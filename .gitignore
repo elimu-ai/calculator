@@ -13,5 +13,4 @@ gradle-app.setting
 *.iml
 .idea
 
-*.mk
 .DS_Store
