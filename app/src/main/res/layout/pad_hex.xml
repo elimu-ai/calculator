@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 
-<com.android.calculator2.CalculatorPadLayout
+<org.literacyapp.calculator.CalculatorPadLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pad_hex"
     style="@style/PadLayoutStyle.Hex"
@@ -78,4 +78,4 @@
         android:onClick="onButtonClick"
         android:text="@string/bin" />
 
-</com.android.calculator2.CalculatorPadLayout>
+</org.literacyapp.calculator.CalculatorPadLayout>

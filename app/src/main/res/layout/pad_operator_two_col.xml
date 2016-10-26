@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 
-<com.android.calculator2.CalculatorPadLayout
+<org.literacyapp.calculator.CalculatorPadLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pad_operator"
     style="@style/PadLayoutStyle.Operator"
@@ -30,7 +30,7 @@
         android:onClick="onButtonClick"
         android:text="@string/op_div" />
 
-    <com.android.calculator2.view.AutoFitButtonView
+    <org.literacyapp.calculator.view.AutoFitButtonView
         android:id="@+id/del"
         style="@style/PadButtonStyle.Operator.Text"
         android:contentDescription="@string/desc_del"
@@ -75,4 +75,4 @@
             android:id="@+id/equals_graph"
             layout="@layout/equals_graph_button"/>
 
-</com.android.calculator2.CalculatorPadLayout>
+</org.literacyapp.calculator.CalculatorPadLayout>

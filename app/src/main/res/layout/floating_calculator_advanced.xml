@@ -17,7 +17,7 @@
             android:layout_height="@dimen/floating_window_button_height"
             android:text="@string/fun_sin" />
 
-        <com.android.calculator2.view.AutoFitButtonView
+        <org.literacyapp.calculator.view.AutoFitButtonView
             android:id="@+id/cos"
             style="@style/Theme.Calculator.ButtonStyle.FloatingCalc.Advanced"
             android:layout_width="@dimen/floating_window_button_height"

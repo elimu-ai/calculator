@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 
-<com.android.calculator2.view.DisplayOverlay
+<org.literacyapp.calculator.view.DisplayOverlay
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/display"
     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"/>
 
-            <com.android.calculator2.view.display.AdvancedDisplay
+            <org.literacyapp.calculator.view.display.AdvancedDisplay
                 android:id="@+id/formula"
                 style="@style/Theme.Calculator.Display.Main.Formula"
                 android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:fillViewport="true"
                 android:textColor="@color/display_formula_text_color" />
 
-            <com.android.calculator2.view.display.AdvancedDisplay
+            <org.literacyapp.calculator.view.display.AdvancedDisplay
                 android:id="@+id/result"
                 style="@style/Theme.Calculator.Display.Main.Result"
                 android:layout_width="match_parent"
@@ -64,4 +64,4 @@
 
     </FrameLayout>
 
-</com.android.calculator2.view.DisplayOverlay>
+</org.literacyapp.calculator.view.DisplayOverlay>
