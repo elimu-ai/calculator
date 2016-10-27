@@ -21,7 +21,7 @@
         android:layout_height="0dp"
         android:orientation="vertical">
 
-    <org.literacyapp.calculator.view.GraphView
+    <com.android.calculator2.view.GraphView
             android:id="@+id/graphView"
             android:layout_width="match_parent"
             android:layout_height="0dp"

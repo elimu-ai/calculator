@@ -23,7 +23,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import org.literacyapp.calculator.R;
+import com.android.calculator2.R;
 
 public abstract class FloatingView extends Service implements OnTouchListener {
     public static FloatingView ACTIVE_VIEW;

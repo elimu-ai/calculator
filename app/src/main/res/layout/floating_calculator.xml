@@ -13,7 +13,7 @@
         android:background="@drawable/white_card"
         android:orientation="horizontal">
 
-        <org.literacyapp.calculator.view.display.AdvancedDisplay
+        <com.android.calculator2.view.display.AdvancedDisplay
             android:id="@+id/display"
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-<org.literacyapp.calculator.view.HistoryLine
+<com.android.calculator2.view.HistoryLine
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,4 +28,4 @@
         android:layout_width="wrap_content"
         style="@style/HistoryText.Result"/>
 
-</org.literacyapp.calculator.view.HistoryLine>
+</com.android.calculator2.view.HistoryLine>

@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 
-<org.literacyapp.calculator.CalculatorPadLayout
+<com.android.calculator2.CalculatorPadLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pad_matrix"
     style="@style/PadLayoutStyle.Matrix"
@@ -69,4 +69,4 @@
         android:onClick="onButtonClick"
         android:text="@string/minus_col" />
 
-</org.literacyapp.calculator.CalculatorPadLayout>
+</com.android.calculator2.CalculatorPadLayout>

@@ -19,11 +19,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/PadLayoutStyle.Card">
 
-    <org.literacyapp.calculator.view.AuxPadView
+    <com.android.calculator2.view.AuxPadView
         android:id="@+id/pad_auxiliary"
         style="@style/PadLayoutStyle.Aux">
 
-        <org.literacyapp.calculator.viewpager.VerticalViewPager
+        <com.android.calculator2.viewpager.VerticalViewPager
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/viewPager">
@@ -31,7 +31,7 @@
             <include layout="@layout/pad_advanced" />
             <include layout="@layout/pad_hex" />
 
-        </org.literacyapp.calculator.viewpager.VerticalViewPager>
+        </com.android.calculator2.viewpager.VerticalViewPager>
 
         <LinearLayout
             android:id="@+id/pageIndicators"
@@ -41,6 +41,6 @@
             android:layout_marginRight="6dp"
             android:orientation="vertical"/>
 
-    </org.literacyapp.calculator.view.AuxPadView>
+    </com.android.calculator2.view.AuxPadView>
 
 </FrameLayout>

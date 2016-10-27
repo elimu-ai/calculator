@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "org.literacyapp.calculator"
+        applicationId "com.android.calculator"
         minSdkVersion 14
         targetSdkVersion 21
     }

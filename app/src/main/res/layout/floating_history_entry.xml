@@ -1,10 +1,10 @@
-<org.literacyapp.calculator.view.HistoryLine xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="wrap_content"
-                                             android:background="@drawable/menu_bg"
-                                             android:focusable="false"
-                                             android:orientation="vertical"
-                                             android:padding="12dp">
+<com.android.calculator2.view.HistoryLine xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/menu_bg"
+    android:focusable="false"
+    android:orientation="vertical"
+    android:padding="12dp">
 
     <TextView
         android:id="@+id/historyExpr"
@@ -26,4 +26,4 @@
         android:textColor="@color/history_result_text_color"
         android:textSize="25sp" />
 
-</org.literacyapp.calculator.view.HistoryLine>
+</com.android.calculator2.view.HistoryLine>

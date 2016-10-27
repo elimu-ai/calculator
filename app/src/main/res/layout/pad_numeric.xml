@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 
-<org.literacyapp.calculator.CalculatorNumericPadLayout
+<com.android.calculator2.CalculatorNumericPadLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pad_numeric"
     style="@style/PadLayoutStyle.Numeric"
@@ -83,4 +83,4 @@
             style="@style/EqualsMultiButton"
             layout="@layout/equals_graph_button"/>
 
-</org.literacyapp.calculator.CalculatorNumericPadLayout>
+</com.android.calculator2.CalculatorNumericPadLayout>
