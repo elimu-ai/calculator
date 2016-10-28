@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.android.calculator"
-        minSdkVersion 14
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
     }
 
     buildTypes {
