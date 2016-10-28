@@ -11,16 +11,16 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.android.calculator2.CalculatorExpressionTokenizer;
-import com.android.calculator2.R;
 import com.android.calculator2.util.DigitLabelHelper;
 import com.xlythe.math.Base;
 import com.xlythe.math.Constants;
 import com.xlythe.math.EquationFormatter;
-import com.xlythe.math.Solver;
 import com.xlythe.math.History;
 import com.xlythe.math.Persist;
+import com.xlythe.math.Solver;
 
 import org.javia.arity.SyntaxException;
+import org.literacyapp.calculator.R;
 
 import java.text.DecimalFormatSymbols;
 

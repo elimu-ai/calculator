@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.android.calculator2.R;
+import org.literacyapp.calculator.R;
 import com.android.calculator2.view.display.AdvancedDisplay;
 import com.android.calculator2.view.display.AdvancedDisplayControls;
 import com.android.calculator2.view.display.DisplayComponent;

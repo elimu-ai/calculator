@@ -21,10 +21,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.xlythe.math.Constants;
+import org.literacyapp.calculator.R;
 
 public class CalculatorPadViewPager extends ViewPager {
     private NumberBaseManager mBaseManager;
