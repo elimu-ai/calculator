@@ -71,6 +71,7 @@
     <Button
         android:id="@+id/dec_point"
         style="@style/PadButtonStyle.Numeric"
+        android:visibility="invisible"
         android:onClick="onButtonClick" />
 
     <Button

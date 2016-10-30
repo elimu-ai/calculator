@@ -6,10 +6,9 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.HorizontalScrollView;
 
-import com.android.calculator2.R;
+import org.literacyapp.calculator.R;
 
 public class ScrollableDisplay extends HorizontalScrollView {
     private int mMaxHeight;

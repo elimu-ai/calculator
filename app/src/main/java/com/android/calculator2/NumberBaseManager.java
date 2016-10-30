@@ -2,6 +2,8 @@ package com.android.calculator2;
 
 import com.xlythe.math.Base;
 
+import org.literacyapp.calculator.R;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;

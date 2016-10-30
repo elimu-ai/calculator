@@ -16,9 +16,11 @@
 package com.android.calculator2.floating;
 
 import android.content.Context;
+
 import com.android.calculator2.HistoryAdapter;
-import com.android.calculator2.R;
 import com.xlythe.math.History;
+
+import org.literacyapp.calculator.R;
 
 class FloatingHistoryAdapter extends HistoryAdapter {
     public FloatingHistoryAdapter(Context context, History history, HistoryItemCallback callback) {

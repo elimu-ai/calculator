@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.calculator2.HistoryAdapter;
-import com.android.calculator2.R;
+import org.literacyapp.calculator.R;
 import com.android.calculator2.util.DigitLabelHelper;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;

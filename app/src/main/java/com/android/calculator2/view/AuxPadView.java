@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.android.calculator2.R;
+
 import com.android.calculator2.viewpager.PagerAdapter;
 import com.android.calculator2.viewpager.VerticalViewPager;
+
+import org.literacyapp.calculator.R;
 
 /**
  * Container for a vertical view pager that adds indicator dots to show the currently
