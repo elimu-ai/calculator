@@ -17,7 +17,8 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/PadLayoutStyle.Card">
+    style="@style/PadLayoutStyle.Card"
+    android:visibility="gone">
 
     <com.android.calculator2.view.AuxPadView
         android:id="@+id/pad_auxiliary"

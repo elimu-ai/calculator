@@ -29,6 +29,8 @@ import com.xlythe.math.EquationFormatter;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 
+import org.literacyapp.calculator.R;
+
 import java.util.Vector;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {

@@ -60,6 +60,8 @@ import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 import com.xlythe.math.Persist;
 
+import org.literacyapp.calculator.R;
+
 public class Calculator extends Activity
         implements OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener {
 

@@ -27,6 +27,8 @@ import java.util.Map.Entry;
 
 import com.xlythe.math.Constants;
 
+import org.literacyapp.calculator.R;
+
 import java.util.LinkedList;
 import java.util.List;
 

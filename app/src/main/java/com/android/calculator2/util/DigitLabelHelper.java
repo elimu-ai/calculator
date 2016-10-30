@@ -2,7 +2,7 @@ package com.android.calculator2.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import com.android.calculator2.R;
+import org.literacyapp.calculator.R;
 
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;

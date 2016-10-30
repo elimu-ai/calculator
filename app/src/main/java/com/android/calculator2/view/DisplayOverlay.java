@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.android.calculator2.R;
+import org.literacyapp.calculator.R;
 import com.android.calculator2.view.display.AdvancedDisplay;
 import com.android.calculator2.util.AnimationUtil;
 

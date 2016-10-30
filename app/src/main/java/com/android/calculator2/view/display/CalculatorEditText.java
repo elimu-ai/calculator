@@ -39,7 +39,7 @@ import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.android.calculator2.R;
+import org.literacyapp.calculator.R;
 import com.android.calculator2.view.MatrixView;
 import com.android.calculator2.view.TextUtil;
 import com.xlythe.math.BaseModule;

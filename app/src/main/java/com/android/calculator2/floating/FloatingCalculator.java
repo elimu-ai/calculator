@@ -13,11 +13,12 @@ import android.widget.Toast;
 import com.android.calculator2.Calculator;
 import com.android.calculator2.CalculatorExpressionEvaluator;
 import com.android.calculator2.CalculatorExpressionTokenizer;
-import com.android.calculator2.R;
 import com.android.calculator2.view.display.AdvancedDisplay;
 import com.xlythe.floatingview.FloatingView;
 import com.xlythe.math.History;
 import com.xlythe.math.Persist;
+
+import org.literacyapp.calculator.R;
 
 
 public class FloatingCalculator extends FloatingView {

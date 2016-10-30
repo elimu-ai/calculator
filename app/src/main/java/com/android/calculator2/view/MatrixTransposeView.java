@@ -21,8 +21,9 @@ import android.text.Html;
 import android.text.InputType;
 import android.widget.TextView;
 
-import com.android.calculator2.R;
 import com.android.calculator2.view.display.AdvancedDisplay;
+
+import org.literacyapp.calculator.R;
 
 public class MatrixTransposeView extends TextView {
     public final static String PATTERN = "^T";

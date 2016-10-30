@@ -64,13 +64,13 @@ public class AutoFitButtonView extends android.widget.Button {
         if (attrs != null) {
             android.content.res.TypedArray ta = context.obtainStyledAttributes(
                     attrs,
-                    com.android.calculator2.R.styleable.CalculatorEditText,
+                    org.literacyapp.calculator.R.styleable.CalculatorEditText,
                     defStyle,
                     0);
-            sizeToFit = ta.getBoolean(com.android.calculator2.R.styleable.CalculatorEditText_sizeToFit, sizeToFit);
-            minTextSize = ta.getDimensionPixelSize(com.android.calculator2.R.styleable.CalculatorEditText_minTextSize,
+            sizeToFit = ta.getBoolean(org.literacyapp.calculator.R.styleable.CalculatorEditText_sizeToFit, sizeToFit);
+            minTextSize = ta.getDimensionPixelSize(org.literacyapp.calculator.R.styleable.CalculatorEditText_minTextSize,
                     minTextSize);
-            precision = ta.getFloat(com.android.calculator2.R.styleable.CalculatorEditText_precision, precision);
+            precision = ta.getFloat(org.literacyapp.calculator.R.styleable.CalculatorEditText_precision, precision);
             ta.recycle();
         }
 
