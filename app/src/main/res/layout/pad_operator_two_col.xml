@@ -28,7 +28,8 @@
         style="@style/PadButtonStyle.Operator"
         android:contentDescription="@string/desc_op_div"
         android:onClick="onButtonClick"
-        android:text="@string/op_div" />
+        android:text="@string/op_div"
+        android:visibility="invisible"/>
 
     <com.android.calculator2.view.AutoFitButtonView
         android:id="@+id/del"
