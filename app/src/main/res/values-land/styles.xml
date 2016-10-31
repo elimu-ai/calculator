@@ -47,7 +47,6 @@
     </style>
 
     <style name="PadButtonStyle.Numeric">
-        <item name="android:layout_margin">4dip</item>
         <item name="android:textSize">23sp</item>
     </style>
 
@@ -56,8 +55,6 @@
     </style>
 
     <style name="PadButtonStyle.Operator">
-        <item name="android:layout_marginTop">4dip</item>
-        <item name="android:layout_marginBottom">4dip</item>
         <item name="android:layout_marginLeft">8dip</item>
         <item name="android:layout_marginRight">8dip</item>
         <item name="android:textSize">20sp</item>

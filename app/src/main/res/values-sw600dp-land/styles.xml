@@ -19,7 +19,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Calculator.Display.Main.Formula">
-        <item name="android:paddingTop">46dip</item>
+        <item name="android:paddingTop">26dip</item>
         <item name="android:paddingBottom">26dip</item>
         <item name="android:paddingLeft">44dip</item>
         <item name="android:paddingRight">44dip</item>
@@ -28,7 +28,7 @@
 
     <style name="Theme.Calculator.Display.Main.Result">
         <item name="android:paddingTop">26dip</item>
-        <item name="android:paddingBottom">46dip</item>
+        <item name="android:paddingBottom">26dip</item>
         <item name="android:paddingLeft">44dip</item>
         <item name="android:paddingRight">44dip</item>
         <item name="textSize">48sp</item>
@@ -42,16 +42,15 @@
     </style>
 
     <style name="PadButtonStyle.Numeric">
-        <item name="android:layout_margin">6dip</item>
         <item name="android:textSize">36sp</item>
     </style>
 
     <style name="EqualsMultiButton">
-        <item name="android:visibility">gone</item>
+        <item name="android:visibility">visible</item>
     </style>
 
     <style name="PadButtonStyle.Operator">
-        <item name="android:layout_margin">6dip</item>
+        <!--<item name="android:layout_margin">6dip</item>-->
         <item name="android:textSize">36sp</item>
     </style>
 
