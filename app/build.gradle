@@ -8,6 +8,8 @@ android {
         applicationId "org.literacyapp.calculator"
         minSdkVersion 21
         targetSdkVersion 23
+        versionCode 1000000
+        versionName "1.0.0"
     }
 
     buildTypes {
