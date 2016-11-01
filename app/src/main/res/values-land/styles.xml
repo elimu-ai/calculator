@@ -17,7 +17,7 @@
 
     <style name="Theme.Calculator.Display.Main.Formula">
         <item name="android:paddingTop">16dip</item>
-        <item name="android:paddingBottom">1dip</item>
+        <item name="android:paddingBottom">8dip</item>
         <item name="android:paddingLeft">16dip</item>
         <item name="android:paddingRight">16dip</item>
         <item name="android:textSize">30sp</item>
@@ -27,7 +27,7 @@
     </style>
 
     <style name="Theme.Calculator.Display.Main.Result">
-        <item name="android:paddingTop">1dip</item>
+        <item name="android:paddingTop">8dip</item>
         <item name="android:paddingBottom">16dip</item>
         <item name="android:paddingLeft">16dip</item>
         <item name="android:paddingRight">16dip</item>
@@ -51,7 +51,7 @@
     </style>
 
     <style name="EqualsMultiButton">
-        <item name="android:visibility">gone</item>
+        <item name="android:visibility">visible</item>
     </style>
 
     <style name="PadButtonStyle.Operator">
