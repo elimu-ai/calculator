@@ -142,6 +142,11 @@
         <item name="android:textColor">@color/pad_button_toggle_text_color</item>
     </style>
 
+    <style name="PadButtonStyle.Icon">
+        <item name="android:layout_margin">10dip</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
     <style name="PadButtonStyle.Numeric">
         <item name="android:textSize">32sp</item>
     </style>
@@ -158,7 +163,7 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">15sp</item>
     </style>
-
+    
     <style name="PadLayoutStyle.Aux" />
 
     <style name="PadLayoutStyle.Advanced">
