@@ -36,14 +36,16 @@
         style="@style/PadButtonStyle.Icon"
         android:contentDescription="@string/desc_del"
         android:onClick="onButtonClick"
-        android:background="@android:drawable/ic_menu_delete" />
+        android:background="@drawable/ic_delete_black_24dp"
+        android:tint="#FFF"/>
 
     <ImageButton
         android:id="@+id/clr"
         style="@style/PadButtonStyle.Icon"
         android:contentDescription="@string/desc_clr"
         android:onClick="onButtonClick"
-        android:background="@android:drawable/ic_menu_delete"
+        android:background="@drawable/ic_delete_black_24dp"
+        android:tint="#FFF"
         android:visibility="gone" />
 
     <Button

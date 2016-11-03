@@ -47,7 +47,7 @@
     </style>
 
     <style name="PadButtonStyle.Icon">
-        <item name="android:layout_margin">4dip</item>
+        <item name="android:layout_margin">6dip</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
 
