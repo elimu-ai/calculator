@@ -117,8 +117,7 @@ public class DisplayOverlay extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        //Don't show history display
-        /*int action = MotionEventCompat.getActionMasked(ev);
+        int action = MotionEventCompat.getActionMasked(ev);
         float y = ev.getRawY();
         TranslateState state = getTranslateState();
 
@@ -146,7 +145,7 @@ public class DisplayOverlay extends FrameLayout {
                 }
 
                 break;
-        }*/
+        }
 
         return false;
     }

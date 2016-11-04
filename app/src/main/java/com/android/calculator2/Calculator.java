@@ -260,8 +260,9 @@ public class Calculator extends Activity
         new HistoryAdapter.HistoryItemCallback() {
             @Override
             public void onHistoryItemSelected(HistoryEntry entry) {
-                mFormulaEditText.insert(entry.getEdited());
-                mDisplayView.collapseHistory();
+                //Disabled insert text in the formula
+//                mFormulaEditText.insert(entry.getEdited());
+//                mDisplayView.collapseHistory();
             }
         });
         mHistory.setObserver(mHistoryAdapter);
