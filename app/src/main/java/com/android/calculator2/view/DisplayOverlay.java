@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import org.literacyapp.calculator.R;
-import com.android.calculator2.view.display.AdvancedDisplay;
+
 import com.android.calculator2.util.AnimationUtil;
+import com.android.calculator2.view.display.AdvancedDisplay;
+
+import org.literacyapp.calculator.R;
 
 /**
  * The display overlay is a container that intercepts touch events on top of:
@@ -115,7 +117,8 @@ public class DisplayOverlay extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        int action = MotionEventCompat.getActionMasked(ev);
+        //Don't show history display
+        /*int action = MotionEventCompat.getActionMasked(ev);
         float y = ev.getRawY();
         TranslateState state = getTranslateState();
 
@@ -143,7 +146,7 @@ public class DisplayOverlay extends FrameLayout {
                 }
 
                 break;
-        }
+        }*/
 
         return false;
     }
