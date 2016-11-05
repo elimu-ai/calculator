@@ -94,7 +94,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/op_div" />
+                    android:text="@string/op_div"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
             <LinearLayout
@@ -177,7 +178,8 @@
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:visibility="invisible"/>
 
                 <Button
                     android:id="@+id/digit0"
