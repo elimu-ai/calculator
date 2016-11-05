@@ -260,8 +260,9 @@ public class Calculator extends Activity
         new HistoryAdapter.HistoryItemCallback() {
             @Override
             public void onHistoryItemSelected(HistoryEntry entry) {
-                mFormulaEditText.insert(entry.getEdited());
-                mDisplayView.collapseHistory();
+                //Disabled insert text in the formula
+//                mFormulaEditText.insert(entry.getEdited());
+//                mDisplayView.collapseHistory();
             }
         });
         mHistory.setObserver(mHistoryAdapter);
@@ -445,7 +446,7 @@ public class Calculator extends Activity
                 mResultEditText.clear();
             }
             else {
-                mResultEditText.setText(result);
+                mResultEditText.setText("=" + result);
             }
         } else if (errorResourceId != INVALID_RES_ID) {
             onError(errorResourceId);
