@@ -446,7 +446,7 @@ public class Calculator extends Activity
                 mResultEditText.clear();
             }
             else {
-                mResultEditText.setText(result);
+                mResultEditText.setText("=" + result);
             }
         } else if (errorResourceId != INVALID_RES_ID) {
             onError(errorResourceId);
