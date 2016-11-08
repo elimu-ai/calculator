@@ -12,10 +12,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.calculator2.HistoryAdapter;
-import org.literacyapp.calculator.R;
 import com.android.calculator2.util.DigitLabelHelper;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
+
+import org.literacyapp.calculator.R;
 
 public class FloatingCalculatorPageAdapter extends PagerAdapter {
     private final Context mContext;
@@ -35,7 +36,7 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2; //Removed the green pad with additional operators
     }
 
     @Override
