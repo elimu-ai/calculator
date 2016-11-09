@@ -95,7 +95,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/op_div"
-                    android:visibility="invisible"/>
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/mul"
+                    style="@style/Theme.Calculator.ButtonStyle.Widget"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/op_mul" />
             </LinearLayout>
 
             <LinearLayout
@@ -125,12 +133,12 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/mul"
+                    android:id="@+id/minus"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/op_mul" />
+                    android:text="@string/op_sub" />
             </LinearLayout>
 
             <LinearLayout
@@ -160,12 +168,12 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/minus"
+                    android:id="@+id/plus"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/op_sub" />
+                    android:text="@string/op_add" />
             </LinearLayout>
 
             <LinearLayout
@@ -189,20 +197,18 @@
                     android:layout_weight="1" />
 
                 <Button
+                    style="@style/Theme.Calculator.ButtonStyle.Widget"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <Button
                     android:id="@+id/equal"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/eq" />
-
-                <Button
-                    android:id="@+id/plus"
-                    style="@style/Theme.Calculator.ButtonStyle.Widget"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/op_add" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
