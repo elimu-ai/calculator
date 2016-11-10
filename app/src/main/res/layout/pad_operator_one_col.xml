@@ -50,6 +50,7 @@
 
     <Button
         android:id="@+id/op_mul"
+        android:tag="multiplied_by"
         style="@style/PadButtonStyle.Operator"
         android:contentDescription="@string/desc_op_mul"
         android:onClick="onButtonClick"
@@ -57,6 +58,7 @@
 
     <Button
         android:id="@+id/op_sub"
+        android:tag="minus"
         style="@style/PadButtonStyle.Operator"
         android:contentDescription="@string/desc_op_sub"
         android:onClick="onButtonClick"
@@ -64,6 +66,7 @@
 
     <Button
         android:id="@+id/op_add"
+        android:tag="plus"
         style="@style/PadButtonStyle.Operator"
         android:contentDescription="@string/desc_op_add"
         android:onClick="onButtonClick"

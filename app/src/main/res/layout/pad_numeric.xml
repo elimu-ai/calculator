@@ -25,46 +25,55 @@
 
     <Button
         android:id="@+id/digit7"
+        android:tag="seven"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit8"
+        android:tag="eight"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit9"
+        android:tag="nine"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit4"
+        android:tag="four"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit5"
+        android:tag="five"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit6"
+        android:tag="six"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit1"
+        android:tag="one"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit2"
+        android:tag="two"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
     <Button
         android:id="@+id/digit3"
+        android:tag="three"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 
@@ -76,6 +85,7 @@
 
     <Button
         android:id="@+id/digit0"
+        android:tag="zero"
         style="@style/PadButtonStyle.Numeric"
         android:onClick="onButtonClick" />
 

@@ -345,6 +345,7 @@ public class Calculator extends Activity
     }
 
     public void onButtonClick(View view) {
+        // TODO: 10/11/2016 [GSC] view.getTag() -> play audio
         mCurrentButton = view;
         switch (view.getId()) {
             case R.id.eq:
