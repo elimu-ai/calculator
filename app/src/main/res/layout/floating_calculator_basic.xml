@@ -105,12 +105,10 @@
             android:layout_gravity="center" />
 
         <Button
-            android:id="@+id/eq"
             style="@style/Theme.Calculator.ButtonStyle.FloatingCalc"
             android:layout_width="@dimen/floating_window_button_height"
             android:layout_height="@dimen/floating_window_button_height"
-            android:layout_gravity="center"
-            android:text="@string/eq" />
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <LinearLayout
@@ -127,7 +125,7 @@
             android:layout_height="@dimen/floating_window_button_height"
             android:layout_gravity="center"
             android:text="@string/op_div"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/mul"
@@ -152,6 +150,15 @@
             android:layout_height="@dimen/floating_window_button_height"
             android:layout_gravity="center"
             android:text="@string/op_add" />
+
+        <Button
+            android:id="@+id/eq"
+            style="@style/Theme.Calculator.ButtonStyle.FloatingCalc"
+            android:layout_width="@dimen/floating_window_button_height"
+            android:layout_height="@dimen/floating_window_button_height"
+            android:layout_gravity="center"
+            android:text="@string/eq" />
+
     </LinearLayout>
 
 </LinearLayout>
