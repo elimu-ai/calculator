@@ -69,7 +69,6 @@
 
                 <Button
                     android:id="@+id/digit7"
-                    android:tag="seven"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -77,7 +76,6 @@
 
                 <Button
                     android:id="@+id/digit8"
-                    android:tag="eight"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -85,7 +83,6 @@
 
                 <Button
                     android:id="@+id/digit9"
-                    android:tag="nine"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -117,7 +114,6 @@
 
                 <Button
                     android:id="@+id/digit4"
-                    android:tag="four"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -125,7 +121,6 @@
 
                 <Button
                     android:id="@+id/digit5"
-                    android:tag="five"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -133,7 +128,6 @@
 
                 <Button
                     android:id="@+id/digit6"
-                    android:tag="six"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -141,7 +135,6 @@
 
                 <Button
                     android:id="@+id/minus"
-                    android:tag="minus"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -156,7 +149,6 @@
 
                 <Button
                     android:id="@+id/digit1"
-                    android:tag="one"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -164,7 +156,6 @@
 
                 <Button
                     android:id="@+id/digit2"
-                    android:tag="two"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -172,7 +163,6 @@
 
                 <Button
                     android:id="@+id/digit3"
-                    android:tag="three"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -180,7 +170,6 @@
 
                 <Button
                     android:id="@+id/plus"
-                    android:tag="plus"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -203,7 +192,6 @@
 
                 <Button
                     android:id="@+id/digit0"
-                    android:tag="zero"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -217,7 +205,6 @@
 
                 <Button
                     android:id="@+id/equal"
-                    android:tag="equals"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

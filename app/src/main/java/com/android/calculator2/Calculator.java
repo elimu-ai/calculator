@@ -42,17 +42,18 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.android.calculator2.view.GraphView;
-import com.android.calculator2.view.MultiButton;
-import com.android.calculator2.view.display.AdvancedDisplay.OnTextSizeChangeListener;
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback;
-import com.android.calculator2.view.display.AdvancedDisplay;
+import com.android.calculator2.util.PlayerUtil;
 import com.android.calculator2.view.DisplayOverlay;
 import com.android.calculator2.view.DisplayOverlay.DisplayMode;
+import com.android.calculator2.view.GraphView;
 import com.android.calculator2.view.MatrixEditText;
 import com.android.calculator2.view.MatrixInverseView;
 import com.android.calculator2.view.MatrixTransposeView;
 import com.android.calculator2.view.MatrixView;
+import com.android.calculator2.view.MultiButton;
+import com.android.calculator2.view.display.AdvancedDisplay;
+import com.android.calculator2.view.display.AdvancedDisplay.OnTextSizeChangeListener;
 import com.xlythe.math.Base;
 import com.xlythe.math.Constants;
 import com.xlythe.math.GraphModule;
@@ -345,7 +346,10 @@ public class Calculator extends Activity
     }
 
     public void onButtonClick(View view) {
-        // TODO: 10/11/2016 [GSC] view.getTag() -> play audio
+
+        if (view.getTag() != null)
+            PlayerUtil.playRawFile(this, view.getTag().toString());
+
         mCurrentButton = view;
         switch (view.getId()) {
             case R.id.eq:

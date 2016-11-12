@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.android.calculator2.Calculator;
 import com.android.calculator2.CalculatorExpressionEvaluator;
 import com.android.calculator2.CalculatorExpressionTokenizer;
+import com.android.calculator2.util.PlayerUtil;
 import com.android.calculator2.view.display.AdvancedDisplay;
 import com.xlythe.floatingview.FloatingView;
 import com.xlythe.math.History;
@@ -70,6 +71,9 @@ public class FloatingCalculator extends FloatingView {
         mListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (v.getTag() != null)
+                    PlayerUtil.playRawFile(getContext(), v.getTag().toString());
+
                 if(v instanceof Button) {
                     if(((Button) v).getText().toString().equals("=")) {
                         mEvaluator.evaluate(mDisplay.getText(), new CalculatorExpressionEvaluator.EvaluateCallback() {
