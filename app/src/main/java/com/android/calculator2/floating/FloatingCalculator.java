@@ -71,8 +71,9 @@ public class FloatingCalculator extends FloatingView {
         mListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.getTag() != null)
+                if (v.getTag() != null) {
                     PlayerUtil.playRawFile(getContext(), v.getTag().toString());
+                }
 
                 if(v instanceof Button) {
                     if(((Button) v).getText().toString().equals("=")) {

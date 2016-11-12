@@ -68,4 +68,8 @@ public final class DigitLabelHelper {
             }
         }
     }
+
+    public static int getIdForDigit(int digit) {
+        return sDigitIds[digit];
+    }
 }
