@@ -10,6 +10,19 @@ public class PlayerUtil {
 
     public static String RAW_FILE_EQUALS = "equals";
 
+    public static final String[] NUMBER_RAW_FILES = new String[] {
+            "zero",
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine"
+    };
+
     public static void playRawFile(Context context, String rawFile) {
         int rawId = context.getResources().getIdentifier(rawFile, "raw", context.getPackageName());
         if (rawId != 0) {

@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -24,6 +25,9 @@ import org.javia.arity.SyntaxException;
 import org.literacyapp.calculator.R;
 
 import java.text.DecimalFormatSymbols;
+
+import static com.android.calculator2.util.PlayerUtil.NUMBER_RAW_FILES;
+import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
 
 public class CalculatorWidget extends AppWidgetProvider {
     public final static String PREFERENCE_WIDGET_PREAMBLE = "com.android.calculator2.CALC_WIDGET_VALUE_";
@@ -61,8 +65,11 @@ public class CalculatorWidget extends AppWidgetProvider {
         if(value.equals(context.getResources().getString(R.string.error_syntax))) value = "";
         mClearText = intent.getBooleanExtra(SHOW_CLEAR, false);
 
+        // Play audio for numbers and operators
         String action = intent.getAction().substring(intent.getAction().lastIndexOf(".")+1);
-        PlayerUtil.playRawFile(context, action);
+        if (!RAW_FILE_EQUALS.equals(action)) {
+            PlayerUtil.playRawFile(context, action);
+        }
 
         if(intent.getAction().equals(DIGIT_0)) {
             if(mClearText) {
@@ -162,6 +169,14 @@ public class CalculatorWidget extends AppWidgetProvider {
 
             // Try to save it to history
             if(!value.equals(context.getResources().getString(R.string.error_syntax))) {
+
+                // Play audio for result
+                if (TextUtils.isDigitsOnly(value) && Integer.parseInt(value) < 10) {
+                    PlayerUtil.playResult(context, NUMBER_RAW_FILES[Integer.parseInt(value)]);
+                } else {
+                    PlayerUtil.playRawFile(context, RAW_FILE_EQUALS);
+                }
+                
                 final Persist persist = new Persist(context);
                 persist.load();
                 if(persist.getMode() == null) persist.setMode(Base.DECIMAL);
