@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.android.calculator2.Calculator;
 import com.android.calculator2.CalculatorExpressionEvaluator;
 import com.android.calculator2.CalculatorExpressionTokenizer;
+import com.android.calculator2.util.DigitLabelHelper;
 import com.android.calculator2.util.PlayerUtil;
 import com.android.calculator2.view.display.AdvancedDisplay;
 import com.xlythe.floatingview.FloatingView;
@@ -21,6 +23,7 @@ import com.xlythe.math.Persist;
 
 import org.literacyapp.calculator.R;
 
+import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
 
 public class FloatingCalculator extends FloatingView {
     // Calc logic
@@ -44,7 +47,7 @@ public class FloatingCalculator extends FloatingView {
     }
 
     public View inflateView() {
-        View child = View.inflate(getContext(), R.layout.floating_calculator, null);
+        final View child = View.inflate(getContext(), R.layout.floating_calculator, null);
 
         mTokenizer = new CalculatorExpressionTokenizer(this);
         mEvaluator = new CalculatorExpressionEvaluator(mTokenizer);
@@ -70,8 +73,8 @@ public class FloatingCalculator extends FloatingView {
         mClear = (ImageButton) child.findViewById(R.id.clear);
         mListener = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (v.getTag() != null) {
+            public void onClick(final View v) {
+                if (v.getTag() != null && !RAW_FILE_EQUALS.equals(v.getTag())) {
                     PlayerUtil.playRawFile(getContext(), v.getTag().toString());
                 }
 
@@ -83,6 +86,13 @@ public class FloatingCalculator extends FloatingView {
                                 if (errorResourceId != Calculator.INVALID_RES_ID) {
                                     onError(errorResourceId);
                                 } else {
+                                    // Play audio for result
+                                    if (result != null && TextUtils.isDigitsOnly(result) && Integer.parseInt(result) < 10) {
+                                        View view = child.findViewById(DigitLabelHelper.getIdForDigit(Integer.parseInt(result)));
+                                        PlayerUtil.playResult(getContext(), view.getTag().toString());
+                                    } else {
+                                        PlayerUtil.playRawFile(getContext(), RAW_FILE_EQUALS);
+                                    }
                                     setText(result);
                                 }
                             }
