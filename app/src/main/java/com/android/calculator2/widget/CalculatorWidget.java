@@ -31,16 +31,16 @@ import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
 
 public class CalculatorWidget extends AppWidgetProvider {
     public final static String PREFERENCE_WIDGET_PREAMBLE = "com.android.calculator2.CALC_WIDGET_VALUE_";
-    public static final String DIGIT_0 = "com.android.calculator2.zero";
-    public static final String DIGIT_1 = "com.android.calculator2.one";
-    public static final String DIGIT_2 = "com.android.calculator2.two";
-    public static final String DIGIT_3 = "com.android.calculator2.three";
-    public static final String DIGIT_4 = "com.android.calculator2.four";
-    public static final String DIGIT_5 = "com.android.calculator2.five";
-    public static final String DIGIT_6 = "com.android.calculator2.six";
-    public static final String DIGIT_7 = "com.android.calculator2.seven";
-    public static final String DIGIT_8 = "com.android.calculator2.eight";
-    public static final String DIGIT_9 = "com.android.calculator2.nine";
+    public static final String DIGIT_0 = "com.android.calculator2.digit_0";
+    public static final String DIGIT_1 = "com.android.calculator2.digit_1";
+    public static final String DIGIT_2 = "com.android.calculator2.digit_2";
+    public static final String DIGIT_3 = "com.android.calculator2.digit_3";
+    public static final String DIGIT_4 = "com.android.calculator2.digit_4";
+    public static final String DIGIT_5 = "com.android.calculator2.digit_5";
+    public static final String DIGIT_6 = "com.android.calculator2.digit_6";
+    public static final String DIGIT_7 = "com.android.calculator2.digit_7";
+    public static final String DIGIT_8 = "com.android.calculator2.digit_8";
+    public static final String DIGIT_9 = "com.android.calculator2.digit_9";
     public static final String DOT = "com.android.calculator2.dot";
     public static final String PLUS = "com.android.calculator2.plus";
     public static final String MINUS = "com.android.calculator2.minus";

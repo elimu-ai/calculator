@@ -11,16 +11,16 @@ public class PlayerUtil {
     public static String RAW_FILE_EQUALS = "equals";
 
     public static final String[] NUMBER_RAW_FILES = new String[] {
-            "zero",
-            "one",
-            "two",
-            "three",
-            "four",
-            "five",
-            "six",
-            "seven",
-            "eight",
-            "nine"
+            "digit_0",
+            "digit_1",
+            "digit_2",
+            "digit_3",
+            "digit_4",
+            "digit_5",
+            "digit_6",
+            "digit_7",
+            "digit_8",
+            "digit_9"
     };
 
     public static void playRawFile(Context context, String rawFile) {
