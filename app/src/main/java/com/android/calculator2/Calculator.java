@@ -42,17 +42,19 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.android.calculator2.view.GraphView;
-import com.android.calculator2.view.MultiButton;
-import com.android.calculator2.view.display.AdvancedDisplay.OnTextSizeChangeListener;
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback;
-import com.android.calculator2.view.display.AdvancedDisplay;
+import com.android.calculator2.util.DigitLabelHelper;
+import com.android.calculator2.util.PlayerUtil;
 import com.android.calculator2.view.DisplayOverlay;
 import com.android.calculator2.view.DisplayOverlay.DisplayMode;
+import com.android.calculator2.view.GraphView;
 import com.android.calculator2.view.MatrixEditText;
 import com.android.calculator2.view.MatrixInverseView;
 import com.android.calculator2.view.MatrixTransposeView;
 import com.android.calculator2.view.MatrixView;
+import com.android.calculator2.view.MultiButton;
+import com.android.calculator2.view.display.AdvancedDisplay;
+import com.android.calculator2.view.display.AdvancedDisplay.OnTextSizeChangeListener;
 import com.xlythe.math.Base;
 import com.xlythe.math.Constants;
 import com.xlythe.math.GraphModule;
@@ -61,6 +63,8 @@ import com.xlythe.math.HistoryEntry;
 import com.xlythe.math.Persist;
 
 import org.literacyapp.calculator.R;
+
+import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
 
 public class Calculator extends Activity
         implements OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener {
@@ -345,6 +349,12 @@ public class Calculator extends Activity
     }
 
     public void onButtonClick(View view) {
+
+        // Play audio for numbers and operators
+        if (view.getTag() != null && !RAW_FILE_EQUALS.equals(view.getTag())) {
+            PlayerUtil.playRawFile(this, view.getTag().toString());
+        }
+
         mCurrentButton = view;
         switch (view.getId()) {
             case R.id.eq:
@@ -593,6 +603,15 @@ public class Calculator extends Activity
     }
 
     private void onResult(final String result) {
+
+        // Play audio for result
+        if (TextUtils.isDigitsOnly(result) && Integer.parseInt(result) < 10) {
+            View view = findViewById(DigitLabelHelper.getIdForDigit(Integer.parseInt(result)));
+            PlayerUtil.playResult(this, view.getTag().toString());
+        } else {
+            PlayerUtil.playRawFile(this, RAW_FILE_EQUALS);
+        }
+
         // Make the clear button appear immediately.
         setClearVisibility(true);
 

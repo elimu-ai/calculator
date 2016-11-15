@@ -7,11 +7,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.android.calculator2.CalculatorExpressionTokenizer;
 import com.android.calculator2.util.DigitLabelHelper;
+import com.android.calculator2.util.PlayerUtil;
 import com.xlythe.math.Base;
 import com.xlythe.math.Constants;
 import com.xlythe.math.EquationFormatter;
@@ -24,22 +26,25 @@ import org.literacyapp.calculator.R;
 
 import java.text.DecimalFormatSymbols;
 
+import static com.android.calculator2.util.PlayerUtil.NUMBER_RAW_FILES;
+import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
+
 public class CalculatorWidget extends AppWidgetProvider {
     public final static String PREFERENCE_WIDGET_PREAMBLE = "com.android.calculator2.CALC_WIDGET_VALUE_";
-    public static final String DIGIT_0 = "com.android.calculator2.0";
-    public static final String DIGIT_1 = "com.android.calculator2.1";
-    public static final String DIGIT_2 = "com.android.calculator2.2";
-    public static final String DIGIT_3 = "com.android.calculator2.3";
-    public static final String DIGIT_4 = "com.android.calculator2.4";
-    public static final String DIGIT_5 = "com.android.calculator2.5";
-    public static final String DIGIT_6 = "com.android.calculator2.6";
-    public static final String DIGIT_7 = "com.android.calculator2.7";
-    public static final String DIGIT_8 = "com.android.calculator2.8";
-    public static final String DIGIT_9 = "com.android.calculator2.9";
+    public static final String DIGIT_0 = "com.android.calculator2.digit_0";
+    public static final String DIGIT_1 = "com.android.calculator2.digit_1";
+    public static final String DIGIT_2 = "com.android.calculator2.digit_2";
+    public static final String DIGIT_3 = "com.android.calculator2.digit_3";
+    public static final String DIGIT_4 = "com.android.calculator2.digit_4";
+    public static final String DIGIT_5 = "com.android.calculator2.digit_5";
+    public static final String DIGIT_6 = "com.android.calculator2.digit_6";
+    public static final String DIGIT_7 = "com.android.calculator2.digit_7";
+    public static final String DIGIT_8 = "com.android.calculator2.digit_8";
+    public static final String DIGIT_9 = "com.android.calculator2.digit_9";
     public static final String DOT = "com.android.calculator2.dot";
     public static final String PLUS = "com.android.calculator2.plus";
     public static final String MINUS = "com.android.calculator2.minus";
-    public static final String MUL = "com.android.calculator2.mul";
+    public static final String MUL = "com.android.calculator2.multiplied_by";
     public static final String DIV = "com.android.calculator2.div";
     public static final String EQUALS = "com.android.calculator2.equals";
     public static final String CLR = "com.android.calculator2.clear";
@@ -59,6 +64,12 @@ public class CalculatorWidget extends AppWidgetProvider {
         String value = getValue(context, appWidgetId);
         if(value.equals(context.getResources().getString(R.string.error_syntax))) value = "";
         mClearText = intent.getBooleanExtra(SHOW_CLEAR, false);
+
+        // Play audio for numbers and operators
+        String action = intent.getAction().substring(intent.getAction().lastIndexOf(".")+1);
+        if (!RAW_FILE_EQUALS.equals(action)) {
+            PlayerUtil.playRawFile(context, action);
+        }
 
         if(intent.getAction().equals(DIGIT_0)) {
             if(mClearText) {
@@ -158,6 +169,14 @@ public class CalculatorWidget extends AppWidgetProvider {
 
             // Try to save it to history
             if(!value.equals(context.getResources().getString(R.string.error_syntax))) {
+
+                // Play audio for result
+                if (TextUtils.isDigitsOnly(value) && Integer.parseInt(value) < 10) {
+                    PlayerUtil.playResult(context, NUMBER_RAW_FILES[Integer.parseInt(value)]);
+                } else {
+                    PlayerUtil.playRawFile(context, RAW_FILE_EQUALS);
+                }
+                
                 final Persist persist = new Persist(context);
                 persist.load();
                 if(persist.getMode() == null) persist.setMode(Base.DECIMAL);
