@@ -351,7 +351,7 @@ public class Calculator extends Activity
     public void onButtonClick(View view) {
 
         // Play audio for numbers and operators
-        if (view.getTag() != null && !RAW_FILE_EQUALS.equals(view.getTag())) {
+        if ((view.getTag() != null) && !RAW_FILE_EQUALS.equals(view.getTag())) {
             PlayerUtil.playRawFile(this, view.getTag().toString());
         }
 
@@ -605,7 +605,7 @@ public class Calculator extends Activity
     private void onResult(final String result) {
 
         // Play audio for result
-        if (TextUtils.isDigitsOnly(result) && Integer.parseInt(result) < 10) {
+        if (TextUtils.isDigitsOnly(result) && (Integer.parseInt(result) < 10)) {
             View view = findViewById(DigitLabelHelper.getIdForDigit(Integer.parseInt(result)));
             PlayerUtil.playResult(this, view.getTag().toString());
         } else {

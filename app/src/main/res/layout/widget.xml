@@ -99,7 +99,7 @@
 
                 <Button
                     android:id="@+id/mul"
-                    android:tag="multiplied_by"
+                    android:tag="mul"
                     style="@style/Theme.Calculator.ButtonStyle.Widget"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
