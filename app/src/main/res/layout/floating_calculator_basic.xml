@@ -139,7 +139,7 @@
 
         <Button
             android:id="@+id/mul"
-            android:tag="multiplied_by"
+            android:tag="mul"
             style="@style/Theme.Calculator.ButtonStyle.FloatingCalc"
             android:layout_width="@dimen/floating_window_button_height"
             android:layout_height="@dimen/floating_window_button_height"

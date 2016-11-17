@@ -44,7 +44,7 @@ public class CalculatorWidget extends AppWidgetProvider {
     public static final String DOT = "com.android.calculator2.dot";
     public static final String PLUS = "com.android.calculator2.plus";
     public static final String MINUS = "com.android.calculator2.minus";
-    public static final String MUL = "com.android.calculator2.multiplied_by";
+    public static final String MUL = "com.android.calculator2.mul";
     public static final String DIV = "com.android.calculator2.div";
     public static final String EQUALS = "com.android.calculator2.equals";
     public static final String CLR = "com.android.calculator2.clear";
@@ -62,7 +62,9 @@ public class CalculatorWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
         String value = getValue(context, appWidgetId);
-        if(value.equals(context.getResources().getString(R.string.error_syntax))) value = "";
+        if (value.equals(context.getResources().getString(R.string.error_syntax))) {
+            value = "";
+        }
         mClearText = intent.getBooleanExtra(SHOW_CLEAR, false);
 
         // Play audio for numbers and operators

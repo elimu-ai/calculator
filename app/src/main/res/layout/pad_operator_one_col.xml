@@ -50,7 +50,7 @@
 
     <Button
         android:id="@+id/op_mul"
-        android:tag="multiplied_by"
+        android:tag="mul"
         style="@style/PadButtonStyle.Operator"
         android:contentDescription="@string/desc_op_mul"
         android:onClick="onButtonClick"
