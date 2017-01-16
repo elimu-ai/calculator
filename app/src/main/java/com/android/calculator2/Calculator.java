@@ -24,12 +24,15 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,6 +46,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback;
+import com.android.calculator2.receiver.StudentUpdatedReceiver;
 import com.android.calculator2.util.DigitLabelHelper;
 import com.android.calculator2.util.PlayerUtil;
 import com.android.calculator2.view.DisplayOverlay;
@@ -63,6 +67,9 @@ import com.xlythe.math.HistoryEntry;
 import com.xlythe.math.Persist;
 
 import org.literacyapp.calculator.R;
+import org.literacyapp.model.enums.content.NumeracySkill;
+
+import java.util.Set;
 
 import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
 
@@ -159,6 +166,25 @@ public class Calculator extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
+
+        // Personalize available operators
+        Button buttonOperatorMul = (Button) findViewById(R.id.op_mul);
+        Button buttonOperatorSub = (Button) findViewById(R.id.op_sub);
+        Button buttonOperatorAdd = (Button) findViewById(R.id.op_add);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Set<String> numeracySkillSet = sharedPreferences.getStringSet(StudentUpdatedReceiver.PREF_STUDENT_NUMERACY_SKILLS, null);
+        Log.d(getClass().getName(), "numeracySkillSet: " + numeracySkillSet);
+        if (numeracySkillSet == null) {
+            buttonOperatorMul.setVisibility(View.INVISIBLE);
+            buttonOperatorSub.setVisibility(View.INVISIBLE);
+        } else {
+            if (!numeracySkillSet.contains(NumeracySkill.MULTIPLICATION.toString())) {
+                buttonOperatorMul.setVisibility(View.INVISIBLE);
+            }
+            if (!numeracySkillSet.contains(NumeracySkill.SUBTRACTION.toString())) {
+                buttonOperatorSub.setVisibility(View.INVISIBLE);
+            }
+        }
 
         mX = getString(R.string.X);
         mDisplayView = (DisplayOverlay) findViewById(R.id.display);

@@ -93,5 +93,15 @@
                 <action android:name="android.intent.action.CONFIGURATION_CHANGED" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name="com.android.calculator2.receiver.StudentUpdatedReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="literacyapp.intent.action.STUDENT_UPDATED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest> 

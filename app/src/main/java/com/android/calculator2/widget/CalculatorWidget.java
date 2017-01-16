@@ -6,12 +6,15 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.android.calculator2.CalculatorExpressionTokenizer;
+import com.android.calculator2.receiver.StudentUpdatedReceiver;
 import com.android.calculator2.util.DigitLabelHelper;
 import com.android.calculator2.util.PlayerUtil;
 import com.xlythe.math.Base;
@@ -23,8 +26,10 @@ import com.xlythe.math.Solver;
 
 import org.javia.arity.SyntaxException;
 import org.literacyapp.calculator.R;
+import org.literacyapp.model.enums.content.NumeracySkill;
 
 import java.text.DecimalFormatSymbols;
+import java.util.Set;
 
 import static com.android.calculator2.util.PlayerUtil.NUMBER_RAW_FILES;
 import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
@@ -301,6 +306,22 @@ public class CalculatorWidget extends AppWidgetProvider {
         remoteViews.setViewVisibility(R.id.delete, mClearText ? View.GONE : View.VISIBLE);
         remoteViews.setViewVisibility(R.id.clear, mClearText ? View.VISIBLE : View.GONE);
         setOnClickListeners(context, appWidgetId, remoteViews);
+
+        // Personalize available operators
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> numeracySkillSet = sharedPreferences.getStringSet(StudentUpdatedReceiver.PREF_STUDENT_NUMERACY_SKILLS, null);
+        Log.d(getClass().getName(), "numeracySkillSet: " + numeracySkillSet);
+        if (numeracySkillSet == null) {
+            remoteViews.setViewVisibility(R.id.mul, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.minus, View.INVISIBLE);
+        } else {
+            if (!numeracySkillSet.contains(NumeracySkill.MULTIPLICATION.toString())) {
+                remoteViews.setViewVisibility(R.id.mul, View.INVISIBLE);
+            }
+            if (!numeracySkillSet.contains(NumeracySkill.SUBTRACTION.toString())) {
+                remoteViews.setViewVisibility(R.id.minus, View.INVISIBLE);
+            }
+        }
 
         DigitLabelHelper.getInstance().getTextForDigits(context,
                 new DigitLabelHelper.DigitLabelHelperCallback() {
