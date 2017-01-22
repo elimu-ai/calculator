@@ -8,8 +8,8 @@ android {
         applicationId "org.literacyapp.calculator"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1000007
-        versionName "1.0.7"
+        versionCode 1000008
+        versionName "1.0.8-SNAPSHOT"
         setProperty("archivesBaseName", "$applicationId-$versionCode")
     }
 
