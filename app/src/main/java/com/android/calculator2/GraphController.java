@@ -12,7 +12,7 @@ import com.xlythe.math.GraphModule;
 import com.xlythe.math.GraphModule.OnGraphUpdatedListener;
 import com.xlythe.math.Point;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 import java.util.ArrayList;
 import java.util.List;

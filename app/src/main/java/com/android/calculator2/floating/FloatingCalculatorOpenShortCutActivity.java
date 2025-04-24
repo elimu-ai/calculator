@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.provider.Settings;
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 /**
  * Created by Will on 4/9/2014.

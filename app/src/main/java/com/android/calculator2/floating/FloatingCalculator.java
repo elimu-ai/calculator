@@ -21,7 +21,7 @@ import com.xlythe.floatingview.FloatingView;
 import com.xlythe.math.History;
 import com.xlythe.math.Persist;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
 

@@ -32,7 +32,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 import com.android.calculator2.view.display.AdvancedDisplay;
 import com.android.calculator2.view.display.EventListener;
 import com.xlythe.math.Constants;

@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.calculator2.Clipboard;
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 import com.android.calculator2.view.CalculatorEditable;
 import com.android.calculator2.view.ScrollableDisplay;
 import com.android.calculator2.view.TextUtil;

@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 

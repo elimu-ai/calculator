@@ -16,7 +16,7 @@ import com.android.calculator2.util.DigitLabelHelper;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 public class FloatingCalculatorPageAdapter extends PagerAdapter {
     private final Context mContext;

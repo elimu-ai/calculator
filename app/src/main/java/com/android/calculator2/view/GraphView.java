@@ -13,7 +13,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 import com.xlythe.math.Point;
 

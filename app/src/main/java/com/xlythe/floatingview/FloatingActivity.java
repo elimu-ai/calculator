@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 /**
  * Created by Will on 4/9/2014.

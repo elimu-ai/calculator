@@ -20,7 +20,7 @@ import android.content.Context;
 import com.android.calculator2.HistoryAdapter;
 import com.xlythe.math.History;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 class FloatingHistoryAdapter extends HistoryAdapter {
     public FloatingHistoryAdapter(Context context, History history, HistoryItemCallback callback) {

@@ -29,7 +29,7 @@ import com.xlythe.math.EquationFormatter;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 import java.util.Vector;
 

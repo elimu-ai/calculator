@@ -18,7 +18,7 @@ import android.widget.FrameLayout;
 import com.android.calculator2.util.AnimationUtil;
 import com.android.calculator2.view.display.AdvancedDisplay;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 /**
  * The display overlay is a container that intercepts touch events on top of:

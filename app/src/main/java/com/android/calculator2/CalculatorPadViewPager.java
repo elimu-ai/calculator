@@ -22,7 +22,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 public class CalculatorPadViewPager extends ViewPager {
     private NumberBaseManager mBaseManager;
