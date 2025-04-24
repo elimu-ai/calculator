@@ -38,7 +38,7 @@
 
     </LinearLayout>
 
-    <androidx.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/panelswitch"
         android:layout_width="280dp"
         android:layout_height="280dp"
