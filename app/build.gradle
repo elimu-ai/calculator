@@ -1,22 +1,30 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdk 35
+    namespace "ai.elimu.calculator"
 
     defaultConfig {
-        applicationId "org.literacyapp.calculator"
-        minSdkVersion 21
-        targetSdkVersion 23
-        versionCode 1000008
-        versionName "1.0.8"
-        setProperty("archivesBaseName", "$applicationId-$versionCode")
+        applicationId "ai.elimu.calculator"
+        minSdkVersion 26
+        targetSdkVersion 35
+        versionCode 2000000
+        versionName "2.0.0"
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
         release {
             minifyEnabled false
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     lintOptions {
@@ -26,10 +34,10 @@ android {
 }
 
 dependencies {
-    compile files('libs/arity-2.1.6.jar')
-    compile files('libs/ejml-0.21.jar')
+    implementation files('libs/arity-2.1.6.jar')
+    implementation files('libs/ejml-0.21.jar')
 
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'org.literacyapp:literacyapp-model:1.1.33'
+    implementation 'com.android.support:appcompat-v7:23.4.0'
+    implementation 'com.android.support:recyclerview-v7:23.4.0'
+    implementation 'ai.elimu:model:model-2.0.100'
 }
