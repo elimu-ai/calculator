@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/menu_bg"
-                android:contentDescription="@string/clear"
+                android:contentDescription="@string/clr"
                 android:src="@drawable/widget_clear" />
         </LinearLayout>
 
