@@ -40,16 +40,16 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
-import android.support.v4.view.AccessibilityDelegateCompat;
-import android.support.v4.view.KeyEventCompat;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.VelocityTrackerCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewConfigurationCompat;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
-import android.support.v4.widget.EdgeEffectCompat;
+import androidx.v4.os.ParcelableCompat;
+import androidx.v4.os.ParcelableCompatCreatorCallbacks;
+import androidx.v4.view.AccessibilityDelegateCompat;
+import androidx.v4.view.KeyEventCompat;
+import androidx.v4.view.MotionEventCompat;
+import androidx.v4.view.VelocityTrackerCompat;
+import androidx.v4.view.ViewCompat;
+import androidx.v4.view.ViewConfigurationCompat;
+import androidx.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.v4.widget.EdgeEffectCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.FocusFinder;
@@ -80,10 +80,10 @@ import android.widget.Scroller;
  * which is a convenient way to supply and manage the lifecycle of each page.
  * There are standard adapters implemented for using fragments with the ViewPager,
  * which cover the most common use cases.  These are
- * {@link android.support.v4.app.FragmentPagerAdapter},
- * {@link android.support.v4.app.FragmentStatePagerAdapter},
- * {@link android.support.v13.app.FragmentPagerAdapter}, and
- * {@link android.support.v13.app.FragmentStatePagerAdapter}; each of these
+ * {@link androidx.v4.app.FragmentPagerAdapter},
+ * {@link androidx.v4.app.FragmentStatePagerAdapter},
+ * {@link androidx.v13.app.FragmentPagerAdapter}, and
+ * {@link androidx.v13.app.FragmentStatePagerAdapter}; each of these
  * classes have simple code showing how to build a full user interface
  * with them.
  *

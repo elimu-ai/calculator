@@ -3,7 +3,7 @@ package com.android.calculator2.floating;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.v4.view.ViewPager;
+import androidx.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;

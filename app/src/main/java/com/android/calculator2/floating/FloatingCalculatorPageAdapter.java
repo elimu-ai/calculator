@@ -2,9 +2,9 @@ package com.android.calculator2.floating;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.v4.view.PagerAdapter;
+import androidx.v7.widget.LinearLayoutManager;
+import androidx.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
