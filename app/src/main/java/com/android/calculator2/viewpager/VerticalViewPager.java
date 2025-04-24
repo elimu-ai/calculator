@@ -44,7 +44,7 @@ import androidx.v4.os.ParcelableCompat;
 import androidx.v4.os.ParcelableCompatCreatorCallbacks;
 import androidx.v4.view.AccessibilityDelegateCompat;
 import androidx.v4.view.KeyEventCompat;
-import androidx.v4.view.MotionEventCompat;
+import androidx.core.view.MotionEventCompat;
 import androidx.v4.view.VelocityTrackerCompat;
 import androidx.v4.view.ViewCompat;
 import androidx.v4.view.ViewConfigurationCompat;
