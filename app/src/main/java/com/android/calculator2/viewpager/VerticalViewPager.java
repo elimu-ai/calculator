@@ -49,7 +49,7 @@ import androidx.v4.view.VelocityTrackerCompat;
 import androidx.v4.view.ViewCompat;
 import androidx.v4.view.ViewConfigurationCompat;
 import androidx.v4.view.accessibility.AccessibilityNodeInfoCompat;
-import androidx.v4.widget.EdgeEffectCompat;
+import androidx.core.widget.EdgeEffectCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.FocusFinder;
