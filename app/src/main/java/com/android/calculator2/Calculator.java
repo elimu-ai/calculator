@@ -67,7 +67,7 @@ import com.xlythe.math.HistoryEntry;
 import com.xlythe.math.Persist;
 
 import ai.elimu.calculator.R;
-import org.literacyapp.model.enums.content.NumeracySkill;
+import ai.elimu.model.enums.content.NumeracySkill;
 
 import java.util.Set;
 
