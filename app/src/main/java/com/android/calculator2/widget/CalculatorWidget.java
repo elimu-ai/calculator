@@ -26,7 +26,7 @@ import com.xlythe.math.Solver;
 
 import org.javia.arity.SyntaxException;
 import ai.elimu.calculator.R;
-import ai.elimu.model.enums.content.NumeracySkill;
+import ai.elimu.model.v2.enums.content.NumeracySkill;
 
 import java.text.DecimalFormatSymbols;
 import java.util.Set;
