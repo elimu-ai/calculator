@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import com.android.calculator2.viewpager.PagerAdapter;
 import com.android.calculator2.viewpager.VerticalViewPager;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 /**
  * Container for a vertical view pager that adds indicator dots to show the currently

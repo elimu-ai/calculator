@@ -27,8 +27,8 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -66,8 +66,8 @@ import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 import com.xlythe.math.Persist;
 
-import org.literacyapp.calculator.R;
-import org.literacyapp.model.enums.content.NumeracySkill;
+import ai.elimu.calculator.R;
+import ai.elimu.model.v2.enums.content.NumeracySkill;
 
 import java.util.Set;
 

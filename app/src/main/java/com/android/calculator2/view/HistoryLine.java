@@ -4,7 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ContextMenu;
@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 

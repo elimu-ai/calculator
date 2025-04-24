@@ -2,9 +2,9 @@ package com.android.calculator2.floating;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,7 +16,7 @@ import com.android.calculator2.util.DigitLabelHelper;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 public class FloatingCalculatorPageAdapter extends PagerAdapter {
     private final Context mContext;

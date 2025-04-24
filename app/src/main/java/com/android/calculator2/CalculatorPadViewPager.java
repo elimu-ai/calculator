@@ -16,13 +16,13 @@
 package com.android.calculator2;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 public class CalculatorPadViewPager extends ViewPager {
     private NumberBaseManager mBaseManager;

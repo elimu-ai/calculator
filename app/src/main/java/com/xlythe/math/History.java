@@ -16,7 +16,7 @@
 
 package com.xlythe.math;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.BaseAdapter;
 
 import java.io.DataInput;

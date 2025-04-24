@@ -3,9 +3,9 @@ package com.android.calculator2.view;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.MotionEventCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,7 +18,7 @@ import android.widget.FrameLayout;
 import com.android.calculator2.util.AnimationUtil;
 import com.android.calculator2.view.display.AdvancedDisplay;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 /**
  * The display overlay is a container that intercepts touch events on top of:

@@ -3,7 +3,7 @@ package com.android.calculator2.floating;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +21,7 @@ import com.xlythe.floatingview.FloatingView;
 import com.xlythe.math.History;
 import com.xlythe.math.Persist;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
 

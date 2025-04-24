@@ -21,7 +21,7 @@ import android.text.Html;
 import android.text.InputType;
 import android.widget.TextView;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 import com.android.calculator2.view.display.AdvancedDisplay;
 
 public class MatrixInverseView extends TextView {

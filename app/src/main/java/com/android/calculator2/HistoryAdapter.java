@@ -17,7 +17,7 @@
 package com.android.calculator2;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -29,7 +29,7 @@ import com.xlythe.math.EquationFormatter;
 import com.xlythe.math.History;
 import com.xlythe.math.HistoryEntry;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 import java.util.Vector;
 

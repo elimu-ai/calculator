@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 /**
  * Created by Will on 4/9/2014.

@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 public class ScrollableDisplay extends HorizontalScrollView {
     private int mMaxHeight;

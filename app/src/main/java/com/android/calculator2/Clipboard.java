@@ -5,7 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.widget.Toast;
 
-import org.literacyapp.calculator.R;
+import ai.elimu.calculator.R;
 
 /**
  * Simplify Android copy/paste
