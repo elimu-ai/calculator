@@ -17,7 +17,7 @@
 package com.android.calculator2;
 
 import android.content.Context;
-import androidx.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
