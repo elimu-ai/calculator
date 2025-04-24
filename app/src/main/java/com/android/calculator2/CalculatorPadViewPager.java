@@ -16,7 +16,7 @@
 package com.android.calculator2;
 
 import android.content.Context;
-import androidx.v4.view.PagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
