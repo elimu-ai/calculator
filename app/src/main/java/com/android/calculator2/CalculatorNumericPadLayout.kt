@@ -13,41 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.android.calculator2
 
-package com.android.calculator2;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import android.widget.Button
+import com.android.calculator2.util.DigitLabelHelper
+import com.android.calculator2.util.DigitLabelHelper.DigitLabelHelperCallback
 
-import com.android.calculator2.util.DigitLabelHelper;
+class CalculatorNumericPadLayout @JvmOverloads constructor(
+    context: Context?,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : CalculatorPadLayout(context, attrs, defStyle) {
+    public override fun onFinishInflate() {
+        super.onFinishInflate()
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.Button;
-
-public class CalculatorNumericPadLayout extends CalculatorPadLayout {
-
-    public CalculatorNumericPadLayout(Context context) {
-        this(context, null);
-    }
-
-    public CalculatorNumericPadLayout(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public CalculatorNumericPadLayout(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-    @Override
-    public void onFinishInflate() {
-        super.onFinishInflate();
-
-        DigitLabelHelper.getInstance().getTextForDigits(getContext(),
-                new DigitLabelHelper.DigitLabelHelperCallback() {
-                    @Override
-                    public void setDigitText(int id, String text) {
-                        Button button = (Button) findViewById(id);
-                        button.setText(text);
-                    }
-                });
+        DigitLabelHelper.getInstance().getTextForDigits(
+            context,
+            object : DigitLabelHelperCallback {
+                override fun setDigitText(id: Int, text: String?) {
+                    val button = findViewById<View?>(id) as Button
+                    button.text = text
+                }
+            })
     }
 }
 
