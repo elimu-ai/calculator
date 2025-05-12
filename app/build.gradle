@@ -11,8 +11,8 @@ android {
         applicationId "ai.elimu.calculator"
         minSdkVersion 26
         targetSdkVersion 35
-        versionCode 2000001
-        versionName "2.0.1"
+        versionCode 2000002
+        versionName "2.0.2-SNAPSHOT"
     }
 
     buildTypes {
