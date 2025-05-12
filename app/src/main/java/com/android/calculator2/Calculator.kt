@@ -256,7 +256,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         val graphView: GraphView =
             findViewById<GraphView>(R.id.graphView)
         val graphModule = GraphModule(mEvaluator!!.solver)
-        mGraphController = GraphController(graphView, graphModule, mDisplayView)
+        mGraphController = GraphController(graphView, graphModule, mDisplayView!!)
 
         var displayMode: DisplayOverlay.DisplayMode? = DisplayOverlay.DisplayMode.FORMULA
         val modeOrdinal = savedInstanceState.getInt(KEY_DISPLAY_MODE, -1)

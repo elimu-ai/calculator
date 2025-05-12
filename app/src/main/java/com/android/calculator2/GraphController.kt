@@ -1,153 +1,129 @@
-package com.android.calculator2;
+package com.android.calculator2
 
-import android.view.View;
-import com.android.calculator2.view.DisplayOverlay;
-import com.android.calculator2.view.DisplayOverlay.DisplayMode;
-import com.android.calculator2.view.DisplayOverlay.TranslateStateListener;
-import com.android.calculator2.view.DisplayOverlay.TranslateState;
-import com.android.calculator2.view.GraphView;
-import com.android.calculator2.view.GraphView.PanListener;
-import com.android.calculator2.view.GraphView.ZoomListener;
-import com.xlythe.math.GraphModule;
-import com.xlythe.math.GraphModule.OnGraphUpdatedListener;
-import com.xlythe.math.Point;
+import ai.elimu.calculator.R
+import android.view.View
+import com.android.calculator2.view.DisplayOverlay
+import com.android.calculator2.view.DisplayOverlay.TranslateState
+import com.android.calculator2.view.DisplayOverlay.TranslateStateListener
+import com.android.calculator2.view.GraphView
+import com.android.calculator2.view.GraphView.PanListener
+import com.android.calculator2.view.GraphView.ZoomListener
+import com.xlythe.math.GraphModule
+import com.xlythe.math.GraphModule.OnGraphUpdatedListener
+import com.xlythe.math.Point
 
-import ai.elimu.calculator.R;
+class GraphController(
+    private val mGraphView: GraphView,
+    private val mGraphModule: GraphModule,
+    private val mDisplayOverlay: DisplayOverlay
+) : OnGraphUpdatedListener, TranslateStateListener, PanListener, ZoomListener,
+    View.OnClickListener {
+    private val mExitControl: View
+    private val mZoomInControl: View
+    private val mZoomOutControl: View
+    private val mZoomResetControl: View
 
-import java.util.ArrayList;
-import java.util.List;
+    private var mEquation: String? = null
+    private var mSeries: MutableList<Point?>? = null
+    private var mIsGraphViewReady = false
 
-public class GraphController implements
-        OnGraphUpdatedListener, TranslateStateListener, PanListener, ZoomListener,
-        View.OnClickListener {
+    init {
+        mGraphView.panListener = this
+        mGraphView.zoomListener = this
 
-    private GraphView mGraphView;
-    private GraphModule mGraphModule;
-    private DisplayOverlay mDisplayOverlay;
+        mExitControl = mDisplayOverlay.findViewById<View>(R.id.exitGraph)
+        mExitControl.setOnClickListener(this)
 
-    private View mExitControl;
-    private View mZoomInControl;
-    private View mZoomOutControl;
-    private View mZoomResetControl;
+        mZoomInControl = mDisplayOverlay.findViewById<View>(R.id.minusZoom)
+        mZoomInControl.setOnClickListener(this)
 
-    private String mEquation;
-    private List<Point> mSeries;
-    private boolean mIsGraphViewReady;
+        mZoomOutControl = mDisplayOverlay.findViewById<View>(R.id.plusZoom)
+        mZoomOutControl.setOnClickListener(this)
 
-    public GraphController(GraphView view, GraphModule module, DisplayOverlay overlay) {
-        mGraphView = view;
-        mGraphModule = module;
-        mDisplayOverlay = overlay;
-
-        view.setPanListener(this);
-        view.setZoomListener(this);
-
-        mExitControl = overlay.findViewById(R.id.exitGraph);
-        mExitControl.setOnClickListener(this);
-
-        mZoomInControl = overlay.findViewById(R.id.minusZoom);
-        mZoomInControl.setOnClickListener(this);
-
-        mZoomOutControl = overlay.findViewById(R.id.plusZoom);
-        mZoomOutControl.setOnClickListener(this);
-
-        mZoomResetControl = overlay.findViewById(R.id.resetZoom);
-        mZoomResetControl.setOnClickListener(this);
+        mZoomResetControl = mDisplayOverlay.findViewById<View>(R.id.resetZoom)
+        mZoomResetControl.setOnClickListener(this)
     }
 
-    private void resetState() {
-        mEquation = null;
-        mSeries = null;
-        mIsGraphViewReady = false;
-        mGraphView.zoomReset();
+    private fun resetState() {
+        mEquation = null
+        mSeries = null
+        mIsGraphViewReady = false
+        mGraphView.zoomReset()
     }
 
-    public void startGraph(String equation) {
-        resetState();
-        mEquation = equation;
-        setDomainAndRange();
+    fun startGraph(equation: String) {
+        resetState()
+        mEquation = equation
+        setDomainAndRange()
 
         // start calculating series now but don't set data on graph view until display
         // overlay has settled in the expanded position.  This prevents jank while the
         // display is opening.
-        mGraphModule.updateGraph(equation, this);
-        mDisplayOverlay.setTranslateStateListener(this);
-        mDisplayOverlay.setMode(DisplayMode.GRAPH);
-        mDisplayOverlay.animateModeTransition();
+        mGraphModule.updateGraph(equation, this)
+        mDisplayOverlay.translateStateListener = this
+        mDisplayOverlay.mode = DisplayOverlay.DisplayMode.GRAPH
+        mDisplayOverlay.animateModeTransition()
     }
 
-    private void setDomainAndRange() {
-        mGraphModule.setDomain(mGraphView.getXAxisMin(), mGraphView.getXAxisMax());
-        mGraphModule.setRange(mGraphView.getYAxisMin(), mGraphView.getYAxisMax());
-        mGraphModule.setZoomLevel(mGraphView.getZoomLevel());
+    private fun setDomainAndRange() {
+        mGraphModule.setDomain(mGraphView.xAxisMin, mGraphView.getXAxisMax())
+        mGraphModule.setRange(mGraphView.yAxisMin, mGraphView.getYAxisMax())
+        mGraphModule.setZoomLevel(mGraphView.zoomLevel)
     }
 
-    private void setGraphDataIfReady() {
+    private fun setGraphDataIfReady() {
         if (mIsGraphViewReady && mSeries != null) {
-            mGraphView.setData(mSeries);
-            mGraphView.invalidate();
+            mGraphView.setData(mSeries)
+            mGraphView.invalidate()
         }
     }
 
-    public void exitGraphMode() {
-        mGraphView.setData(new ArrayList<Point>());
-        mGraphView.invalidate();
-        mDisplayOverlay.setMode(DisplayMode.FORMULA);
-        mDisplayOverlay.animateModeTransition();
-        resetState();
+    fun exitGraphMode() {
+        mGraphView.setData(ArrayList<Point?>())
+        mGraphView.invalidate()
+        mDisplayOverlay.mode = DisplayOverlay.DisplayMode.FORMULA
+        mDisplayOverlay.animateModeTransition()
+        resetState()
     }
 
-    @Override
-    public void onGraphUpdated(List<Point> result) {
-        mSeries = result;
-        setGraphDataIfReady();
+    override fun onGraphUpdated(result: MutableList<Point?>?) {
+        mSeries = result
+        setGraphDataIfReady()
     }
 
-    @Override
-    public void onTranslateStateChanged(TranslateState newState) {
-        if (mDisplayOverlay.getMode() == DisplayMode.GRAPH) {
+    override fun onTranslateStateChanged(newState: TranslateState?) {
+        if (mDisplayOverlay.mode == DisplayOverlay.DisplayMode.GRAPH) {
             if (newState == TranslateState.EXPANDED) {
-                mIsGraphViewReady = true;
-                setGraphDataIfReady();
+                mIsGraphViewReady = true
+                setGraphDataIfReady()
             } else if (newState == TranslateState.COLLAPSED) {
-                exitGraphMode();
+                exitGraphMode()
             }
         }
     }
 
-    @Override
-    public void panApplied() {
-        updateForPanOrZoom();
+    override fun panApplied() {
+        updateForPanOrZoom()
     }
 
-    @Override
-    public void zoomApplied(float level) {
-        updateForPanOrZoom();
+    override fun zoomApplied(level: Float) {
+        updateForPanOrZoom()
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.exitGraph:
-                exitGraphMode();
-                break;
-            case R.id.minusZoom:
-                mGraphView.zoomOut();
-                break;
-            case R.id.plusZoom:
-                mGraphView.zoomIn();
-                break;
-            case R.id.resetZoom:
-                mGraphView.zoomReset();
-                break;
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.exitGraph -> exitGraphMode()
+            R.id.minusZoom -> mGraphView.zoomOut()
+            R.id.plusZoom -> mGraphView.zoomIn()
+            R.id.resetZoom -> mGraphView.zoomReset()
         }
     }
 
-    private void updateForPanOrZoom() {
+    private fun updateForPanOrZoom() {
         if (mEquation != null) {
-            setDomainAndRange();
-            mIsGraphViewReady = true;
-            mGraphModule.updateGraph(mEquation, this);
+            setDomainAndRange()
+            mIsGraphViewReady = true
+            mGraphModule.updateGraph(mEquation, this)
         }
     }
 }
