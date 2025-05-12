@@ -1,3 +1,6 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
 
 android {
@@ -9,7 +12,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 35
         versionCode 2000000
-        versionName "2.0.0"
+        versionName "2.0.0-SNAPSHOT"
     }
 
     buildTypes {
@@ -40,4 +43,68 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'ai.elimu:model:model-2.0.100'
+}
+
+tasks.register('removeSnapshot') {
+    doLast {
+        println("removeSnapshot")
+
+        def file = file("build.gradle")
+        def originalFileContent = file.getText()
+
+        Pattern pattern = Pattern.compile("versionName \"\\d+\\.\\d+\\.\\d+-SNAPSHOT\"")
+        Matcher matcher = pattern.matcher(originalFileContent)
+        matcher.find()
+        println("match: ${matcher.group()}")
+
+        def newVersionName = matcher.group().replace("-SNAPSHOT", "")
+        println("newVersionName: ${newVersionName}")
+
+        def newFileContent = originalFileContent.replaceFirst("versionName \"\\d+\\.\\d+\\.\\d+-SNAPSHOT\"", newVersionName)
+        file.write(newFileContent)
+    }
+}
+tasks.register('getVersionName') {
+    doLast {
+        println android.defaultConfig.versionName
+    }
+}
+tasks.register('bumpVersion') {
+    doLast {
+        println("bumpVersion")
+
+        def currentVersionCode = android.defaultConfig.versionCode
+        println("currentVersionCode: ${currentVersionCode}")
+
+        def newVersionCode = currentVersionCode + 1
+        println("newVersionCode: ${newVersionCode}")
+
+        def newVersionName = newVersionCode.toString().substring(0, 1).toInteger() + "." + newVersionCode.toString().substring(1, 4).toInteger() + "." + newVersionCode.toString().substring(4, 7).toInteger()
+        println("newVersionName: ${newVersionName}")
+
+        def file = file("build.gradle")
+        def originalFileContent = file.getText()
+        def newFileContent = originalFileContent.replaceFirst("versionCode \\d+", "versionCode ${newVersionCode}")
+        newFileContent = newFileContent.replaceFirst("versionName \"\\d+\\.\\d+\\.\\d+\"", "versionName \"${newVersionName}\"")
+        file.write(newFileContent)
+    }
+}
+tasks.register('addSnapshot') {
+    doLast {
+        println("addSnapshot")
+
+        def file = file("build.gradle")
+        def originalFileContent = file.getText()
+
+        Pattern pattern = Pattern.compile("versionName \"\\d+\\.\\d+\\.\\d+\"")
+        Matcher matcher = pattern.matcher(originalFileContent)
+        matcher.find()
+        println("match: ${matcher.group()}")
+
+        def newVersionName = "${matcher.group().substring(12, matcher.group().length() - 1)}-SNAPSHOT\""
+        println("newVersionName: ${newVersionName}")
+
+        def newFileContent = originalFileContent.replaceFirst("versionName \"\\d+\\.\\d+\\.\\d+\"", "versionName ${newVersionName}")
+        file.write(newFileContent)
+    }
 }
