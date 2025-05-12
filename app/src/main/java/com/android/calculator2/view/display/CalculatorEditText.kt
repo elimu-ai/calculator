@@ -13,239 +13,239 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.android.calculator2.view.display
 
-package com.android.calculator2.view.display;
+import ai.elimu.calculator.R
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.os.Build
+import android.os.Handler
+import android.os.SystemClock
+import android.text.Editable
+import android.text.Html
+import android.text.Spanned
+import android.text.TextWatcher
+import android.util.AttributeSet
+import android.util.Log
+import android.view.ActionMode
+import android.view.Gravity
+import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
+import com.android.calculator2.view.MatrixView
+import com.android.calculator2.view.TextUtil.countOccurrences
+import com.xlythe.math.BaseModule
+import com.xlythe.math.Constants
+import com.xlythe.math.EquationFormatter
+import com.xlythe.math.Solver
+import kotlin.math.min
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.text.Editable;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextWatcher;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.ActionMode;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewParent;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-
-import ai.elimu.calculator.R;
-import com.android.calculator2.view.MatrixView;
-import com.android.calculator2.view.TextUtil;
-import com.xlythe.math.BaseModule;
-import com.xlythe.math.Constants;
-import com.xlythe.math.EquationFormatter;
-import com.xlythe.math.Solver;
-
-public class CalculatorEditText extends EditText {
-    private static final int BLINK = 500;
-    private static final String TAG = "CalculatorEditText";
-    private final long mShowCursor = SystemClock.uptimeMillis();
-    private final Paint mHighlightPaint = new Paint();
-    private final Handler mHandler = new Handler();
-    private final Runnable mRefresher = new Runnable() {
-        @Override
-        public void run() {
-            invalidate();
+class CalculatorEditText : EditText {
+    private val mShowCursor = SystemClock.uptimeMillis()
+    private val mHighlightPaint = Paint()
+    private val mHandler = Handler()
+    private val mRefresher: Runnable = object : Runnable {
+        override fun run() {
+            invalidate()
         }
-    };
-    private EquationFormatter mEquationFormatter;
-    private String mInput = "";
-    private int mSelectionHandle = 0;
-    private Solver mSolver;
-    private EventListener mEventListener;
+    }
+    private var mEquationFormatter: EquationFormatter? = null
+    private var mInput = ""
+    private var mSelectionHandle = 0
+    private var mSolver: Solver? = null
+    private var mEventListener: EventListener? = null
 
-    public static CalculatorEditText getInstance(Context context, Solver solver, EventListener eventListener) {
-        CalculatorEditText text = (CalculatorEditText) View.inflate(context, R.layout.view_edittext, null);
-        text.mSolver = solver;
-        text.mEventListener = eventListener;
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.CENTER_VERTICAL;
-        text.setLayoutParams(params);
-        return text;
+    constructor(context: Context?) : super(context) {
+        setUp()
     }
 
-    public CalculatorEditText(Context context) {
-        super(context);
-        setUp();
+    constructor(context: Context?, attr: AttributeSet?) : super(context, attr) {
+        setUp()
     }
 
-    public CalculatorEditText(Context context, AttributeSet attr) {
-        super(context, attr);
-        setUp();
-    }
-
-    private void setUp() {
-        setLongClickable(false);
+    private fun setUp() {
+        setLongClickable(false)
 
         // Disable highlighting text
-        setCustomSelectionActionModeCallback(new NoTextSelectionMode());
+        setCustomSelectionActionModeCallback(NoTextSelectionMode())
 
         // Display ^ , and other visual cues
-        mEquationFormatter = new EquationFormatter();
-        addTextChangedListener(new TextWatcher() {
-            boolean updating = false;
+        mEquationFormatter = EquationFormatter()
+        addTextChangedListener(object : TextWatcher {
+            var updating: Boolean = false
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(updating) return;
-                updating = true;
+            override fun afterTextChanged(s: Editable) {
+                if (updating) return
+                updating = true
 
                 mInput = s.toString()
-                        .replace(Constants.PLACEHOLDER, Constants.POWER)
-                        .replace(mSolver.getBaseModule().getSeparator() + "", "");
+                    .replace(Constants.PLACEHOLDER, Constants.POWER)
+                    .replace(mSolver!!.getBaseModule().getSeparator().toString() + "", "")
 
                 // Get the selection handle, since we're setting text and that'll overwrite it
-                mSelectionHandle = getSelectionStart();
+                mSelectionHandle = getSelectionStart()
 
                 // Adjust the handle by removing any comas or spacing to the left
-                String cs = s.subSequence(0, mSelectionHandle).toString();
-                mSelectionHandle -= TextUtil.countOccurrences(cs, mSolver.getBaseModule().getSeparator());
+                val cs = s.subSequence(0, mSelectionHandle).toString()
+                mSelectionHandle -= countOccurrences(cs, mSolver!!.getBaseModule().getSeparator())
 
                 // Update the text with formatted (comas, etc) text
-                setText(formatText(mInput));
-                setSelection(Math.min(mSelectionHandle, getText().length()));
+                setText(formatText(mInput))
+                setSelection(min(mSelectionHandle.toDouble(), getText().length.toDouble()).toInt())
 
-                updating = false;
+                updating = false
             }
-        });
+        })
 
-        setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (i == keyEvent.KEYCODE_DEL) {
-                    int sel = getSelectionStart();
-                    String edit = getEditableText().toString();
+        setOnKeyListener(object : OnKeyListener {
+            override fun onKey(view: View?, i: Int, keyEvent: KeyEvent): Boolean {
+                if (i == KeyEvent.KEYCODE_DEL) {
+                    val sel = getSelectionStart()
+                    val edit = getEditableText().toString()
 
                     // If we're trying to delete a separator shift the selector over
                     if (sel >= 1
-                            && edit.charAt(sel - 1) == mSolver.getBaseModule().getSeparator()) {
-                        setSelection(sel - 1);
+                        && edit.get(sel - 1) == mSolver!!.getBaseModule().getSeparator()
+                    ) {
+                        setSelection(sel - 1)
                     }
                 }
 
-                return false;
+                return false
             }
-        });
+        })
 
-        setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
-                    mEventListener.onEditTextChanged(CalculatorEditText.this);
+        setOnFocusChangeListener(object : OnFocusChangeListener {
+            override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                if (hasFocus) mEventListener!!.onEditTextChanged(this@CalculatorEditText)
             }
-        });
+        })
     }
 
-    private Spanned formatText(String input) {
-        if(mSolver != null) {
+    private fun formatText(input: String): Spanned? {
+        var input = input
+        if (mSolver != null) {
             // Add grouping, and then split on the selection handle
             // which is saved as a unique char
-            String grouped = mEquationFormatter.addComas(mSolver, input, mSelectionHandle);
-            if (grouped.contains(String.valueOf(BaseModule.SELECTION_HANDLE))) {
-                String[] temp = grouped.split(String.valueOf(BaseModule.SELECTION_HANDLE));
-                mSelectionHandle = temp[0].length();
-                input = "";
-                for (String s : temp) {
-                    input += s;
+            val grouped = mEquationFormatter!!.addComas(mSolver, input, mSelectionHandle)
+            if (grouped.contains(BaseModule.SELECTION_HANDLE.toString())) {
+                val temp = grouped.split(BaseModule.SELECTION_HANDLE.toString().toRegex())
+                    .dropLastWhile { it.isEmpty() }.toTypedArray()
+                mSelectionHandle = temp[0].length
+                input = ""
+                for (s in temp) {
+                    input += s
                 }
             } else {
-                input = grouped;
-                mSelectionHandle = input.length();
+                input = grouped
+                mSelectionHandle = input.length
             }
         }
 
-        return Html.fromHtml(mEquationFormatter.insertSupScripts(input));
+        return Html.fromHtml(mEquationFormatter!!.insertSupScripts(input))
     }
 
-    @Override
-    public String toString() {
-        return mInput;
+    override fun toString(): String {
+        return mInput
     }
 
-    @Override
-    public View focusSearch(int direction) {
-        ViewParent p = getParent();
-        if (p instanceof AdvancedDisplay) {
-            AdvancedDisplay parent = (AdvancedDisplay) p;
-            View v;
-            switch(direction) {
-                case View.FOCUS_FORWARD:
-                    v = parent.nextView(this);
-                    while(!v.isFocusable())
-                        v = parent.nextView(v);
-                    return v;
-                case View.FOCUS_BACKWARD:
-                    v = parent.previousView(this);
-                    while(!v.isFocusable())
-                        v = parent.previousView(v);
-                    if(MatrixView.class.isAssignableFrom(v.getClass())) {
-                        v = ((ViewGroup) v).getChildAt(((ViewGroup) v).getChildCount() - 1);
-                        v = ((ViewGroup) v).getChildAt(((ViewGroup) v).getChildCount() - 1);
+    override fun focusSearch(direction: Int): View? {
+        val p = getParent()
+        if (p is AdvancedDisplay) {
+            val parent = p
+            var v: View?
+            when (direction) {
+                FOCUS_FORWARD -> {
+                    v = parent.nextView(this)
+                    while (!v!!.isFocusable()) v = parent.nextView(v)
+                    return v
+                }
+
+                FOCUS_BACKWARD -> {
+                    v = parent.previousView(this)
+                    while (!v!!.isFocusable()) v = parent.previousView(v)
+                    if (MatrixView::class.java.isAssignableFrom(v.javaClass)) {
+                        v = (v as ViewGroup).getChildAt(v.getChildCount() - 1)
+                        v = (v as ViewGroup).getChildAt(v.getChildCount() - 1)
                     }
-                    return v;
+                    return v
+                }
             }
         } else {
-            Log.d(TAG, "parent isn't an AdvancedDisplay");
+            Log.d(TAG, "parent isn't an AdvancedDisplay")
         }
-        return super.focusSearch(direction);
+        return super.focusSearch(direction)
     }
 
-    @Override
-    public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    public override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
         // TextViews don't draw the cursor if textLength is 0. Because we're an
         // array of TextViews, we'd prefer that it did.
-        if(getText().length() == 0 && isEnabled() && (isFocused() || isPressed())) {
-            if((SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
-                mHighlightPaint.setColor(getCurrentTextColor());
-                mHighlightPaint.setStyle(Paint.Style.STROKE);
-                if (android.os.Build.VERSION.SDK_INT >= 21) {
-                    mHighlightPaint.setStrokeWidth(6f);
+        if (getText().length == 0 && isEnabled() && (isFocused() || isPressed())) {
+            if ((SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
+                mHighlightPaint.setColor(getCurrentTextColor())
+                mHighlightPaint.setStyle(Paint.Style.STROKE)
+                if (Build.VERSION.SDK_INT >= 21) {
+                    mHighlightPaint.setStrokeWidth(6f)
                 }
-                canvas.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight(), mHighlightPaint);
-                mHandler.postAtTime(mRefresher, SystemClock.uptimeMillis() + BLINK);
+                canvas.drawLine(
+                    (getWidth() / 2).toFloat(),
+                    0f,
+                    (getWidth() / 2).toFloat(),
+                    getHeight().toFloat(),
+                    mHighlightPaint
+                )
+                mHandler.postAtTime(mRefresher, SystemClock.uptimeMillis() + BLINK)
             }
         }
     }
 
-    class NoTextSelectionMode implements ActionMode.Callback {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+    internal inner class NoTextSelectionMode : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
             // Prevents the selection action mode on double tap.
-            return false;
+            return false
         }
 
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
         }
 
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            return false;
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            return false
         }
 
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
+        override fun onDestroyActionMode(mode: ActionMode?) {
+        }
+    }
+
+    companion object {
+        private const val BLINK = 500
+        private const val TAG = "CalculatorEditText"
+        @JvmStatic
+        fun getInstance(
+            context: Context?,
+            solver: Solver?,
+            eventListener: EventListener
+        ): CalculatorEditText {
+            val text = inflate(context, R.layout.view_edittext, null) as CalculatorEditText
+            text.mSolver = solver
+            text.mEventListener = eventListener
+            val params = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            params.gravity = Gravity.CENTER_VERTICAL
+            text.setLayoutParams(params)
+            return text
         }
     }
 }
