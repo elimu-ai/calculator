@@ -55,7 +55,7 @@ class FloatingCalculator : FloatingView() {
         mPersist = Persist(this)
         mPersist!!.load()
 
-        mHistory = mPersist!!.getHistory()
+        mHistory = mPersist!!.history
 
         mDisplay = child.findViewById<View?>(R.id.display) as AdvancedDisplay
         mDisplay!!.setSolver(mEvaluator!!.solver)

@@ -13,89 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.xlythe.math
 
-package com.xlythe.math;
+import android.content.Context
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
-import android.content.Context;
+class Persist(private val mContext: Context) {
+    var history: History = History()
+    var deleteMode: Int = 0
+    var mode: Base? = null
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-public class Persist {
-    private static final int LAST_VERSION = 3;
-    private static final String FILE_NAME = "calculator.data";
-    private final Context mContext;
-    History mHistory = new History();
-    private int mDeleteMode;
-    private Base mMode;
-
-    public Persist(Context context) {
-        this.mContext = context;
-    }
-
-    public int getDeleteMode() {
-        return mDeleteMode;
-    }
-
-    public void setDeleteMode(int mode) {
-        mDeleteMode = mode;
-    }
-
-    public Base getMode() {
-        return mMode;
-    }
-
-    public void setMode(Base mode) {
-        this.mMode = mode;
-    }
-
-    public void load() {
+    fun load() {
         try {
-            InputStream is = new BufferedInputStream(mContext.openFileInput(FILE_NAME), 8192);
-            DataInputStream in = new DataInputStream(is);
-            int version = in.readInt();
-            if(version > LAST_VERSION) {
-                throw new IOException("data version " + version + "; expected " + LAST_VERSION);
+            val `is`: InputStream = BufferedInputStream(mContext.openFileInput(FILE_NAME), 8192)
+            val `in` = DataInputStream(`is`)
+            val version = `in`.readInt()
+            if (version > LAST_VERSION) {
+                throw IOException("data version $version; expected $LAST_VERSION")
             }
-            if(version > 1) {
-                mDeleteMode = in.readInt();
+            if (version > 1) {
+                this.deleteMode = `in`.readInt()
             }
-            if(version > 2) {
-                int quickSerializable = in.readInt();
-                for(Base m : Base.values()) {
-                    if(m.getQuickSerializable() == quickSerializable) this.mMode = m;
+            if (version > 2) {
+                val quickSerializable = `in`.readInt()
+                for (m in Base.entries) {
+                    if (m.getQuickSerializable() == quickSerializable) this.mode = m
                 }
             }
-            mHistory = new History(version, in);
-            in.close();
-        } catch(FileNotFoundException e) {
-            e.printStackTrace();
-        } catch(IOException e) {
-            e.printStackTrace();
+            this.history = History(version, `in`)
+            `in`.close()
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
-    public void save() {
+    fun save() {
         try {
-            OutputStream os = new BufferedOutputStream(mContext.openFileOutput(FILE_NAME, 0), 8192);
-            DataOutputStream out = new DataOutputStream(os);
-            out.writeInt(LAST_VERSION);
-            out.writeInt(mDeleteMode);
-            out.writeInt(mMode == null ? Base.DECIMAL.getQuickSerializable() : mMode.getQuickSerializable());
-            mHistory.write(out);
-            out.close();
-        } catch(IOException e) {
-            e.printStackTrace();
+            val os: OutputStream = BufferedOutputStream(mContext.openFileOutput(FILE_NAME, 0), 8192)
+            val out = DataOutputStream(os)
+            out.writeInt(LAST_VERSION)
+            out.writeInt(this.deleteMode)
+            out.writeInt(if (this.mode == null) Base.DECIMAL.getQuickSerializable() else mode!!.getQuickSerializable())
+            history.write(out)
+            out.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
-    public History getHistory() {
-        return mHistory;
+    companion object {
+        private const val LAST_VERSION = 3
+        private const val FILE_NAME = "calculator.data"
     }
 }

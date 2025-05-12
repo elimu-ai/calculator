@@ -152,8 +152,8 @@ class CalculatorWidget : AppWidgetProvider() {
 
                 val persist = Persist(context)
                 persist.load()
-                if (persist.getMode() == null) persist.setMode(Base.DECIMAL)
-                val history = persist.getHistory()
+                if (persist.mode == null) persist.mode = Base.DECIMAL
+                val history = persist.history
                 history.enter(input, value)
                 persist.save()
             }
