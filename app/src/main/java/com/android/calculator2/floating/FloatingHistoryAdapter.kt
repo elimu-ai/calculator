@@ -13,22 +13,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.android.calculator2.floating;
+package com.android.calculator2.floating
 
-import android.content.Context;
+import ai.elimu.calculator.R
+import android.content.Context
+import com.android.calculator2.HistoryAdapter
+import com.xlythe.math.History
 
-import com.android.calculator2.HistoryAdapter;
-import com.xlythe.math.History;
-
-import ai.elimu.calculator.R;
-
-class FloatingHistoryAdapter extends HistoryAdapter {
-    public FloatingHistoryAdapter(Context context, History history, HistoryItemCallback callback) {
-        super(context, history, callback);
-    }
-
-    @Override
-    protected int getLayoutResourceId() {
-        return R.layout.floating_history_entry;
-    }
+internal class FloatingHistoryAdapter(
+    context: Context?,
+    history: History,
+    callback: HistoryItemCallback
+) : HistoryAdapter(context, history, callback) {
+    override val layoutResourceId: Int
+        get() = R.layout.floating_history_entry
 }
