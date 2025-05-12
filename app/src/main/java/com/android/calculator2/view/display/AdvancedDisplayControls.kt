@@ -1,5 +1,5 @@
-package com.android.calculator2.view.display;
+package com.android.calculator2.view.display
 
-public interface AdvancedDisplayControls {
-    public boolean hasNext();
+interface AdvancedDisplayControls {
+    fun hasNext(): Boolean
 }
