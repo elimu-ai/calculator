@@ -1,68 +1,73 @@
-package com.xlythe.math;
+package com.xlythe.math
 
-import java.text.DecimalFormatSymbols;
-import java.util.regex.Pattern;
+import java.text.DecimalFormatSymbols
+import java.util.regex.Pattern
 
 /**
  * Created by Will on 11/8/2014.
  */
-public class Constants {
-    public static final String INFINITY_UNICODE = "\u221e";
+object Constants {
+    const val INFINITY_UNICODE: String = "\u221e"
+
     // Double.toString() for Infinity
-    public static final String INFINITY = "Infinity";
+    const val INFINITY: String = "Infinity"
+
     // Double.toString() for NaN
-    public static final String NAN = "NaN";
-    public static final char MINUS = '\u2212';
-    public static final char MUL = '\u00d7';
-    public static final char PLUS = '+';
-    public static final char DIV = '\u00f7';
-    public static final char PLACEHOLDER = '\u200B';
-    public static final char POWER = '^';
-    public static final char EQUAL = '=';
-    public static final char LEFT_PAREN = '(';
-    public static final char RIGHT_PAREN = ')';
+    const val NAN: String = "NaN"
+    const val MINUS: Char = '\u2212'
+    const val MUL: Char = '\u00d7'
+    const val PLUS: Char = '+'
+    const val DIV: Char = '\u00f7'
+    const val PLACEHOLDER: Char = '\u200B'
+    const val POWER: Char = '^'
+    const val EQUAL: Char = '='
+    const val LEFT_PAREN: Char = '('
+    const val RIGHT_PAREN: Char = ')'
 
     // Values for decimals and comas
-    private static DecimalFormatSymbols DECIMAL_FORMAT;
-    public static char DECIMAL_POINT;
-    public static char DECIMAL_SEPARATOR;
-    public static char BINARY_SEPARATOR;
-    public static char HEXADECIMAL_SEPARATOR;
-    public static char MATRIX_SEPARATOR;
+    private var DECIMAL_FORMAT: DecimalFormatSymbols? = null
+    @JvmField
+    var DECIMAL_POINT: Char = 0.toChar()
+    var DECIMAL_SEPARATOR: Char = 0.toChar()
+    var BINARY_SEPARATOR: Char = 0.toChar()
+    var HEXADECIMAL_SEPARATOR: Char = 0.toChar()
+    var MATRIX_SEPARATOR: Char = 0.toChar()
 
-    public static String REGEX_NUMBER;
-    public static String REGEX_NOT_NUMBER;
+    @JvmField
+    var REGEX_NUMBER: String? = null
+    @JvmField
+    var REGEX_NOT_NUMBER: String? = null
 
-    static {
-        rebuildConstants();
+    init {
+        rebuildConstants()
     }
 
     /**
      * If the locale changes, but the app is still in memory, you may need to rebuild these constants
-     * */
-    public static void rebuildConstants() {
-        DECIMAL_FORMAT = new DecimalFormatSymbols();
+     */
+    fun rebuildConstants() {
+        DECIMAL_FORMAT = DecimalFormatSymbols()
 
         // These will already be known by Java
-        DECIMAL_POINT = DECIMAL_FORMAT.getDecimalSeparator();
-        DECIMAL_SEPARATOR = DECIMAL_FORMAT.getGroupingSeparator();
+        DECIMAL_POINT = DECIMAL_FORMAT!!.getDecimalSeparator()
+        DECIMAL_SEPARATOR = DECIMAL_FORMAT!!.getGroupingSeparator()
 
         // Use a space for Bin and Hex
-        BINARY_SEPARATOR = ' ';
-        HEXADECIMAL_SEPARATOR = ' ';
+        BINARY_SEPARATOR = ' '
+        HEXADECIMAL_SEPARATOR = ' '
 
         // We have to be careful with the Matrix Separator.
         // It defaults to "," but that's a common decimal point.
-        if(DECIMAL_POINT == ',') MATRIX_SEPARATOR = ' ';
-        else MATRIX_SEPARATOR = ',';
+        if (DECIMAL_POINT == ',') MATRIX_SEPARATOR = ' '
+        else MATRIX_SEPARATOR = ','
 
-        String number = "A-F0-9" +
-                Pattern.quote(String.valueOf(DECIMAL_POINT)) +
-                Pattern.quote(String.valueOf(DECIMAL_SEPARATOR)) +
-                Pattern.quote(String.valueOf(BINARY_SEPARATOR)) +
-                Pattern.quote(String.valueOf(HEXADECIMAL_SEPARATOR));
+        val number = "A-F0-9" +
+                Pattern.quote(DECIMAL_POINT.toString()) +
+                Pattern.quote(DECIMAL_SEPARATOR.toString()) +
+                Pattern.quote(BINARY_SEPARATOR.toString()) +
+                Pattern.quote(HEXADECIMAL_SEPARATOR.toString())
 
-        REGEX_NUMBER = "[" + number + "]";
-        REGEX_NOT_NUMBER = "[^" + number + "]";
+        REGEX_NUMBER = "[" + number + "]"
+        REGEX_NOT_NUMBER = "[^" + number + "]"
     }
 }
