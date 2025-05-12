@@ -1,87 +1,86 @@
-package com.android.calculator2.view.display;
+package com.android.calculator2.view.display
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.text.TextUtils;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import com.android.calculator2.Clipboard;
+import android.R
+import android.content.Context
+import android.text.TextUtils
+import android.view.ContextMenu
+import android.view.Menu
+import android.view.MenuItem
+import com.android.calculator2.Clipboard
+import com.android.calculator2.Clipboard.canPaste
+import com.android.calculator2.Clipboard.paste
 
 /**
  * Created by Will on 12/13/2014.
  */
-class MenuHandler implements MenuItem.OnMenuItemClickListener {
-    private static final int CUT = 0;
-    private static final int COPY = 1;
-    private static final int PASTE = 2;
-
+internal class MenuHandler(private val mDisplay: AdvancedDisplay) :
+    MenuItem.OnMenuItemClickListener {
     // For copy/paste
-    private String[] mMenuItemsStrings;
-    private AdvancedDisplay mDisplay;
+    private val mMenuItemsStrings: Array<String?>
 
-    public MenuHandler(AdvancedDisplay display) {
-        mDisplay = display;
-
-        Resources resources = getContext().getResources();
-        mMenuItemsStrings = new String[3];
-        mMenuItemsStrings[CUT] = resources.getString(android.R.string.cut);
-        mMenuItemsStrings[COPY] = resources.getString(android.R.string.copy);
-        mMenuItemsStrings[PASTE] = resources.getString(android.R.string.paste);
+    init {
+        val resources = context.resources
+        mMenuItemsStrings = arrayOfNulls<String>(3)
+        mMenuItemsStrings[CUT] = resources.getString(R.string.cut)
+        mMenuItemsStrings[COPY] = resources.getString(R.string.copy)
+        mMenuItemsStrings[PASTE] = resources.getString(R.string.paste)
     }
 
-    public void onCreateContextMenu(ContextMenu menu) {
-        for(int i = 0; i < mMenuItemsStrings.length; i++) {
-            menu.add(Menu.NONE, i, i, mMenuItemsStrings[i]).setOnMenuItemClickListener(this);
+    fun onCreateContextMenu(menu: ContextMenu) {
+        for (i in mMenuItemsStrings.indices) {
+            menu.add(Menu.NONE, i, i, mMenuItemsStrings[i]).setOnMenuItemClickListener(this)
         }
-        if(getText().isEmpty()) {
-            menu.getItem(CUT).setVisible(false);
-            menu.getItem(COPY).setVisible(false);
+        if (this.text!!.isEmpty()) {
+            menu.getItem(CUT).setVisible(false)
+            menu.getItem(COPY).setVisible(false)
         }
-        if(!Clipboard.canPaste(getContext())) {
-            menu.getItem(PASTE).setVisible(false);
+        if (!canPaste(this.context)) {
+            menu.getItem(PASTE).setVisible(false)
         }
     }
 
-    public Context getContext() {
-        return mDisplay.getContext();
+    val context: Context
+        get() = mDisplay.context
+
+    val text: String?
+        get() = mDisplay.getText()
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return onTextContextMenuItem(item.getTitle())
     }
 
-    public String getText() {
-        return mDisplay.getText();
-    }
-
-    public boolean onMenuItemClick(MenuItem item) {
-        return onTextContextMenuItem(item.getTitle());
-    }
-
-    public boolean onTextContextMenuItem(CharSequence title) {
-        boolean handled = false;
-        if(TextUtils.equals(title, mMenuItemsStrings[CUT])) {
-            cutContent();
-            handled = true;
-        } else if(TextUtils.equals(title, mMenuItemsStrings[COPY])) {
-            copyContent();
-            handled = true;
-        } else if(TextUtils.equals(title, mMenuItemsStrings[PASTE])) {
-            pasteContent();
-            handled = true;
+    fun onTextContextMenuItem(title: CharSequence?): Boolean {
+        var handled = false
+        if (TextUtils.equals(title, mMenuItemsStrings[CUT])) {
+            cutContent()
+            handled = true
+        } else if (TextUtils.equals(title, mMenuItemsStrings[COPY])) {
+            copyContent()
+            handled = true
+        } else if (TextUtils.equals(title, mMenuItemsStrings[PASTE])) {
+            pasteContent()
+            handled = true
         }
-        return handled;
+        return handled
     }
 
 
-    private void copyContent() {
-        Clipboard.copy(getContext(), getText());
+    private fun copyContent() {
+        Clipboard.copy(this.context, this.text!!)
     }
 
-    private void cutContent() {
-        Clipboard.copy(getContext(), getText());
-        mDisplay.clear();
+    private fun cutContent() {
+        Clipboard.copy(this.context, this.text!!)
+        mDisplay.clear()
     }
 
-    private void pasteContent() {
-        mDisplay.insert(Clipboard.paste(getContext()));
+    private fun pasteContent() {
+        mDisplay.insert(paste(this.context))
+    }
+
+    companion object {
+        private const val CUT = 0
+        private const val COPY = 1
+        private const val PASTE = 2
     }
 }
