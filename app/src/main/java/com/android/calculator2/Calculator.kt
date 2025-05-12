@@ -317,7 +317,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             KEY_CURRENT_EXPRESSION,
             mTokenizer!!.getNormalizedExpression(mFormulaEditText!!.getText())
         )
-        outState.putInt(KEY_BASE, mBaseManager!!.getNumberBase().ordinal)
+        outState.putInt(KEY_BASE, mBaseManager!!.numberBase.ordinal)
         outState.putInt(KEY_DISPLAY_MODE, mDisplayView!!.getMode().ordinal)
     }
 
@@ -683,10 +683,10 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
     }
 
     private fun setBase(base: Base) {
-        val baseChanged = base != mBaseManager!!.getNumberBase()
+        val baseChanged = base != mBaseManager!!.numberBase
 
         // Update the BaseManager, which handles restricting which buttons to show
-        mBaseManager!!.setNumberBase(base)
+        mBaseManager!!.numberBase = base
 
         // Update the evaluator, which handles the math
         mEvaluator!!.setBase(mFormulaEditText!!.getText(), base, object : EvaluateCallback {
@@ -704,7 +704,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         setSelectedBaseButton(base)
 
         // disable any buttons that are not relevant to the current base
-        for (resId in mBaseManager!!.getViewIds()) {
+        for (resId in mBaseManager!!.viewIds) {
             // TODO: handle duplicates
             // This will not work if the same resId is used on multiple pages,
             // which will be the case after adding the matrix view.

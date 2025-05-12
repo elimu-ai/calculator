@@ -1,64 +1,40 @@
-package com.android.calculator2;
+package com.android.calculator2
 
-import com.xlythe.math.Base;
-
-import ai.elimu.calculator.R;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import ai.elimu.calculator.R
+import com.xlythe.math.Base
+import java.util.Arrays
 
 /**
  * Keeps track of the application wide number base, and manages the IDs of views to disable
  * when changing base.
  */
-public class NumberBaseManager {
-
-    private Base mBase;
-    private Map<Base, Set<Integer>> mDisabledViewIds;
-    private Set<Integer> mViewIds;
-
-    public NumberBaseManager(Base base) {
-        mBase = base;
-
-        List<Integer> hexList =
-                Arrays.asList(R.id.A, R.id.B, R.id.C, R.id.D, R.id.E, R.id.F);
-
-        List<Integer> binaryList =
-                Arrays.asList(R.id.digit2, R.id.digit3, R.id.digit4, R.id.digit5, R.id.digit6,
-                        R.id.digit7, R.id.digit8, R.id.digit9);
-
-        mDisabledViewIds = new HashMap<Base, Set<Integer>>();
-        mDisabledViewIds.put(Base.DECIMAL, new HashSet<Integer>(hexList));
-        Set<Integer> disabledForBinary = new HashSet<Integer>(binaryList);
-        disabledForBinary.addAll(hexList);
-        mDisabledViewIds.put(Base.BINARY, disabledForBinary);
-        mDisabledViewIds.put(Base.HEXADECIMAL, new HashSet<Integer>());
-
-        mViewIds = new HashSet<Integer>();
-        mViewIds.addAll(binaryList);
-        mViewIds.addAll(hexList);
-
-        // setup default base
-        setNumberBase(mBase);
-    }
-
-    public void setNumberBase(Base base) {
-        mBase = base;
-    }
-
-    public Base getNumberBase() {
-        return mBase;
-    }
+class NumberBaseManager(var numberBase: Base) {
+    private val mDisabledViewIds: MutableMap<Base?, MutableSet<Int?>?>
 
     /**
      * @return the set of view resource IDs managed by the enabled/disabled list
      */
-    public Set<Integer> getViewIds() {
-        return mViewIds;
+    val viewIds: MutableSet<Int> by lazy { hashSetOf() }
+
+    init {
+        val hexList =
+            Arrays.asList<Int?>(R.id.A, R.id.B, R.id.C, R.id.D, R.id.E, R.id.F)
+
+        val binaryList =
+            Arrays.asList<Int?>(
+                R.id.digit2, R.id.digit3, R.id.digit4, R.id.digit5, R.id.digit6,
+                R.id.digit7, R.id.digit8, R.id.digit9
+            )
+
+        mDisabledViewIds = HashMap<Base?, MutableSet<Int?>?>()
+        mDisabledViewIds.put(Base.DECIMAL, HashSet<Int?>(hexList))
+        val disabledForBinary: MutableSet<Int?> = HashSet<Int?>(binaryList)
+        disabledForBinary.addAll(hexList)
+        mDisabledViewIds.put(Base.BINARY, disabledForBinary)
+        mDisabledViewIds.put(Base.HEXADECIMAL, HashSet<Int?>())
+
+        viewIds.addAll(binaryList)
+        viewIds.addAll(hexList)
     }
 
     /**
@@ -67,8 +43,8 @@ public class NumberBaseManager {
      * @param viewResId
      * @return
      */
-    public boolean isViewDisabled(int viewResId) {
-        Set<Integer> disabledSet = mDisabledViewIds.get(mBase);
-        return disabledSet.contains(viewResId);
+    fun isViewDisabled(viewResId: Int): Boolean {
+        val disabledSet = mDisabledViewIds.get(this.numberBase)
+        return disabledSet!!.contains(viewResId)
     }
 }
