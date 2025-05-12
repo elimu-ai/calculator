@@ -1,106 +1,104 @@
-package com.android.calculator2.view;
+package com.android.calculator2.view
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.HorizontalScrollView;
+import ai.elimu.calculator.R
+import android.content.Context
+import android.util.AttributeSet
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.widget.HorizontalScrollView
+import kotlin.math.max
+import kotlin.math.min
+import androidx.core.view.isNotEmpty
 
-import ai.elimu.calculator.R;
+open class ScrollableDisplay @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet?,
+    defStyle: Int = 0
+) : HorizontalScrollView(context, attrs, defStyle) {
+    private var mMaxHeight = 0
+    private var gravityRight = false
+    private var autoScrolling = false
 
-public class ScrollableDisplay extends HorizontalScrollView {
-    private int mMaxHeight;
-    private boolean gravityRight = false;
-    private boolean autoScrolling = false;
-
-    public ScrollableDisplay(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    init {
+        val a = context.obtainStyledAttributes(attrs, R.styleable.ScrollableDisplay, defStyle, 0)
+        setMaxHeight(a.getDimensionPixelSize(R.styleable.ScrollableDisplay_max_height, -1))
+        a.recycle()
     }
 
-    public ScrollableDisplay(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScrollableDisplay, defStyle, 0);
-        setMaxHeight(a.getDimensionPixelSize(R.styleable.ScrollableDisplay_max_height, -1));
-        a.recycle();
+    fun setMaxHeight(maxHeight: Int) {
+        mMaxHeight = maxHeight
     }
 
-    public void setMaxHeight(int maxHeight) {
-        mMaxHeight = maxHeight;
-    }
+    val view: View
+        get() = getChildAt(0)
 
-    public View getView() {
-        return getChildAt(0);
-    }
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mMaxHeight != -1) {
+            val width = measuredWidth
+            val height = min(measuredHeight.toDouble(), mMaxHeight.toDouble()).toInt()
 
-        if(mMaxHeight != -1) {
-            int width = getMeasuredWidth();
-            int height = Math.min(getMeasuredHeight(), mMaxHeight);
-
-            setMeasuredDimension(width, height);
+            setMeasuredDimension(width, height)
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        autoScrolling = false;
-        super.onTouchEvent(ev);
-        return false;
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        autoScrolling = false
+        super.onTouchEvent(ev)
+        return false
     }
 
-    @Override
-    public void computeScroll() {
-        if(autoScrolling) return;
-        super.computeScroll();
+    override fun computeScroll() {
+        if (autoScrolling) return
+        super.computeScroll()
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         // HorizontalScrollView is broken for Gravity.RIGHT. So we're fixing it.
-        autoScrolling = false;
-        int childWidth = getView().getWidth();
-        super.onLayout(changed, left, top, right, bottom);
-        int delta = getView().getWidth() - childWidth;
-        View view = getView();
-        LayoutParams p = (LayoutParams) view.getLayoutParams();
-        int verticalGravity = p.gravity & Gravity.VERTICAL_GRAVITY_MASK;
-        if(getScrollRange() > 0) {
-            gravityRight = true;
-            p.gravity = Gravity.LEFT | verticalGravity;
-            view.setLayoutParams(p);
-            super.onLayout(changed, left, top, right, bottom);
+        autoScrolling = false
+        val childWidth = this.view.width
+        super.onLayout(changed, left, top, right, bottom)
+        val delta = this.view.width - childWidth
+        val view = this.view
+        val p = view.layoutParams as LayoutParams
+        val verticalGravity = p.gravity and Gravity.VERTICAL_GRAVITY_MASK
+        if (this.scrollRange > 0) {
+            gravityRight = true
+            p.gravity = Gravity.LEFT or verticalGravity
+            view.setLayoutParams(p)
+            super.onLayout(changed, left, top, right, bottom)
         }
-        if(gravityRight) {
-            if(getScrollRange() == 0) {
-                gravityRight = false;
-                p.gravity = Gravity.RIGHT | verticalGravity;
-                view.setLayoutParams(p);
-                super.onLayout(changed, left, top, right, bottom);
+        if (gravityRight) {
+            if (this.scrollRange == 0) {
+                gravityRight = false
+                p.gravity = Gravity.RIGHT or verticalGravity
+                view.setLayoutParams(p)
+                super.onLayout(changed, left, top, right, bottom)
             }
         }
-        if(gravityRight && delta > 0) {
-            scrollBy(delta, 0);
-            autoScrolling = true;
+        if (gravityRight && delta > 0) {
+            scrollBy(delta, 0)
+            autoScrolling = true
         }
     }
 
-    private int getScrollRange() {
-        int scrollRange = 0;
-        if(getChildCount() > 0) {
-            View child = getChildAt(0);
-            scrollRange = Math.max(0, child.getWidth() - (getWidth() - getPaddingLeft() - getPaddingRight()));
+    private val scrollRange: Int
+        get() {
+            var scrollRange = 0
+            if (isNotEmpty()) {
+                val child = getChildAt(0)
+                scrollRange = max(
+                    0.0,
+                    (child.getWidth() - (getWidth() - getPaddingLeft() - getPaddingRight())).toDouble()
+                ).toInt()
+            }
+            return scrollRange
         }
-        return scrollRange;
-    }
 
-    @Override
-    public void scrollTo(int x, int y) {
-        if(autoScrolling) return;
-        super.scrollTo(x, y);
+    override fun scrollTo(x: Int, y: Int) {
+        if (autoScrolling) return
+        super.scrollTo(x, y)
     }
 }
