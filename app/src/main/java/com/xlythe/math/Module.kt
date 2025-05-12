@@ -1,55 +1,30 @@
-package com.xlythe.math;
+package com.xlythe.math
 
 /**
  * A super class for BaseModule, GraphModule, MatrixModule
  */
-public class Module {
-    // Used whenever math is necessary
-    private final Solver mSolver;
-
+open class Module internal constructor(
+// Used whenever math is necessary
+    val solver: Solver?
+) {
     // Used for formatting Dec, Bin, and Hex.
     // Dec looks like 1,234,567. Bin is 1010 1010. Hex is 0F 1F 2F.
-    private final int mDecSeparatorDistance = 3;
-    private final int mBinSeparatorDistance = 4;
-    private final int mHexSeparatorDistance = 2;
+    val decSeparatorDistance: Int = 3
+    val binSeparatorDistance: Int = 4
+    val hexSeparatorDistance: Int = 2
 
-    Module(Solver solver) {
-        mSolver = solver;
-    }
+    val decimalPoint: Char
+        get() = Constants.DECIMAL_POINT
 
-    public int getDecSeparatorDistance() {
-        return mDecSeparatorDistance;
-    }
+    val decSeparator: Char
+        get() = Constants.DECIMAL_SEPARATOR
 
-    public int getBinSeparatorDistance() {
-        return mBinSeparatorDistance;
-    }
+    val binSeparator: Char
+        get() = Constants.BINARY_SEPARATOR
 
-    public int getHexSeparatorDistance() {
-        return mHexSeparatorDistance;
-    }
+    val hexSeparator: Char
+        get() = Constants.HEXADECIMAL_SEPARATOR
 
-    public char getDecimalPoint() {
-        return Constants.DECIMAL_POINT;
-    }
-
-    public char getDecSeparator() {
-        return Constants.DECIMAL_SEPARATOR;
-    }
-
-    public char getBinSeparator() {
-        return Constants.BINARY_SEPARATOR;
-    }
-
-    public char getHexSeparator() {
-        return Constants.HEXADECIMAL_SEPARATOR;
-    }
-
-    public char getMatrixSeparator() {
-        return Constants.MATRIX_SEPARATOR;
-    }
-
-    public Solver getSolver() {
-        return mSolver;
-    }
+    val matrixSeparator: Char
+        get() = Constants.MATRIX_SEPARATOR
 }
