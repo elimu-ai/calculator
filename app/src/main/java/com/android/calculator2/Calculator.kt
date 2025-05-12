@@ -107,10 +107,10 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             when (keyCode) {
                 KeyEvent.KEYCODE_NUMPAD_ENTER, KeyEvent.KEYCODE_ENTER -> {
                     if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
-                        val v = mEqualsGraphButton!!.getEnabledView()
+                        val v = mEqualsGraphButton!!.enabledView
                         mCurrentButton = v
                         if (v != null) {
-                            when (v.getId()) {
+                            when (v.id) {
                                 R.id.eq -> onEquals()
                                 R.id.graph -> onGraph()
                             }

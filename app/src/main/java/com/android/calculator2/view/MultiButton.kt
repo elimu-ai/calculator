@@ -1,44 +1,41 @@
-package com.android.calculator2.view;
+package com.android.calculator2.view
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
-import com.android.calculator2.Calculator;
-import com.android.calculator2.util.AnimationUtil;
+import android.content.Context
+import android.util.AttributeSet
+import android.util.Log
+import android.view.View
+import android.widget.FrameLayout
+import com.android.calculator2.Calculator
+import com.android.calculator2.util.AnimationUtil
 
 /**
  * A collection of buttons that occupy the same space, only one of which is visible at a time
  */
-public class MultiButton extends FrameLayout {
+class MultiButton : FrameLayout {
+    private var mActiveViewId = NO_ID
 
-    private static final String TAG = Calculator.TAG;
+    constructor(context: Context) : super(context)
 
-    private int mActiveViewId = View.NO_ID;
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    public MultiButton(Context context) {
-        super(context);
-    }
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
-    public MultiButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(context, attrs, defStyleAttr, defStyleRes)
 
-    public MultiButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+    override fun onFinishInflate() {
+        super.onFinishInflate()
 
-    public MultiButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-
-        for (int i=0; i < getChildCount(); ++i) {
-            getChildAt(i).setVisibility(View.INVISIBLE);
+        for (i in 0..< childCount) {
+            getChildAt(i).visibility = INVISIBLE
         }
     }
 
@@ -47,33 +44,36 @@ public class MultiButton extends FrameLayout {
      *
      * @param resId
      */
-    public void setEnabled(int resId) {
+    fun setEnabled(resId: Int) {
         if (mActiveViewId == resId) {
-            return;
+            return
         }
 
-        View newView = findViewById(resId);
+        val newView = findViewById<View?>(resId)
         if (newView == null) {
-            Log.w(TAG, "Cannot enable MultiButton view by resId " + resId);
-            return;
+            Log.w(TAG, "Cannot enable MultiButton view by resId " + resId)
+            return
         }
 
-        if (mActiveViewId != View.NO_ID) {
-            View oldView = findViewById(mActiveViewId);
-            AnimationUtil.shrinkAndGrow(oldView, newView);
+        if (mActiveViewId != NO_ID) {
+            val oldView = findViewById<View?>(mActiveViewId)
+            AnimationUtil.shrinkAndGrow(oldView, newView)
         } else {
-            newView.setVisibility(View.VISIBLE);
+            newView.visibility = VISIBLE
         }
 
-        mActiveViewId = resId;
+        mActiveViewId = resId
     }
 
-    /**
-     * Gets currently enabled view
-     *
-     * @return enabled view or null if none
-     */
-    public View getEnabledView() {
-        return findViewById(mActiveViewId);
+    val enabledView: View?
+        /**
+         * Gets currently enabled view
+         *
+         * @return enabled view or null if none
+         */
+        get() = findViewById<View?>(mActiveViewId)
+
+    companion object {
+        private val TAG = Calculator.TAG
     }
 }
