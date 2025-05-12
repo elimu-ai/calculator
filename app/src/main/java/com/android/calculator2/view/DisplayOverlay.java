@@ -387,13 +387,13 @@ public class DisplayOverlay extends FrameLayout {
         switch (mMode) {
             case GRAPH:
                 expandHistory();
-                AnimationUtil.fadeOut(mMainDisplay);
-                AnimationUtil.fadeIn(mGraphLayout);
+                AnimationUtil.INSTANCE.fadeOut(mMainDisplay);
+                AnimationUtil.INSTANCE.fadeIn(mGraphLayout);
                 break;
             case FORMULA:
                 collapseHistory();
-                AnimationUtil.fadeIn(mMainDisplay);
-                AnimationUtil.fadeOut(mGraphLayout);
+                AnimationUtil.INSTANCE.fadeIn(mMainDisplay);
+                AnimationUtil.INSTANCE.fadeOut(mGraphLayout);
                 break;
         }
     }

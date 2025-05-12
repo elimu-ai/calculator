@@ -1,18 +1,18 @@
-package com.android.calculator2.util;
+package com.android.calculator2.util
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.ScaleAnimation
 
 /**
  * Utility for transition animations
  */
-public class AnimationUtil {
-
-    public static final int DEFAULT_FADE_DURATION = 200;
-    public static final int DEFAULT_SHRINK_GROW_DURATION = 200;
+object AnimationUtil {
+    const val DEFAULT_FADE_DURATION: Int = 200
+    const val DEFAULT_SHRINK_GROW_DURATION: Int = 200
 
     /**
      * Makes view visible and transitions alpha from 0 to 1.  Does nothing if view is
@@ -21,24 +21,21 @@ public class AnimationUtil {
      * @param view
      * @param duration
      */
-    public static void fadeIn(View view, int duration) {
-        if (view.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        view.setAlpha(0);
-        view.setVisibility(View.VISIBLE);
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
-        anim.setDuration(duration);
-        anim.start();
-    }
-
     /**
      * Fade in with default duration
      *
      * @param view
      */
-    public static void fadeIn(View view) {
-        fadeIn(view, DEFAULT_FADE_DURATION);
+    @JvmOverloads
+    fun fadeIn(view: View, duration: Int = DEFAULT_FADE_DURATION) {
+        if (view.getVisibility() == View.VISIBLE) {
+            return
+        }
+        view.setAlpha(0f)
+        view.setVisibility(View.VISIBLE)
+        val anim = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
+        anim.setDuration(duration.toLong())
+        anim.start()
     }
 
     /**
@@ -47,40 +44,30 @@ public class AnimationUtil {
      * @param view
      * @param duration
      */
-    public static void fadeOut(final View view, int duration) {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", 1, 0);
-        anim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                view.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        anim.setDuration(DEFAULT_FADE_DURATION);
-        anim.start();
-    }
-
     /**
      * Fade out with default duration
      *
      * @param view
      */
-    public static void fadeOut(View view) {
-        fadeOut(view, DEFAULT_FADE_DURATION);
+    @JvmOverloads
+    fun fadeOut(view: View, duration: Int = DEFAULT_FADE_DURATION) {
+        val anim = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f)
+        anim.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                view.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {
+            }
+        })
+        anim.setDuration(DEFAULT_FADE_DURATION.toLong())
+        anim.start()
     }
 
     /**
@@ -90,42 +77,48 @@ public class AnimationUtil {
      * @param view2 view to grow
      * @param duration duration for each phase of the animation
      */
-    public static void shrinkAndGrow(final View view1, final View view2, int duration) {
-        ScaleAnimation shrinkAnim =
-                new ScaleAnimation(1, 0, 1, 0, view1.getWidth()/2, view1.getHeight()/2);
-        final ScaleAnimation growAnim =
-                new ScaleAnimation(0, 1, 0, 1, view2.getWidth()/2, view2.getHeight()/2);
-        shrinkAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                view1.setVisibility(View.INVISIBLE);
-                view2.setVisibility(View.VISIBLE);
-                view2.startAnimation(growAnim);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        shrinkAnim.setDuration(duration);
-        growAnim.setDuration(duration);
-        view1.startAnimation(shrinkAnim);
-    }
-
     /**
      * Shrink and grow with default duration
      *
      * @param view1
      * @param view2
      */
-    public static void shrinkAndGrow(View view1, View view2) {
-        shrinkAndGrow(view1, view2, DEFAULT_SHRINK_GROW_DURATION);
+    @JvmOverloads
+    fun shrinkAndGrow(view1: View, view2: View, duration: Int = DEFAULT_SHRINK_GROW_DURATION) {
+        val shrinkAnim =
+            ScaleAnimation(
+                1f,
+                0f,
+                1f,
+                0f,
+                (view1.getWidth() / 2).toFloat(),
+                (view1.getHeight() / 2).toFloat()
+            )
+        val growAnim =
+            ScaleAnimation(
+                0f,
+                1f,
+                0f,
+                1f,
+                (view2.getWidth() / 2).toFloat(),
+                (view2.getHeight() / 2).toFloat()
+            )
+        shrinkAnim.setAnimationListener(object : AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                view1.setVisibility(View.INVISIBLE)
+                view2.setVisibility(View.VISIBLE)
+                view2.startAnimation(growAnim)
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+            }
+        })
+
+        shrinkAnim.setDuration(duration.toLong())
+        growAnim.setDuration(duration.toLong())
+        view1.startAnimation(shrinkAnim)
     }
 }
