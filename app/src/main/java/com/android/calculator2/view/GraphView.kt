@@ -108,8 +108,8 @@ class GraphView : View {
         var x = 0f
         var y = 0f
         for (p in args) {
-            x += p.getX().toFloat()
-            y += p.getY().toFloat()
+            x += p.x.toFloat()
+            y += p.y.toFloat()
         }
         return Point((x / args.size).toDouble(), (y / args.size).toDouble())
     }
@@ -311,7 +311,7 @@ class GraphView : View {
     }
 
     private fun getRawX(p: Point?): Int {
-        if (p == null || Double.isNaN(p.getX()) || Double.isInfinite(p.getX())) return -1
+        if (p == null || Double.isNaN(p.x) || Double.isInfinite(p.x)) return -1
 
         // The left line is at pos
         val leftLine = (mLineMargin + mDragRemainderX).toFloat()
@@ -320,13 +320,13 @@ class GraphView : View {
         // And changes at a rate of
         val slope = mLineMargin / mZoomLevel
         // Put it all together
-        val pos = (slope * (p.getX() - `val`) + leftLine).toInt()
+        val pos = (slope * (p.x - `val`) + leftLine).toInt()
 
         return pos
     }
 
     private fun getRawY(p: Point?): Int {
-        if (p == null || Double.isNaN(p.getY()) || Double.isInfinite(p.getY())) return -1
+        if (p == null || Double.isNaN(p.y) || Double.isInfinite(p.y)) return -1
 
         // The top line is at pos
         val topLine = (mLineMargin + mDragRemainderY).toFloat()
@@ -335,7 +335,7 @@ class GraphView : View {
         // And changes at a rate of
         val slope = mLineMargin / mZoomLevel
         // Put it all together
-        val pos = (-slope * (p.getY() - `val`) + topLine).toInt()
+        val pos = (-slope * (p.y - `val`) + topLine).toInt()
 
         return pos
     }
@@ -436,7 +436,7 @@ class GraphView : View {
     }
 
     private fun getDistance(a: Point, b: Point): kotlin.Double {
-        return sqrt(square(a.getX() - b.getX()) + square(a.getY() - b.getY()))
+        return sqrt(square(a.x - b.x) + square(a.y - b.y))
     }
 
     private fun square(`val`: kotlin.Double): kotlin.Double {
