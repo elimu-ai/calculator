@@ -1,30 +1,22 @@
-package com.android.calculator2.view.display;
+package com.android.calculator2.view.display
 
-import android.widget.TextView;
+import android.widget.TextView
 
 /**
  * Created by Will on 12/13/2014.
  */
-public abstract class Sync {
-    String tag;
+abstract class Sync internal constructor(@JvmField var tag: String) {
+    abstract fun apply(textView: TextView?)
 
-    Sync(String tag) {
-        this.tag = tag;
+    override fun hashCode(): Int {
+        return tag.hashCode()
     }
 
-    public abstract void apply(TextView textView);
-
-    @Override
-    public int hashCode() {
-        return tag.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof Sync) {
-            return ((Sync) o).tag.equals(tag);
+    override fun equals(o: Any?): Boolean {
+        if (o is Sync) {
+            return o.tag == tag
         }
-        return false;
+        return false
     }
 }
 
