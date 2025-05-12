@@ -283,10 +283,10 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // Load new history
         mPersist = Persist(this)
         mPersist!!.load()
-        mHistory = mPersist!!.getHistory()
+        mHistory = mPersist!!.history
 
         mHistoryAdapter = HistoryAdapter(
-            this, mHistory,
+            this, mHistory!!,
             object : HistoryItemCallback {
                 override fun onHistoryItemSelected(entry: HistoryEntry?) {
                     //Disabled insert text in the formula
@@ -295,7 +295,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
                 }
             })
         mHistory!!.setObserver(mHistoryAdapter)
-        mDisplayView!!.getHistoryView().setAdapter(mHistoryAdapter)
+        mDisplayView!!.historyView.setAdapter(mHistoryAdapter)
         mDisplayView!!.scrollToMostRecent()
     }
 

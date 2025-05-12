@@ -13,96 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.android.calculator2
 
-package com.android.calculator2;
+import ai.elimu.calculator.R
+import android.content.Context
+import android.text.Html
+import android.text.Spanned
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.android.calculator2.view.HistoryLine
+import com.xlythe.math.EquationFormatter
+import com.xlythe.math.History
+import com.xlythe.math.HistoryEntry
+import java.util.Vector
 
-import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import com.android.calculator2.view.HistoryLine;
-import com.xlythe.math.EquationFormatter;
-import com.xlythe.math.History;
-import com.xlythe.math.HistoryEntry;
+open class HistoryAdapter(val context: Context?, history: History, callback: HistoryItemCallback) :
+    RecyclerView.Adapter<HistoryAdapter.ViewHolder?>() {
+    private val mEntries: Vector<HistoryEntry> = history.entries
+    private val mEquationFormatter: EquationFormatter = EquationFormatter()
+    protected var mCallback: HistoryItemCallback = callback
 
-import ai.elimu.calculator.R;
-
-import java.util.Vector;
-
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-    private final Context mContext;
-    private final Vector<HistoryEntry> mEntries;
-    private final EquationFormatter mEquationFormatter;
-    protected HistoryItemCallback mCallback;
-
-    public interface HistoryItemCallback {
-        public void onHistoryItemSelected(HistoryEntry entry);
+    interface HistoryItemCallback {
+        fun onHistoryItemSelected(entry: HistoryEntry?)
     }
 
-    public HistoryAdapter(Context context, History history, HistoryItemCallback callback) {
-        mContext = context;
-        mEntries = history.getEntries();
-        mEquationFormatter = new EquationFormatter();
-        mCallback = callback;
+    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        var historyExpr: TextView = v.findViewById<View?>(R.id.historyExpr) as TextView
+        var historyResult: TextView = v.findViewById<View?>(R.id.historyResult) as TextView
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView historyExpr;
-        public TextView historyResult;
-
-        public ViewHolder(View v) {
-            super(v);
-            historyExpr = (TextView)v.findViewById(R.id.historyExpr);
-            historyResult = (TextView)v.findViewById(R.id.historyResult);
-        }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(this.context)
+                .inflate(R.layout.history_entry, parent, false) as HistoryLine
+        return ViewHolder(view)
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        HistoryLine view =
-                (HistoryLine)LayoutInflater.from(mContext)
-                        .inflate(R.layout.history_entry, parent, false);
-        return new ViewHolder(view);
-    }
+    protected open val layoutResourceId: Int
+        get() = R.layout.history_entry
 
-    protected int getLayoutResourceId() {
-        return R.layout.history_entry;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        HistoryLine view = (HistoryLine)holder.itemView;
-        final HistoryEntry entry = mEntries.elementAt(position);
-        view.setAdapter(HistoryAdapter.this);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onHistoryItemSelected(entry);
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val view = holder.itemView as HistoryLine
+        val entry = mEntries.elementAt(position)
+        view.setAdapter(this@HistoryAdapter)
+        view.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                mCallback.onHistoryItemSelected(entry)
             }
-        });
-        holder.historyExpr.setText(formatText(entry.getBase()));
-        holder.historyResult.setText(entry.getEdited());
+        })
+        holder.historyExpr.setText(formatText(entry.getBase()))
+        holder.historyResult.setText(entry.getEdited())
     }
 
-    @Override
-    public int getItemCount() {
-        return mEntries.size() - 1;
+    override fun getItemCount(): Int {
+        return mEntries.size - 1
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
-    protected Spanned formatText(String text) {
-        return Html.fromHtml(mEquationFormatter.insertSupScripts(text));
-    }
-
-    public Context getContext() {
-        return mContext;
+    protected fun formatText(text: String): Spanned? {
+        return Html.fromHtml(mEquationFormatter.insertSupScripts(text))
     }
 }
