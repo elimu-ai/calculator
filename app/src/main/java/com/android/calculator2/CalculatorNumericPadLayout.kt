@@ -23,7 +23,7 @@ import com.android.calculator2.util.DigitLabelHelper
 import com.android.calculator2.util.DigitLabelHelper.DigitLabelHelperCallback
 
 class CalculatorNumericPadLayout @JvmOverloads constructor(
-    context: Context?,
+    context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : CalculatorPadLayout(context, attrs, defStyle) {
