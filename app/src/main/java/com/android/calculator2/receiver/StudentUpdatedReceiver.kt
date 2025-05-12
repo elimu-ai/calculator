@@ -1,51 +1,49 @@
-package com.android.calculator2.receiver;
+package com.android.calculator2.receiver
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.preference.PreferenceManager
+import android.util.Log
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-public class StudentUpdatedReceiver extends BroadcastReceiver {
-
-    public static final String PREF_STUDENT_NUMBERS = "pref_student_numbers";
-    public static final String PREF_STUDENT_NUMERACY_SKILLS = "pref_student_numeracy_skills";
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.i(getClass().getName(), "onReceive");
+class StudentUpdatedReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent) {
+        Log.i(javaClass.getName(), "onReceive")
 
         // Customize the user interface to match the current Student's level
+        val availableNumbers = intent.getStringArrayListExtra("availableNumbers")
+        Log.i(javaClass.getName(), "availableNumbers: $availableNumbers")
 
-        ArrayList<String> availableNumbers = intent.getStringArrayListExtra("availableNumbers");
-        Log.i(getClass().getName(), "availableNumbers: " + availableNumbers);
+        val availableNumeracySkills = intent.getStringArrayListExtra("availableNumeracySkills")
+        Log.i(javaClass.getName(), "availableNumeracySkills: $availableNumeracySkills")
 
-        ArrayList<String> availableNumeracySkills = intent.getStringArrayListExtra("availableNumeracySkills");
-        Log.i(getClass().getName(), "availableNumeracySkills: " + availableNumeracySkills);
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
         if (availableNumbers != null) {
-            Set<String> availableNumberSet = new HashSet<>();
-            for (String availableNumber : availableNumbers) {
-                availableNumberSet.add(availableNumber);
+            val availableNumberSet: MutableSet<String?> = HashSet<String?>()
+            for (availableNumber in availableNumbers) {
+                availableNumberSet.add(availableNumber)
             }
-            Log.i(getClass().getName(), "Storing availableNumbersSet: " + availableNumberSet);
-            sharedPreferences.edit().putStringSet(PREF_STUDENT_NUMBERS, availableNumberSet).commit();
+            Log.i(javaClass.getName(), "Storing availableNumbersSet: $availableNumberSet")
+            sharedPreferences.edit().putStringSet(PREF_STUDENT_NUMBERS, availableNumberSet).commit()
         }
 
         if (availableNumeracySkills != null) {
-            Set<String> availableNumeracySkillSet = new HashSet<>();
-            for (String availableNumeracySkill : availableNumeracySkills) {
-                availableNumeracySkillSet.add(availableNumeracySkill);
+            val availableNumeracySkillSet: MutableSet<String?> = HashSet<String?>()
+            for (availableNumeracySkill in availableNumeracySkills) {
+                availableNumeracySkillSet.add(availableNumeracySkill)
             }
-            Log.i(getClass().getName(), "Storing availableNumeracySkillSet: " + availableNumeracySkillSet);
-            sharedPreferences.edit().putStringSet(PREF_STUDENT_NUMERACY_SKILLS, availableNumeracySkillSet).commit();
+            Log.i(
+                javaClass.getName(),
+                "Storing availableNumeracySkillSet: $availableNumeracySkillSet"
+            )
+            sharedPreferences.edit()
+                .putStringSet(PREF_STUDENT_NUMERACY_SKILLS, availableNumeracySkillSet).commit()
         }
+    }
+
+    companion object {
+        const val PREF_STUDENT_NUMBERS: String = "pref_student_numbers"
+        const val PREF_STUDENT_NUMERACY_SKILLS: String = "pref_student_numeracy_skills"
     }
 }
