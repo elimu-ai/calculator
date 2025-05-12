@@ -125,7 +125,7 @@ class GraphController(
         if (mEquation != null) {
             setDomainAndRange()
             mIsGraphViewReady = true
-            mGraphModule.updateGraph(mEquation, this)
+            mGraphModule.updateGraph(mEquation!!, this)
         }
     }
 }

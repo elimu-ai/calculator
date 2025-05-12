@@ -1,109 +1,96 @@
-package com.xlythe.math;
+package com.xlythe.math
 
-import android.os.AsyncTask;
+import android.os.AsyncTask
+import org.javia.arity.SyntaxException
+import java.util.LinkedList
 
-import org.javia.arity.SyntaxException;
+class GraphModule(solver: Solver?) : Module(solver) {
+    private var mGraphTask: GraphTask? = null
+    private var mMinY = 0.0
+    private var mMaxY = 0.0
+    private var mMinX = 0.0
+    private var mMaxX = 0.0
+    private var mZoomLevel = 0f
 
-import java.util.LinkedList;
-import java.util.List;
-
-public class GraphModule extends Module {
-    private GraphTask mGraphTask;
-    private double mMinY;
-    private double mMaxY;
-    private double mMinX;
-    private double mMaxX;
-    private float mZoomLevel;
-
-    public GraphModule(Solver solver) {
-        super(solver);
+    fun setRange(min: Float, max: Float) {
+        mMinY = min.toDouble()
+        mMaxY = max.toDouble()
     }
 
-    public void setRange(float min, float max) {
-        mMinY = min;
-        mMaxY = max;
+    fun setDomain(min: Float, max: Float) {
+        mMinX = min.toDouble()
+        mMaxX = max.toDouble()
     }
 
-    public void setDomain(float min, float max) {
-        mMinX = min;
-        mMaxX = max;
+    fun setZoomLevel(level: Float) {
+        mZoomLevel = level
     }
 
-    public void setZoomLevel(float level) {
-        mZoomLevel = level;
-    }
-
-    public void updateGraph(String text, OnGraphUpdatedListener l) {
-        boolean endsWithOperator = text.length() != 0 &&
-                (Solver.isOperator(text.charAt(text.length() - 1)) || text.endsWith("("));
-        boolean containsMatrices = getSolver().displayContainsMatrices(text);
-        if(endsWithOperator || containsMatrices) {
-            return;
+    fun updateGraph(text: String, l: OnGraphUpdatedListener) {
+        val endsWithOperator = text.length != 0 &&
+                (Solver.isOperator(text.get(text.length - 1)) || text.endsWith("("))
+        val containsMatrices = solver!!.displayContainsMatrices(text)
+        if (endsWithOperator || containsMatrices) {
+            return
         }
 
-        if(mGraphTask != null) mGraphTask.cancel(true);
-        mGraphTask = new GraphTask(getSolver(), mMinY, mMaxY, mMinX, mMaxX, mZoomLevel, l);
-        mGraphTask.execute(text);
+        if (mGraphTask != null) mGraphTask!!.cancel(true)
+        mGraphTask = GraphTask(solver, mMinY, mMaxY, mMinX, mMaxX, mZoomLevel, l)
+        mGraphTask!!.execute(text)
     }
 
-    class GraphTask extends AsyncTask<String, String, List<Point>> {
-        private final Solver mSolver;
-        private final OnGraphUpdatedListener mListener;
-        private final double mMinY;
-        private final double mMaxY;
-        private final double mMinX;
-        private final double mMaxX;
-        private final float mZoomLevel;
-
-        public GraphTask(Solver solver, double minY, double maxY, double minX, double maxX,
-                         float zoomLevel, OnGraphUpdatedListener l) {
-            mSolver = solver;
-            mListener = l;
-            mMinY = minY;
-            mMaxY = maxY;
-            mMinX = minX;
-            mMaxX = maxX;
-            mZoomLevel = zoomLevel;
-        }
-
-        @Override
-        protected List<Point> doInBackground(String... eq) {
+    internal inner class GraphTask(
+        private val mSolver: Solver,
+        private val mMinY: Double,
+        private val mMaxY: Double,
+        private val mMinX: Double,
+        private val mMaxX: Double,
+        private val mZoomLevel: Float,
+        private val mListener: OnGraphUpdatedListener
+    ) : AsyncTask<String?, String?, MutableList<Point?>?>() {
+        override fun doInBackground(vararg eq: String?): MutableList<Point?>? {
             try {
-                return graph(mSolver.getBaseModule().updateTextToNewMode(eq[0],
-                        mSolver.getBaseModule().getBase(), Base.DECIMAL));
-            } catch(SyntaxException e) {
-                cancel(true);
-                return null;
+                return graph(
+                    mSolver.getBaseModule().updateTextToNewMode(
+                        eq[0],
+                        mSolver.getBaseModule().getBase(), Base.DECIMAL
+                    )
+                )
+            } catch (e: SyntaxException) {
+                cancel(true)
+                return null
             }
         }
 
-        public List<Point> graph(String equation) {
-            final LinkedList<Point> series = new LinkedList<Point>();
+        fun graph(equation: String?): MutableList<Point?>? {
+            val series = LinkedList<Point?>()
 
-            mSolver.mSymbols.pushFrame();
-            for(double x = mMinX; x <= mMaxX; x += 0.01 * mZoomLevel) {
-                if(isCancelled()) {
-                    return null;
+            mSolver.mSymbols.pushFrame()
+            var x = mMinX
+            while (x <= mMaxX) {
+                if (isCancelled()) {
+                    return null
                 }
 
                 try {
-                    mSolver.mSymbols.define("X", x);
-                    double y = mSolver.mSymbols.eval(equation);
-                    series.add(new Point(x, y));
-                } catch(SyntaxException e) {}
+                    mSolver.mSymbols.define("X", x)
+                    val y = mSolver.mSymbols.eval(equation)
+                    series.add(Point(x, y))
+                } catch (e: SyntaxException) {
+                }
+                x += 0.01 * mZoomLevel
             }
-            mSolver.mSymbols.popFrame();
+            mSolver.mSymbols.popFrame()
 
-            return series;
+            return series
         }
 
-        @Override
-        protected void onPostExecute(List<Point> result) {
-            mListener.onGraphUpdated(result);
+        override fun onPostExecute(result: MutableList<Point?>?) {
+            mListener.onGraphUpdated(result)
         }
     }
 
-    public static interface OnGraphUpdatedListener {
-        public void onGraphUpdated(List<Point> result);
+    interface OnGraphUpdatedListener {
+        fun onGraphUpdated(result: MutableList<Point?>?)
     }
 }
