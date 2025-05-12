@@ -1,21 +1,17 @@
-package com.xlythe.floatingview;
+package com.xlythe.floatingview
 
-import java.util.LinkedList;
+import java.util.LinkedList
 
-public class LimitedQueue<E> extends LinkedList<E> {
-    private static final long serialVersionUID = 1L;
-    private int limit;
-
-    public LimitedQueue(int limit) {
-        this.limit = limit;
+class LimitedQueue<E>(private val limit: Int) : LinkedList<E?>() {
+    override fun add(o: E?): Boolean {
+        super.add(o)
+        while (size > limit) {
+            super.remove()
+        }
+        return true
     }
 
-    @Override
-    public boolean add(E o) {
-        super.add(o);
-        while(size() > limit) {
-            super.remove();
-        }
-        return true;
+    companion object {
+        private const val serialVersionUID = 1L
     }
 }
