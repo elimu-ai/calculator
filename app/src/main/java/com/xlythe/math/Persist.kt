@@ -44,7 +44,7 @@ class Persist(private val mContext: Context) {
             if (version > 2) {
                 val quickSerializable = `in`.readInt()
                 for (m in Base.entries) {
-                    if (m.getQuickSerializable() == quickSerializable) this.mode = m
+                    if (m.quickSerializable == quickSerializable) this.mode = m
                 }
             }
             this.history = History(version, `in`)
@@ -62,7 +62,7 @@ class Persist(private val mContext: Context) {
             val out = DataOutputStream(os)
             out.writeInt(LAST_VERSION)
             out.writeInt(this.deleteMode)
-            out.writeInt(if (this.mode == null) Base.DECIMAL.getQuickSerializable() else mode!!.getQuickSerializable())
+            out.writeInt(if (this.mode == null) Base.DECIMAL.quickSerializable else mode!!.quickSerializable)
             history.write(out)
             out.close()
         } catch (e: IOException) {
