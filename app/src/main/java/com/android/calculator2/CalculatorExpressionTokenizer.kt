@@ -13,91 +13,153 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.android.calculator2;
+package com.android.calculator2
 
-import android.content.Context;
+import ai.elimu.calculator.R
+import android.content.Context
+import com.xlythe.math.Constants
+import java.text.DecimalFormatSymbols
+import java.util.LinkedList
+import java.util.Locale
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
+class CalculatorExpressionTokenizer(context: Context) {
+    private val mReplacements: MutableList<Localizer>
+    private val mUseDegrees = false
 
-import com.xlythe.math.Constants;
+    init {
+        mReplacements = LinkedList<Localizer>()
 
-import ai.elimu.calculator.R;
-
-import java.util.LinkedList;
-import java.util.List;
-
-public class CalculatorExpressionTokenizer {
-    private final List<Localizer> mReplacements;
-    private boolean mUseDegrees = false;
-
-    public CalculatorExpressionTokenizer(Context context) {
-        mReplacements = new LinkedList<Localizer>();
-
-        Locale locale = context.getResources().getConfiguration().locale;
-        if (!context.getResources().getBoolean(R.bool.use_localized_digits)) {
-            locale = new Locale.Builder()
+        var locale = context.resources.configuration.locale
+        if (!context.resources.getBoolean(R.bool.use_localized_digits)) {
+            locale = Locale.Builder()
                 .setLocale(locale)
                 .setUnicodeLocaleKeyword("nu", "latn")
-                .build();
+                .build()
         }
 
-        final DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
-        final char zeroDigit = symbols.getZeroDigit();
+        val symbols = DecimalFormatSymbols(locale)
+        val zeroDigit = symbols.getZeroDigit()
 
-        for (int i = 0; i <= 9; ++i) {
-            mReplacements.add(new Localizer(
-                        Integer.toString(i), String.valueOf((char) (i + zeroDigit))));
+        for (i in 0..9) {
+            mReplacements.add(
+                Localizer(
+                    i.toString(), (i + zeroDigit.code).toChar().toString()
+                )
+            )
         }
 
-        mReplacements.add(new Localizer(",", String.valueOf(Constants.MATRIX_SEPARATOR)));
-        mReplacements.add(new Localizer(".", String.valueOf(symbols.getDecimalSeparator())));
-        mReplacements.add(new Localizer("/", context.getString(R.string.op_div)));
-        mReplacements.add(new Localizer("*", context.getString(R.string.op_mul)));
-        mReplacements.add(new Localizer("-", context.getString(R.string.op_sub)));
-        mReplacements.add(new Localizer("asin", context.getString(R.string.arcsin)));
-        mReplacements.add(new Localizer("acos", context.getString(R.string.arccos)));
-        mReplacements.add(new Localizer("atan", context.getString(R.string.arctan)));
-        mReplacements.add(new Localizer("sin", context.getString(R.string.fun_sin)));
-        mReplacements.add(new Localizer("cos", context.getString(R.string.fun_cos)));
-        mReplacements.add(new Localizer("tan", context.getString(R.string.fun_tan)));
-        if(mUseDegrees) {
-            mReplacements.add(new Localizer("sin", "sind"));
-            mReplacements.add(new Localizer("cos", "cosd"));
-            mReplacements.add(new Localizer("tan", "tand"));
+        mReplacements.add(
+            Localizer(
+                ",",
+                Constants.MATRIX_SEPARATOR.toString()
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                ".",
+                symbols.decimalSeparator.toString()
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "/",
+                context.getString(R.string.op_div)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "*",
+                context.getString(R.string.op_mul)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "-",
+                context.getString(R.string.op_sub)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "asin",
+                context.getString(R.string.arcsin)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "acos",
+                context.getString(R.string.arccos)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "atan",
+                context.getString(R.string.arctan)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "sin",
+                context.getString(R.string.fun_sin)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "cos",
+                context.getString(R.string.fun_cos)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "tan",
+                context.getString(R.string.fun_tan)
+            )
+        )
+        if (mUseDegrees) {
+            mReplacements.add(Localizer("sin", "sind"))
+            mReplacements.add(Localizer("cos", "cosd"))
+            mReplacements.add(Localizer("tan", "tand"))
         }
-        mReplacements.add(new Localizer("ln", context.getString(R.string.fun_ln)));
-        mReplacements.add(new Localizer("log", context.getString(R.string.fun_log)));
-        mReplacements.add(new Localizer("det", context.getString(R.string.det)));
-        mReplacements.add(new Localizer("Infinity", context.getString(R.string.inf)));
+        mReplacements.add(
+            Localizer(
+                "ln",
+                context.getString(R.string.fun_ln)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "log",
+                context.getString(R.string.fun_log)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "det",
+                context.getString(R.string.det)
+            )
+        )
+        mReplacements.add(
+            Localizer(
+                "Infinity",
+                context.getString(R.string.inf)
+            )
+        )
     }
 
-    public String getNormalizedExpression(String expr) {
-        for (Localizer replacement : mReplacements) {
-            expr = expr.replace(replacement.local, replacement.english);
+    fun getNormalizedExpression(expr: String): String {
+        var expr = expr
+        for (replacement in mReplacements) {
+            expr = expr.replace(replacement.local, replacement.english)
         }
-        return expr;
+        return expr
     }
 
-    public String getLocalizedExpression(String expr) {
-        for (Localizer replacement : mReplacements) {
-            expr = expr.replace(replacement.english, replacement.local);
+    fun getLocalizedExpression(expr: String): String {
+        var expr = expr
+        for (replacement in mReplacements) {
+            expr = expr.replace(replacement.english, replacement.local)
         }
-        return expr;
+        return expr
     }
 
-    private class Localizer {
-        String english;
-        String local;
-
-        Localizer(String english, String local) {
-            this.english = english;
-            this.local = local;
-        }
-    }
+    private inner class Localizer(var english: String, var local: String)
 }
