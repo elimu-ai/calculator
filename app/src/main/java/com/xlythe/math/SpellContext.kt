@@ -1,191 +1,304 @@
-package com.xlythe.math;
+package com.xlythe.math
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
+import java.util.Arrays
+import java.util.Locale
 
-public class SpellContext {
-    private static String mySuffixText[] = {"", // Dummy! no level 0
-            "", // Nothing for level 1
-            " Thousand", " Million", " Billion", " Trillion", " (Thousand Trillion)", " (Million Trillion)", " (Billion Trillion)",};
-    private static String myTeenText[] = {"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Ninteen",};
+object SpellContext {
+    private val mySuffixText: Array<String>? = arrayOf<String>(
+        "",  // Dummy! no level 0
+        "",  // Nothing for level 1
+        " Thousand",
+        " Million",
+        " Billion",
+        " Trillion",
+        " (Thousand Trillion)",
+        " (Million Trillion)",
+        " (Billion Trillion)",
+    )
+    private val myTeenText: Array<String>? = arrayOf<String>(
+        "Zero",
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six",
+        "Seven",
+        "Eight",
+        "Nine",
+        "Ten",
+        "Eleven",
+        "Twelve",
+        "Thirteen",
+        "Fourteen",
+        "Fifteen",
+        "Sixteen",
+        "Seventeen",
+        "Eighteen",
+        "Ninteen",
+    )
+
     // used appropriately for under-cent values:
-    private static String myCentText[] = {"Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
-    // used appropriately for under-mil values.
-    private static String myMilText[] = {"One Hundred", "Two Hundred", "Three Hundred", "Four Hundred", "Five Hundred", "Six Hundred", "Seven Hundred", "Eight Hundred", "Nine Hundred"};
-    private static String[] myBelowThousandWords = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "ninteen", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred"};
-    private static ArrayList<String> myBelowThousandWordList = new ArrayList<String>(Arrays.asList(myBelowThousandWords));
-    private static long[] myBelowThousandValuess = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-    private static String[] mySuffixWords = {"trillion", "billion", "million", "thousand"};
-    private static long[] mySuffixValues = {1000000000000L, 1000000000L, 1000000L, 1000L};
+    private val myCentText: Array<String>? = arrayOf<String>(
+        "Twenty",
+        "Thirty",
+        "Forty",
+        "Fifty",
+        "Sixty",
+        "Seventy",
+        "Eighty",
+        "Ninety"
+    )
 
-    public static String replaceAllWithNumbers(String input) {
-        String result = "";
-        goingForward:
-        for(int i = 0; i < input.length(); i++) {
+    // used appropriately for under-mil values.
+    private val myMilText: Array<String>? = arrayOf<String>(
+        "One Hundred",
+        "Two Hundred",
+        "Three Hundred",
+        "Four Hundred",
+        "Five Hundred",
+        "Six Hundred",
+        "Seven Hundred",
+        "Eight Hundred",
+        "Nine Hundred"
+    )
+    private val myBelowThousandWords = arrayOf<String?>(
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "eleven",
+        "twelve",
+        "thirteen",
+        "fourteen",
+        "fifteen",
+        "sixteen",
+        "seventeen",
+        "eighteen",
+        "ninteen",
+        "twenty",
+        "thirty",
+        "forty",
+        "fifty",
+        "sixty",
+        "seventy",
+        "eighty",
+        "ninety",
+        "hundred"
+    )
+    private val myBelowThousandWordList =
+        ArrayList<String?>(Arrays.asList<String?>(*myBelowThousandWords))
+    private val myBelowThousandValuess = longArrayOf(
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100
+    )
+    private val mySuffixWords = arrayOf<String?>("trillion", "billion", "million", "thousand")
+    private val mySuffixValues = longArrayOf(1000000000000L, 1000000000L, 1000000L, 1000L)
+
+    fun replaceAllWithNumbers(input: String): String {
+        var result = ""
+        var i = 0
+        goingForward@ while (i < input.length) {
             // Start reading character by character forwards
-            String goingForward = input.substring(i);
-            for(int j = 0; j < goingForward.length(); j++) {
+            val goingForward = input.substring(i)
+            for (j in 0..<goingForward.length) {
                 // And, in each loop, character by character backwards
-                String goingBackward = goingForward.substring(0, goingForward.length() - j);
+                val goingBackward = goingForward.substring(0, goingForward.length - j)
 
                 // Attempt to parse words as numbers (ie: three)
                 try {
-                    long value = SpellContext.parse(goingBackward);
-                    result += value;
+                    val value = parse(goingBackward)
+                    result += value
 
                     // This worked. Add the length of goingBackward to
                     // the init loop.
-                    i += goingBackward.length() - 1;
-                    continue goingForward;
-                } catch(SpellException e) {
+                    i += goingBackward.length - 1
+                    i++
+                    continue@goingForward
+                } catch (e: SpellException) {
                 }
             }
-            result += input.charAt(i);
+            result += input.get(i)
+            i++
         }
-        return result;
+        return result
     }
 
-    public static String spell(long number) throws SpellException {
-        String text;
-        if(number < 0L) {
-            text = "Minus " + spell(-number, 1);
+    @Throws(SpellException::class)
+    fun spell(number: Long): String {
+        var text: String
+        if (number < 0L) {
+            text = "Minus " + spell(-number, 1)
         } else {
-            text = spell(number, 1);
+            text = spell(number, 1)
         }
 
-        int index_amp, index_perc;
+        val index_amp: Int
+        val index_perc: Int
 
-        index_amp = text.lastIndexOf("$");
-        index_perc = text.lastIndexOf("%");
+        index_amp = text.lastIndexOf("$")
+        index_perc = text.lastIndexOf("%")
 
-        if(index_amp >= 0) {
-            if(index_perc < 0 || index_amp > index_perc) {
+        if (index_amp >= 0) {
+            if (index_perc < 0 || index_amp > index_perc) {
+                val text1 = text.substring(0, index_amp)
+                val text2 = text.substring(index_amp + 1, text.length)
 
-                String text1 = text.substring(0, index_amp);
-                String text2 = text.substring(index_amp + 1, text.length());
-
-                text = text1 + " and " + text2;
+                text = text1 + " and " + text2
             }
         }
 
-        text = text.replaceAll("\\$", ", ");
-        text = text.replaceAll("%", " and ");
+        text = text.replace("\\$".toRegex(), ", ")
+        text = text.replace("%".toRegex(), " and ")
 
-        return text;
+        return text
     }
 
     // WithSeparator () function:
     // It converts a number to string using 1000's separator.
     // It uses a simple recursive algorithm.
-    public static String WithSeparator(long number) {
-        if(number < 0) {
-            return "-" + WithSeparator(-number);
+    fun WithSeparator(number: Long): String {
+        if (number < 0) {
+            return "-" + WithSeparator(-number)
         }
 
-        if(number / 1000L > 0) {
-            return WithSeparator(number / 1000L) + "," + String.format("%1$03d", number % 1000L);
+        if (number / 1000L > 0) {
+            return WithSeparator(number / 1000L) + "," + String.format("%1$03d", number % 1000L)
         } else {
-            return String.format(Locale.US, "%1$d", number);
+            return String.format(Locale.US, "%1\$d", number)
         }
     }
 
-    private static String SpellBelow1000(long number) throws SpellException {
-        if(number < 0 || number >= 1000)
-            throw new SpellException("Expecting a number between 0 and 999: " + number);
+    @Throws(SpellException::class)
+    private fun SpellBelow1000(number: Long): String {
+        if (number < 0 || number >= 1000) throw SpellException("Expecting a number between 0 and 999: " + number)
 
-        if(number < 20L) {
-            return myTeenText[(int) number];
-        } else if(number < 100L) {
-            int div = (int) number / 10;
-            int rem = (int) number % 10;
+        if (number < 20L) {
+            return myTeenText!![number.toInt()]
+        } else if (number < 100L) {
+            val div = number.toInt() / 10
+            val rem = number.toInt() % 10
 
-            if(rem == 0) {
-                return myCentText[div - 2];
+            if (rem == 0) {
+                return myCentText!![div - 2]
             } else {
-                return myCentText[div - 2] + " " + SpellBelow1000(rem);
+                return myCentText!![div - 2] + " " + SpellBelow1000(rem.toLong())
             }
         } else {
-            int div = (int) number / 100;
-            int rem = (int) number % 100;
+            val div = number.toInt() / 100
+            val rem = number.toInt() % 100
 
-            if(rem == 0) {
-                return myMilText[div - 1];
+            if (rem == 0) {
+                return myMilText!![div - 1]
             } else {
-                return myMilText[div - 1] + "%" + SpellBelow1000(rem);
+                return myMilText!![div - 1] + "%" + SpellBelow1000(rem.toLong())
             }
         }
     }
 
-    private static String spell(long number, int level) throws SpellException {
-        long div = number / 1000L;
-        long rem = number % 1000L;
+    @Throws(SpellException::class)
+    private fun spell(number: Long, level: Int): String {
+        val div = number / 1000L
+        val rem = number % 1000L
 
-        if(div == 0) {
-            return SpellBelow1000(rem) + mySuffixText[level];
+        if (div == 0L) {
+            return SpellBelow1000(rem) + mySuffixText!![level]
         } else {
-            if(rem == 0) {
-                return spell(div, level + 1);
+            if (rem == 0L) {
+                return spell(div, level + 1)
             } else {
-                return spell(div, level + 1) + "$" + SpellBelow1000(rem) + mySuffixText[level];
+                return spell(div, level + 1) + "$" + SpellBelow1000(rem) + mySuffixText!![level]
             }
         }
     }
 
-    public static long parseBelow1000(String text) throws SpellException {
+    @Throws(SpellException::class)
+    fun parseBelow1000(text: String): Long {
+        var value: Long = 0
+        val words: Array<String?> = text.replace(" and ".toRegex(), " ").split("\\s".toRegex())
+            .dropLastWhile { it.isEmpty() }.toTypedArray()
 
-        long value = 0;
-        String[] words = text.replaceAll(" and ", " ").split("\\s");
-
-        for(String word : words) {
-            if(!myBelowThousandWordList.contains(word)) {
-                throw new SpellException("Unknown token : " + word);
+        for (word in words) {
+            if (!myBelowThousandWordList.contains(word)) {
+                throw SpellException("Unknown token : " + word)
             }
 
-            long subval = getValueOf(word);
+            val subval = getValueOf(word)
 
-            if(subval == 100) {
-                if(value == 0) value = 100;
-                else value *= 100;
-            } else value += subval;
-
+            if (subval == 100L) {
+                if (value == 0L) value = 100
+                else value *= 100
+            } else value += subval
         }
 
-        return value;
+        return value
     }
 
-    private static long getValueOf(String word) {
-
-        return myBelowThousandValuess[myBelowThousandWordList.indexOf(word)];
+    private fun getValueOf(word: String?): Long {
+        return myBelowThousandValuess[myBelowThousandWordList.indexOf(word)]
     }
 
-    public static long parse(String text) throws SpellException {
-        text = text.toLowerCase(Locale.US).replaceAll("[,]", " ").replaceAll(" and ", " ");
+    @Throws(SpellException::class)
+    fun parse(text: String): Long {
+        var text = text
+        text = text.lowercase().replace("[,]".toRegex(), " ").replace(" and ".toRegex(), " ")
 
-        long totalValue = 0;
+        var totalValue: Long = 0
 
-        boolean processed = false;
+        var processed = false
 
-        for(int n = 0; n < mySuffixWords.length; n++) {
+        for (n in mySuffixWords.indices) {
+            val index = text.indexOf(mySuffixWords[n]!!)
 
-            int index = text.indexOf(mySuffixWords[n]);
+            if (index >= 0) {
+                var text1 = text.substring(0, index).trim { it <= ' ' }
+                var text2 = text.substring(index + mySuffixWords[n]!!.length).trim { it <= ' ' }
 
-            if(index >= 0) {
-                String text1 = text.substring(0, index).trim();
-                String text2 = text.substring(index + mySuffixWords[n].length()).trim();
+                if (text1 == "") text1 = "one"
 
-                if(text1.equals("")) text1 = "one";
+                if (text2 == "") text2 = "zero"
 
-                if(text2.equals("")) text2 = "zero";
-
-                totalValue = parseBelow1000(text1) * mySuffixValues[n] + parse(text2);
-                processed = true;
-                break;
-
+                totalValue = parseBelow1000(text1) * mySuffixValues[n] + parse(text2)
+                processed = true
+                break
             }
         }
 
-        if(processed) return totalValue;
-        else return parseBelow1000(text);
+        if (processed) return totalValue
+        else return parseBelow1000(text)
     }
 }
