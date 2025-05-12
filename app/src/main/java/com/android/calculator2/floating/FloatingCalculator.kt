@@ -1,200 +1,199 @@
-package com.android.calculator2.floating;
+package com.android.calculator2.floating
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
-import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import ai.elimu.calculator.R
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.text.TextUtils
+import android.view.MotionEvent
+import android.view.View
+import android.view.View.OnLongClickListener
+import android.view.View.OnTouchListener
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.viewpager.widget.ViewPager
+import com.android.calculator2.Calculator
+import com.android.calculator2.CalculatorExpressionEvaluator
+import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback
+import com.android.calculator2.CalculatorExpressionTokenizer
+import com.android.calculator2.util.DigitLabelHelper
+import com.android.calculator2.util.PlayerUtil
+import com.android.calculator2.view.display.AdvancedDisplay
+import com.xlythe.floatingview.FloatingView
+import com.xlythe.math.History
+import com.xlythe.math.Persist
 
-import com.android.calculator2.Calculator;
-import com.android.calculator2.CalculatorExpressionEvaluator;
-import com.android.calculator2.CalculatorExpressionTokenizer;
-import com.android.calculator2.util.DigitLabelHelper;
-import com.android.calculator2.util.PlayerUtil;
-import com.android.calculator2.view.display.AdvancedDisplay;
-import com.xlythe.floatingview.FloatingView;
-import com.xlythe.math.History;
-import com.xlythe.math.Persist;
-
-import ai.elimu.calculator.R;
-
-import static com.android.calculator2.util.PlayerUtil.RAW_FILE_EQUALS;
-
-public class FloatingCalculator extends FloatingView {
+class FloatingCalculator : FloatingView() {
     // Calc logic
-    private View.OnClickListener mListener;
-    private AdvancedDisplay mDisplay;
-    private ImageButton mDelete;
-    private ImageButton mClear;
-    private ViewPager mPager;
-    private Persist mPersist;
-    private History mHistory;
-    private CalculatorExpressionTokenizer mTokenizer;
-    private CalculatorExpressionEvaluator mEvaluator;
-    private State mState;
+    private var mListener: View.OnClickListener? = null
+    private var mDisplay: AdvancedDisplay? = null
+    private var mDelete: ImageButton? = null
+    private var mClear: ImageButton? = null
+    private var mPager: ViewPager? = null
+    private var mPersist: Persist? = null
+    private var mHistory: History? = null
+    private var mTokenizer: CalculatorExpressionTokenizer? = null
+    private var mEvaluator: CalculatorExpressionEvaluator? = null
+    private var mState: State? = null
 
-    private enum State {
-        DELETE, CLEAR, ERROR;
+    private enum class State {
+        DELETE, CLEAR, ERROR
     }
 
-    public View inflateButton() {
-        return View.inflate(getContext(), R.layout.floating_calculator_icon, null);
+    public override fun inflateButton(): View {
+        return View.inflate(getContext(), R.layout.floating_calculator_icon, null)
     }
 
-    public View inflateView() {
-        final View child = View.inflate(getContext(), R.layout.floating_calculator, null);
+    public override fun inflateView(): View {
+        val child = View.inflate(getContext(), R.layout.floating_calculator, null)
 
-        mTokenizer = new CalculatorExpressionTokenizer(this);
-        mEvaluator = new CalculatorExpressionEvaluator(mTokenizer);
+        mTokenizer = CalculatorExpressionTokenizer(this)
+        mEvaluator = CalculatorExpressionEvaluator(mTokenizer!!)
 
-        mPager = (ViewPager) child.findViewById(R.id.panelswitch);
+        mPager = child.findViewById<View?>(R.id.panelswitch) as ViewPager
 
-        mPersist = new Persist(this);
-        mPersist.load();
+        mPersist = Persist(this)
+        mPersist!!.load()
 
-        mHistory = mPersist.getHistory();
+        mHistory = mPersist!!.getHistory()
 
-        mDisplay = (AdvancedDisplay) child.findViewById(R.id.display);
-        mDisplay.setSolver(mEvaluator.getSolver());
-        mDisplay.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                copyContent(mDisplay.getText());
-                return true;
+        mDisplay = child.findViewById<View?>(R.id.display) as AdvancedDisplay
+        mDisplay!!.setSolver(mEvaluator!!.solver)
+        mDisplay!!.setOnLongClickListener(object : OnLongClickListener {
+            override fun onLongClick(v: View?): Boolean {
+                copyContent(mDisplay!!.getText())
+                return true
             }
-        });
+        })
 
-        mDelete = (ImageButton) child.findViewById(R.id.delete);
-        mClear = (ImageButton) child.findViewById(R.id.clear);
-        mListener = new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (v.getTag() != null && !RAW_FILE_EQUALS.equals(v.getTag())) {
-                    PlayerUtil.playRawFile(getContext(), v.getTag().toString());
+        mDelete = child.findViewById<View?>(R.id.delete) as ImageButton
+        mClear = child.findViewById<View?>(R.id.clear) as ImageButton
+        mListener = object : View.OnClickListener {
+            override fun onClick(v: View) {
+                if (v.getTag() != null && PlayerUtil.RAW_FILE_EQUALS != v.getTag()) {
+                    PlayerUtil.playRawFile(getContext(), v.getTag().toString())
                 }
 
-                if(v instanceof Button) {
-                    if(((Button) v).getText().toString().equals("=")) {
-                        mEvaluator.evaluate(mDisplay.getText(), new CalculatorExpressionEvaluator.EvaluateCallback() {
-                            @Override
-                            public void onEvaluate(String expr, String result, int errorResourceId) {
+                if (v is Button) {
+                    if (v.getText().toString() == "=") {
+                        mEvaluator!!.evaluate(mDisplay!!.getText(), object : EvaluateCallback {
+                            override fun onEvaluate(
+                                expr: String?,
+                                result: String?,
+                                errorResourceId: Int
+                            ) {
                                 if (errorResourceId != Calculator.INVALID_RES_ID) {
-                                    onError(errorResourceId);
+                                    onError(errorResourceId)
                                 } else {
                                     // Play audio for result
-                                    if (result != null && TextUtils.isDigitsOnly(result) && Integer.parseInt(result) < 10) {
-                                        View view = child.findViewById(DigitLabelHelper.getIdForDigit(Integer.parseInt(result)));
-                                        PlayerUtil.playResult(getContext(), view.getTag().toString());
+                                    if (result != null && TextUtils.isDigitsOnly(result) && result.toInt() < 10) {
+                                        val view = child.findViewById<View>(
+                                            DigitLabelHelper.getIdForDigit(result.toInt())
+                                        )
+                                        PlayerUtil.playResult(
+                                            getContext(),
+                                            view.getTag().toString()
+                                        )
                                     } else {
-                                        PlayerUtil.playRawFile(getContext(), RAW_FILE_EQUALS);
+                                        PlayerUtil.playRawFile(
+                                            getContext(),
+                                            PlayerUtil.RAW_FILE_EQUALS
+                                        )
                                     }
-                                    setText(result);
+                                    setText(result)
                                 }
                             }
-                        });
-                    } else if(v.getId() == R.id.parentheses) {
-                        setText("(" + mDisplay.getText() + ")");
-                    } else if(((Button) v).getText().toString().length() >= 2) {
-                        onInsert(((Button) v).getText().toString() + "(");
+                        })
+                    } else if (v.getId() == R.id.parentheses) {
+                        setText("(" + mDisplay!!.getText() + ")")
+                    } else if (v.getText().toString().length >= 2) {
+                        onInsert(v.getText().toString() + "(")
                     } else {
-                        onInsert(((Button) v).getText().toString());
+                        onInsert(v.getText().toString())
                     }
-                } else if(v instanceof ImageButton) {
-                    onDelete();
+                } else if (v is ImageButton) {
+                    onDelete()
                 }
             }
-        };
-        mDelete.setOnClickListener(mListener);
-        mDelete.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                onClear();
-                return true;
+        }
+        mDelete!!.setOnClickListener(mListener)
+        mDelete!!.setOnLongClickListener(object : OnLongClickListener {
+            override fun onLongClick(v: View?): Boolean {
+                onClear()
+                return true
             }
-        });
-        mClear.setOnClickListener(mListener);
-        mClear.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                onClear();
-                return true;
+        })
+        mClear!!.setOnClickListener(mListener)
+        mClear!!.setOnLongClickListener(object : OnLongClickListener {
+            override fun onLongClick(v: View?): Boolean {
+                onClear()
+                return true
             }
-        });
+        })
 
-        FloatingCalculatorPageAdapter adapter = new FloatingCalculatorPageAdapter(getContext(), mListener, mHistory);
-        mPager.setAdapter(adapter);
-        mPager.setCurrentItem(1);
+        val adapter = FloatingCalculatorPageAdapter(getContext(), mListener, mHistory)
+        mPager!!.setAdapter(adapter)
+        mPager!!.setCurrentItem(1)
 
-        child.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
+        child.setOnTouchListener(object : OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                return true
             }
-        });
-        child.findViewById(R.id.display_wrapper).bringToFront();
+        })
+        child.findViewById<View?>(R.id.display_wrapper).bringToFront()
 
-        setState(State.DELETE);
+        setState(State.DELETE)
 
-        return child;
+        return child
     }
 
-    private void onDelete() {
-        setState(State.DELETE);
-        mDisplay.backspace();
+    private fun onDelete() {
+        setState(State.DELETE)
+        mDisplay!!.backspace()
     }
 
-    private void onClear() {
-        setState(State.CLEAR);
-        mDisplay.clear();
+    private fun onClear() {
+        setState(State.CLEAR)
+        mDisplay!!.clear()
     }
 
-    private void setText(String text) {
-        setState(State.DELETE);
-        mDisplay.setText(text);
+    private fun setText(text: String?) {
+        setState(State.DELETE)
+        mDisplay!!.setText(text)
     }
 
-    private void onInsert(String text) {
-        if(mState != State.DELETE) {
-            setText(text);
-            return;
+    private fun onInsert(text: String?) {
+        if (mState != State.DELETE) {
+            setText(text)
+            return
         }
 
-        setState(State.DELETE);
-        mDisplay.insert(text);
+        setState(State.DELETE)
+        mDisplay!!.insert(text)
     }
 
-    private void onError(int resId) {
-        setState(State.ERROR);
-        mDisplay.setText(resId);
+    private fun onError(resId: Int) {
+        setState(State.ERROR)
+        mDisplay!!.setText(resId)
     }
 
-    private void setState(State state) {
-        mDelete.setVisibility(state == State.DELETE ? View.VISIBLE : View.GONE);
-        mClear.setVisibility(state != State.DELETE ? View.VISIBLE : View.GONE);
-        if(mState != state) {
-            switch (state) {
-                case CLEAR:
-                    break;
-                case DELETE:
-                    mDisplay.setTextColor(getResources().getColor(R.color.display_formula_text_color));
-                    break;
-                case ERROR:
-                    mDisplay.setTextColor(getResources().getColor(R.color.calculator_error_color));
-                    break;
+    private fun setState(state: State) {
+        mDelete!!.setVisibility(if (state == State.DELETE) View.VISIBLE else View.GONE)
+        mClear!!.setVisibility(if (state != State.DELETE) View.VISIBLE else View.GONE)
+        if (mState != state) {
+            when (state) {
+                State.CLEAR -> {}
+                State.DELETE -> mDisplay!!.setTextColor(getResources().getColor(R.color.display_formula_text_color))
+                State.ERROR -> mDisplay!!.setTextColor(getResources().getColor(R.color.calculator_error_color))
             }
-            mState = state;
+            mState = state
         }
     }
 
-    private void copyContent(String text) {
-        ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText(null, text));
-        String toastText = String.format(getResources().getString(R.string.text_copied_toast), text);
-        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
+    private fun copyContent(text: String) {
+        val clipboard = getContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
+        val toastText = String.format(getResources().getString(R.string.text_copied_toast), text)
+        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show()
     }
 }
