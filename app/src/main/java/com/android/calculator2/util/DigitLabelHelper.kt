@@ -1,18 +1,52 @@
-package com.android.calculator2.util;
+package com.android.calculator2.util
 
-import android.content.Context;
-import android.content.res.Resources;
-import ai.elimu.calculator.R;
+import ai.elimu.calculator.R
+import android.content.Context
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
+class DigitLabelHelper {
+    private var mCachedLocaleHash = 0
+    private var mDecFormatSymbols: DecimalFormatSymbols? = null
 
-public final class DigitLabelHelper {
+    interface DigitLabelHelperCallback {
+        fun setDigitText(id: Int, text: String?)
+    }
 
-    private static final String UNICODE_LOCALE_KEY = "nu";
-    private static final String UNICODE_LOCALE_VALUE = "latn";
-    private static DigitLabelHelper sInstance;
-    private static final int[] sDigitIds = new int[] {
+    private fun getDecimalFormatForCurrentLocale(context: Context): DecimalFormatSymbols {
+        val resources = context.getResources()
+        var locale = resources.getConfiguration().locale
+        if (locale.hashCode() != mCachedLocaleHash) {
+            if (!resources.getBoolean(R.bool.use_localized_digits)) {
+                locale = Locale.Builder()
+                    .setLocale(locale)
+                    .setUnicodeLocaleKeyword(UNICODE_LOCALE_KEY, UNICODE_LOCALE_VALUE)
+                    .build()
+            }
+            mCachedLocaleHash = locale.hashCode()
+            mDecFormatSymbols = DecimalFormatSymbols.getInstance(locale)
+        }
+        return mDecFormatSymbols!!
+    }
+
+    fun getTextForDigits(context: Context, callback: DigitLabelHelperCallback) {
+        val symbols = getDecimalFormatForCurrentLocale(context)
+        val zeroDigit = symbols.getZeroDigit()
+        for (i in sDigitIds.indices) {
+            val id: Int = sDigitIds[i]
+            if (id == R.id.dec_point) {
+                callback.setDigitText(id, symbols.getDecimalSeparator().toString())
+            } else {
+                callback.setDigitText(id, (zeroDigit.code + i).toChar().toString())
+            }
+        }
+    }
+
+    companion object {
+        private const val UNICODE_LOCALE_KEY = "nu"
+        private const val UNICODE_LOCALE_VALUE = "latn"
+        private var sInstance: DigitLabelHelper? = null
+        private val sDigitIds = intArrayOf(
             R.id.digit0,
             R.id.digit1,
             R.id.digit2,
@@ -24,52 +58,20 @@ public final class DigitLabelHelper {
             R.id.digit8,
             R.id.digit9,
             R.id.dec_point
-    };
+        )
 
-    private int mCachedLocaleHash;
-    private DecimalFormatSymbols mDecFormatSymbols;
-
-    public interface DigitLabelHelperCallback {
-        void setDigitText(int id, String text);
-    }
-
-    public synchronized static DigitLabelHelper getInstance() {
-        if (sInstance == null) {
-            sInstance = new DigitLabelHelper();
-        }
-        return sInstance;
-    }
-
-    private DecimalFormatSymbols getDecimalFormatForCurrentLocale(Context context) {
-        Resources resources = context.getResources();
-        Locale locale = resources.getConfiguration().locale;
-        if (locale.hashCode() != mCachedLocaleHash) {
-            if (!resources.getBoolean(R.bool.use_localized_digits)) {
-                locale = new Locale.Builder()
-                        .setLocale(locale)
-                        .setUnicodeLocaleKeyword(UNICODE_LOCALE_KEY, UNICODE_LOCALE_VALUE)
-                        .build();
+        @JvmStatic
+        @get:Synchronized
+        val instance: DigitLabelHelper
+            get() {
+                if (sInstance == null) {
+                    sInstance = DigitLabelHelper()
+                }
+                return sInstance!!
             }
-            mCachedLocaleHash = locale.hashCode();
-            mDecFormatSymbols = DecimalFormatSymbols.getInstance(locale);
-        }
-        return mDecFormatSymbols;
-    }
 
-    public void getTextForDigits(Context context, DigitLabelHelperCallback callback) {
-        final DecimalFormatSymbols symbols = getDecimalFormatForCurrentLocale(context);
-        final char zeroDigit = symbols.getZeroDigit();
-        for (int i = 0; i < sDigitIds.length; i++) {
-            int id = sDigitIds[i];
-            if (id == R.id.dec_point) {
-                callback.setDigitText(id, String.valueOf(symbols.getDecimalSeparator()));
-            } else {
-                callback.setDigitText(id, String.valueOf((char) (zeroDigit + i)));
-            }
+        fun getIdForDigit(digit: Int): Int {
+            return sDigitIds[digit]
         }
-    }
-
-    public static int getIdForDigit(int digit) {
-        return sDigitIds[digit];
     }
 }

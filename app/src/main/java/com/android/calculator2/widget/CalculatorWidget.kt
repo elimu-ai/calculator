@@ -224,7 +224,7 @@ class CalculatorWidget : AppWidgetProvider() {
             }
         }
 
-        DigitLabelHelper.getInstance().getTextForDigits(
+        DigitLabelHelper.instance.getTextForDigits(
             context,
             object : DigitLabelHelperCallback {
                 override fun setDigitText(id: Int, text: String?) {

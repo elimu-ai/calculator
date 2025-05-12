@@ -30,7 +30,7 @@ class CalculatorNumericPadLayout @JvmOverloads constructor(
     public override fun onFinishInflate() {
         super.onFinishInflate()
 
-        DigitLabelHelper.getInstance().getTextForDigits(
+        DigitLabelHelper.instance.getTextForDigits(
             context,
             object : DigitLabelHelperCallback {
                 override fun setDigitText(id: Int, text: String?) {
