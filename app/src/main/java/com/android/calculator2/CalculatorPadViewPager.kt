@@ -13,111 +13,104 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.android.calculator2;
+package com.android.calculator2
 
-import android.content.Context;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
+import ai.elimu.calculator.R
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import java.util.Objects
+import kotlin.math.max
 
-import ai.elimu.calculator.R;
+class CalculatorPadViewPager @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : ViewPager(context, attrs) {
+    private var mBaseManager: NumberBaseManager? = null
 
-public class CalculatorPadViewPager extends ViewPager {
-    private NumberBaseManager mBaseManager;
-
-    private final PagerAdapter mStaticPagerAdapter = new PagerAdapter() {
-        @Override
-        public int getCount() {
-            return getChildCount();
+    private val mStaticPagerAdapter: PagerAdapter = object : PagerAdapter() {
+        override fun getCount(): Int {
+            return getChildCount()
         }
 
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            return getChildAt(position);
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
+            return getChildAt(position)
         }
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            removeViewAt(position);
+        override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+            removeViewAt(position)
         }
 
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
+        override fun isViewFromObject(view: View, obj: Any): Boolean {
+            return view === obj
         }
 
-        @Override
-        public float getPageWidth(int position) {
-            return position == 1 ? 7.0f / 9.0f : 1.0f;
+        override fun getPageWidth(position: Int): Float {
+            return if (position == 1) 7.0f / 9.0f else 1.0f
         }
-    };
+    }
 
-    private final OnPageChangeListener mOnPageChangeListener = new SimpleOnPageChangeListener() {
-        private void recursivelyEnable(View view, boolean enabled) {
-            if (view instanceof ViewGroup) {
-                final ViewGroup viewGroup = (ViewGroup) view;
-                for (int childIndex = 0; childIndex < viewGroup.getChildCount(); ++childIndex) {
-                    recursivelyEnable(viewGroup.getChildAt(childIndex), enabled);
+    private val mOnPageChangeListener: OnPageChangeListener =
+        object : SimpleOnPageChangeListener() {
+            private fun recursivelyEnable(view: View, enabled: Boolean) {
+                var enabled = enabled
+                if (view is ViewGroup) {
+                    val viewGroup = view
+                    for (childIndex in 0..<viewGroup.getChildCount()) {
+                        recursivelyEnable(viewGroup.getChildAt(childIndex), enabled)
+                    }
+                } else {
+                    if (mBaseManager != null) {
+                        enabled = enabled and !mBaseManager!!.isViewDisabled(view.getId())
+                    }
+                    view.setEnabled(enabled)
                 }
-            } else {
-                if(mBaseManager != null) {
-                    enabled &= !mBaseManager.isViewDisabled(view.getId());
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (getAdapter() === mStaticPagerAdapter) {
+                    for (childIndex in 0..<getChildCount()) {
+                        recursivelyEnable(getChildAt(childIndex), childIndex == position)
+                    }
                 }
-                view.setEnabled(enabled);
             }
         }
 
-        @Override
-        public void onPageSelected(int position) {
-            if (getAdapter() == mStaticPagerAdapter) {
-                for (int childIndex = 0; childIndex < getChildCount(); ++childIndex) {
-                    recursivelyEnable(getChildAt(childIndex), childIndex == position);
-                }
-            }
-        }
-    };
-
-    private final PageTransformer mPageTransformer = new PageTransformer() {
-        @Override
-        public void transformPage(View view, float position) {
+    private val mPageTransformer: PageTransformer = object : PageTransformer {
+        override fun transformPage(view: View, position: Float) {
             if (position < 0.0f) {
                 // Pin the left page to the left side.
-                view.setTranslationX(getWidth() * -position);
-                view.setAlpha(Math.max(1.0f + position, 0.0f));
+                view.setTranslationX(getWidth() * -position)
+                view.setAlpha(max((1.0f + position).toDouble(), 0.0).toFloat())
             } else {
                 // Use the default slide transition when moving to the next page.
-                view.setTranslationX(0.0f);
-                view.setAlpha(1.0f);
+                view.setTranslationX(0.0f)
+                view.setAlpha(1.0f)
             }
         }
-    };
-
-    public CalculatorPadViewPager(Context context) {
-        this(context, null);
     }
 
-    public CalculatorPadViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setAdapter(mStaticPagerAdapter);
-        setBackgroundColor(getResources().getColor(android.R.color.black));
-        setOnPageChangeListener(mOnPageChangeListener);
-        setPageMargin(getResources().getDimensionPixelSize(R.dimen.pad_page_margin));
-        setPageTransformer(false, mPageTransformer);
+    init {
+        setAdapter(mStaticPagerAdapter)
+        setBackgroundColor(getResources().getColor(android.R.color.black))
+        setOnPageChangeListener(mOnPageChangeListener)
+        setPageMargin(getResources().getDimensionPixelSize(R.dimen.pad_page_margin))
+        setPageTransformer(false, mPageTransformer)
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+    override fun onFinishInflate() {
+        super.onFinishInflate()
 
         // Invalidate the adapter's data set since children may have been added during inflation.
-        if (getAdapter() == mStaticPagerAdapter) {
-            mStaticPagerAdapter.notifyDataSetChanged();
+        if (getAdapter() === mStaticPagerAdapter) {
+            mStaticPagerAdapter.notifyDataSetChanged()
         }
     }
 
-    public void setBaseManager(NumberBaseManager baseManager) {
-        mBaseManager = baseManager;
+    fun setBaseManager(baseManager: NumberBaseManager?) {
+        mBaseManager = baseManager
     }
 }
