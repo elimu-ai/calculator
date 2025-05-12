@@ -13,55 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.xlythe.math
 
-package com.xlythe.math;
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+class HistoryEntry {
+    private var mBase: String? = null
+    var edited: String? = null
 
-public class HistoryEntry {
-    private static final int VERSION_1 = 1;
-    private String mBase;
-    private String mEdited;
-
-    HistoryEntry(String base, String edited) {
-        mBase = base;
-        mEdited = edited;
+    internal constructor(base: String, edited: String?) {
+        mBase = base
+        this.edited = edited
     }
 
-    HistoryEntry(int version, DataInput in) throws IOException {
-        if(version >= VERSION_1) {
-            mBase = in.readUTF();
-            mEdited = in.readUTF();
+    internal constructor(version: Int, `in`: DataInput) {
+        if (version >= VERSION_1) {
+            mBase = `in`.readUTF()
+            this.edited = `in`.readUTF()
         } else {
-            throw new IOException("invalid version " + version);
+            throw IOException("invalid version " + version)
         }
     }
 
-    void write(DataOutput out) throws IOException {
-        out.writeUTF(mBase);
-        out.writeUTF(mEdited);
+    @Throws(IOException::class)
+    fun write(out: DataOutput) {
+        out.writeUTF(mBase)
+        out.writeUTF(this.edited)
     }
 
-    @Override
-    public String toString() {
-        return mBase;
+    override fun toString(): String {
+        return mBase!!
     }
 
-    void clearEdited() {
-        mEdited = mBase;
+    fun clearEdited() {
+        this.edited = mBase
     }
 
-    public String getEdited() {
-        return mEdited;
-    }
+    val base: String
+        get() = mBase!!
 
-    void setEdited(String edited) {
-        mEdited = edited;
-    }
-
-    public String getBase() {
-        return mBase;
+    companion object {
+        private const val VERSION_1 = 1
     }
 }
