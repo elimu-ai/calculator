@@ -1,48 +1,51 @@
-package com.android.calculator2;
+package com.android.calculator2
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.widget.Toast;
-
-import ai.elimu.calculator.R;
+import ai.elimu.calculator.R
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
 
 /**
  * Simplify Android copy/paste
  */
-public class Clipboard {
-    public static void copy(Context context, String text) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText(null, text));
-        String toastText = String.format(context.getResources().getString(R.string.text_copied_toast), text);
-        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
+object Clipboard {
+    @JvmStatic
+    fun copy(context: Context, text: String) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
+        val toastText =
+            String.format(context.getResources().getString(R.string.text_copied_toast), text)
+        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
     }
 
-    public static String paste(Context context) {
-        ClipData clip = getPrimaryClip(context);
-        if(clip != null) {
-            for(int i = 0; i < clip.getItemCount(); i++) {
-                CharSequence paste = clip.getItemAt(i).coerceToText(context);
-                if(paste.length() > 0) {
-                    return paste.toString();
+    @JvmStatic
+    fun paste(context: Context): String? {
+        val clip = getPrimaryClip(context)
+        if (clip != null) {
+            for (i in 0..<clip.itemCount) {
+                val paste = clip.getItemAt(i).coerceToText(context)
+                if (paste.length > 0) {
+                    return paste.toString()
                 }
             }
         }
-        return null;
+        return null
     }
 
-    public static boolean canPaste(Context context) {
-        return paste(context) != null;
+    @JvmStatic
+    fun canPaste(context: Context): Boolean {
+        return paste(context) != null
     }
 
 
-    private static ClipData getPrimaryClip(Context context) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        return clipboard.getPrimaryClip();
+    private fun getPrimaryClip(context: Context): ClipData? {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        return clipboard.primaryClip
     }
 
-    private static void setPrimaryClip(Context context, ClipData clip) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(clip);
+    private fun setPrimaryClip(context: Context, clip: ClipData) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(clip)
     }
 }
