@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.android.calculator2.view
 
-package com.android.calculator2.view;
-
-public class TextUtil {
-    public static int countOccurrences(String haystack, char needle) {
-        int count = 0;
-        for(int i = 0; i < haystack.length(); i++) {
-            if(haystack.charAt(i) == needle) {
-                count++;
+object TextUtil {
+    @JvmStatic
+    fun countOccurrences(haystack: String, needle: Char): Int {
+        var count = 0
+        for (i in 0..<haystack.length) {
+            if (haystack[i] == needle) {
+                count++
             }
         }
-        return count;
+        return count
     }
 }
