@@ -66,15 +66,17 @@ class GraphController(
     }
 
     private fun setDomainAndRange() {
-        mGraphModule.setDomain(mGraphView.xAxisMin, mGraphView.getXAxisMax())
-        mGraphModule.setRange(mGraphView.yAxisMin, mGraphView.getYAxisMax())
+        mGraphModule.setDomain(mGraphView.xAxisMin, mGraphView.xAxisMax)
+        mGraphModule.setRange(mGraphView.yAxisMin, mGraphView.yAxisMax)
         mGraphModule.setZoomLevel(mGraphView.zoomLevel)
     }
 
     private fun setGraphDataIfReady() {
-        if (mIsGraphViewReady && mSeries != null) {
-            mGraphView.setData(mSeries)
-            mGraphView.invalidate()
+        if (mIsGraphViewReady) {
+            mSeries?.let { series ->
+                mGraphView.setData(series)
+                mGraphView.invalidate()
+            }
         }
     }
 
