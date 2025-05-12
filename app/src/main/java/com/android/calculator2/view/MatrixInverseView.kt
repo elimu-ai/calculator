@@ -13,35 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.android.calculator2.view
 
-package com.android.calculator2.view;
+import ai.elimu.calculator.R
+import android.content.Context
+import android.text.Html
+import android.text.InputType
+import android.widget.TextView
+import com.android.calculator2.view.display.AdvancedDisplay
 
-import android.content.Context;
-import android.text.Html;
-import android.text.InputType;
-import android.widget.TextView;
+class MatrixInverseView : TextView {
+    constructor(context: Context?) : super(context)
 
-import ai.elimu.calculator.R;
-import com.android.calculator2.view.display.AdvancedDisplay;
-
-public class MatrixInverseView extends TextView {
-    private final static char PLACEHOLDER = '\uFEFF';
-    public final static String PATTERN = PLACEHOLDER + "^-1";
-
-    public MatrixInverseView(Context context) {
-        super(context);
+    constructor(display: AdvancedDisplay) : super(display.getContext()) {
+        setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+        setText(Html.fromHtml("<sup><small>-1</small></sup>"))
+        setTextAppearance(display.getContext(), R.style.Theme_Calculator_Display)
+        setPadding(0, 0, 0, 0)
     }
 
-    public MatrixInverseView(final AdvancedDisplay display) {
-        super(display.getContext());
-        setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        setText(Html.fromHtml("<sup><small>-1</small></sup>"));
-        setTextAppearance(display.getContext(), R.style.Theme_Calculator_Display);
-        setPadding(0, 0, 0, 0);
+    override fun toString(): String {
+        return PATTERN
     }
 
-    @Override
-    public String toString() {
-        return PATTERN;
+    companion object {
+        private const val PLACEHOLDER = '\uFEFF'
+        val PATTERN: String = PLACEHOLDER.toString() + "^-1"
     }
 }
