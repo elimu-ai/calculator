@@ -13,114 +13,116 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.calculator2.viewpager;
+package com.android.calculator2.viewpager
 
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
-import android.os.Parcelable;
-import android.view.View;
-import android.view.ViewGroup;
+import android.database.DataSetObservable
+import android.database.DataSetObserver
+import android.os.Parcelable
+import android.view.View
+import android.view.ViewGroup
 
 /**
  * Base class providing the adapter to populate pages inside of
- * a {@link VerticalViewPager}.  You will most likely want to use a more
+ * a [VerticalViewPager].  You will most likely want to use a more
  * specific implementation of this, such as
- * {@link androidx.v4.app.FragmentPagerAdapter} or
- * {@link androidx.v4.app.FragmentStatePagerAdapter}.
+ * [androidx.v4.app.FragmentPagerAdapter] or
+ * [androidx.v4.app.FragmentStatePagerAdapter].
  *
- * <p>When you implement a PagerAdapter, you must override the following methods
- * at minimum:</p>
- * <ul>
- * <li>{@link #instantiateItem(ViewGroup, int)}</li>
- * <li>{@link #destroyItem(ViewGroup, int, Object)}</li>
- * <li>{@link #getCount()}</li>
- * <li>{@link #isViewFromObject(View, Object)}</li>
- * </ul>
  *
- * <p>PagerAdapter is more general than the adapters used for
- * {@link android.widget.AdapterView AdapterViews}. Instead of providing a
+ * When you implement a PagerAdapter, you must override the following methods
+ * at minimum:
+ *
+ *  * [.instantiateItem]
+ *  * [.destroyItem]
+ *  * [.getCount]
+ *  * [.isViewFromObject]
+ *
+ *
+ *
+ * PagerAdapter is more general than the adapters used for
+ * [AdapterViews][android.widget.AdapterView]. Instead of providing a
  * View recycling mechanism directly ViewPager uses callbacks to indicate the
  * steps taken during an update. A PagerAdapter may implement a form of View
  * recycling if desired or use a more sophisticated method of managing page
  * Views such as Fragment transactions where each page is represented by its
- * own Fragment.</p>
+ * own Fragment.
  *
- * <p>ViewPager associates each page with a key Object instead of working with
+ *
+ * ViewPager associates each page with a key Object instead of working with
  * Views directly. This key is used to track and uniquely identify a given page
  * independent of its position in the adapter. A call to the PagerAdapter method
- * {@link #startUpdate(ViewGroup)} indicates that the contents of the ViewPager
- * are about to change. One or more calls to {@link #instantiateItem(ViewGroup, int)}
- * and/or {@link #destroyItem(ViewGroup, int, Object)} will follow, and the end
- * of an update will be signaled by a call to {@link #finishUpdate(ViewGroup)}.
- * By the time {@link #finishUpdate(ViewGroup) finishUpdate} returns the views
+ * [.startUpdate] indicates that the contents of the ViewPager
+ * are about to change. One or more calls to [.instantiateItem]
+ * and/or [.destroyItem] will follow, and the end
+ * of an update will be signaled by a call to [.finishUpdate].
+ * By the time [finishUpdate][.finishUpdate] returns the views
  * associated with the key objects returned by
- * {@link #instantiateItem(ViewGroup, int) instantiateItem} should be added to
+ * [instantiateItem][.instantiateItem] should be added to
  * the parent ViewGroup passed to these methods and the views associated with
- * the keys passed to {@link #destroyItem(ViewGroup, int, Object) destroyItem}
- * should be removed. The method {@link #isViewFromObject(View, Object)} identifies
- * whether a page View is associated with a given key object.</p>
+ * the keys passed to [destroyItem][.destroyItem]
+ * should be removed. The method [.isViewFromObject] identifies
+ * whether a page View is associated with a given key object.
  *
- * <p>A very simple PagerAdapter may choose to use the page Views themselves
- * as key objects, returning them from {@link #instantiateItem(ViewGroup, int)}
+ *
+ * A very simple PagerAdapter may choose to use the page Views themselves
+ * as key objects, returning them from [.instantiateItem]
  * after creation and adding them to the parent ViewGroup. A matching
- * {@link #destroyItem(ViewGroup, int, Object)} implementation would remove the
- * View from the parent ViewGroup and {@link #isViewFromObject(View, Object)}
- * could be implemented as <code>return view == object;</code>.</p>
+ * [.destroyItem] implementation would remove the
+ * View from the parent ViewGroup and [.isViewFromObject]
+ * could be implemented as `return view == object;`.
  *
- * <p>PagerAdapter supports data set changes. Data set changes must occur on the
- * main thread and must end with a call to {@link #notifyDataSetChanged()} similar
- * to AdapterView adapters derived from {@link android.widget.BaseAdapter}. A data
+ *
+ * PagerAdapter supports data set changes. Data set changes must occur on the
+ * main thread and must end with a call to [.notifyDataSetChanged] similar
+ * to AdapterView adapters derived from [android.widget.BaseAdapter]. A data
  * set change may involve pages being added, removed, or changing position. The
  * ViewPager will keep the current page active provided the adapter implements
- * the method {@link #getItemPosition(Object)}.</p>
+ * the method [.getItemPosition].
  */
-public abstract class PagerAdapter {
-    private DataSetObservable mObservable = new DataSetObservable();
-
-    public static final int POSITION_UNCHANGED = -1;
-    public static final int POSITION_NONE = -2;
+abstract class PagerAdapter {
+    private val mObservable = DataSetObservable()
 
     /**
      * Return the number of views available.
      */
-    public abstract int getCount();
+    abstract val count: Int
 
     /**
      * Called when a change in the shown pages is going to start being made.
      * @param container The containing View which is displaying this adapter's
      * page views.
      */
-    public void startUpdate(ViewGroup container) {
-        startUpdate((View) container);
+    fun startUpdate(container: ViewGroup?) {
+        startUpdate(container as View?)
     }
 
     /**
      * Create the page for the given position.  The adapter is responsible
      * for adding the view to the container given here, although it only
      * must ensure this is done by the time it returns from
-     * {@link #finishUpdate(ViewGroup)}.
+     * [.finishUpdate].
      *
      * @param container The containing View in which the page will be shown.
      * @param position The page position to be instantiated.
      * @return Returns an Object representing the new page.  This does not
      * need to be a View, but can be some other container of the page.
      */
-    public Object instantiateItem(ViewGroup container, int position) {
-        return instantiateItem((View) container, position);
+    open fun instantiateItem(container: ViewGroup?, position: Int): Any? {
+        return instantiateItem(container as View?, position)
     }
 
     /**
      * Remove a page for the given position.  The adapter is responsible
      * for removing the view from its container, although it only must ensure
-     * this is done by the time it returns from {@link #finishUpdate(ViewGroup)}.
+     * this is done by the time it returns from [.finishUpdate].
      *
      * @param container The containing View from which the page will be removed.
      * @param position The page position to be removed.
      * @param object The same object that was returned by
-     * {@link #instantiateItem(View, int)}.
+     * [.instantiateItem].
      */
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        destroyItem((View) container, position, object);
+    open fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+        destroyItem(container as View?, position, `object`)
     }
 
     /**
@@ -130,10 +132,10 @@ public abstract class PagerAdapter {
      * @param container The containing View from which the page will be removed.
      * @param position The page position that is now the primary.
      * @param object The same object that was returned by
-     * {@link #instantiateItem(View, int)}.
+     * [.instantiateItem].
      */
-    public void setPrimaryItem(ViewGroup container, int position, Object object) {
-        setPrimaryItem((View) container, position, object);
+    fun setPrimaryItem(container: ViewGroup?, position: Int, `object`: Any?) {
+        setPrimaryItem(container as View?, position, `object`)
     }
 
     /**
@@ -143,8 +145,8 @@ public abstract class PagerAdapter {
      * @param container The containing View which is displaying this adapter's
      * page views.
      */
-    public void finishUpdate(ViewGroup container) {
-        finishUpdate((View) container);
+    fun finishUpdate(container: ViewGroup?) {
+        finishUpdate(container as View?)
     }
 
     /**
@@ -152,43 +154,44 @@ public abstract class PagerAdapter {
      * @param container The containing View which is displaying this adapter's
      * page views.
      *
-     * @deprecated Use {@link #startUpdate(ViewGroup)}
      */
-    public void startUpdate(View container) {
+    @Deprecated("Use {@link #startUpdate(ViewGroup)}")
+    fun startUpdate(container: View?) {
     }
 
     /**
      * Create the page for the given position.  The adapter is responsible
      * for adding the view to the container given here, although it only
      * must ensure this is done by the time it returns from
-     * {@link #finishUpdate(ViewGroup)}.
+     * [.finishUpdate].
      *
      * @param container The containing View in which the page will be shown.
      * @param position The page position to be instantiated.
      * @return Returns an Object representing the new page.  This does not
      * need to be a View, but can be some other container of the page.
      *
-     * @deprecated Use {@link #instantiateItem(ViewGroup, int)}
      */
-    public Object instantiateItem(View container, int position) {
-        throw new UnsupportedOperationException(
-                "Required method instantiateItem was not overridden");
+    @Deprecated("Use {@link #instantiateItem(ViewGroup, int)}")
+    fun instantiateItem(container: View?, position: Int): Any? {
+        throw UnsupportedOperationException(
+            "Required method instantiateItem was not overridden"
+        )
     }
 
     /**
      * Remove a page for the given position.  The adapter is responsible
      * for removing the view from its container, although it only must ensure
-     * this is done by the time it returns from {@link #finishUpdate(View)}.
+     * this is done by the time it returns from [.finishUpdate].
      *
      * @param container The containing View from which the page will be removed.
      * @param position The page position to be removed.
      * @param object The same object that was returned by
-     * {@link #instantiateItem(View, int)}.
+     * [.instantiateItem].
      *
-     * @deprecated Use {@link #destroyItem(ViewGroup, int, Object)}
      */
-    public void destroyItem(View container, int position, Object object) {
-        throw new UnsupportedOperationException("Required method destroyItem was not overridden");
+    @Deprecated("Use {@link #destroyItem(ViewGroup, int, Object)}")
+    fun destroyItem(container: View?, position: Int, `object`: Any?) {
+        throw UnsupportedOperationException("Required method destroyItem was not overridden")
     }
 
     /**
@@ -198,11 +201,11 @@ public abstract class PagerAdapter {
      * @param container The containing View from which the page will be removed.
      * @param position The page position that is now the primary.
      * @param object The same object that was returned by
-     * {@link #instantiateItem(View, int)}.
+     * [.instantiateItem].
      *
-     * @deprecated Use {@link #setPrimaryItem(ViewGroup, int, Object)}
      */
-    public void setPrimaryItem(View container, int position, Object object) {
+    @Deprecated("Use {@link #setPrimaryItem(ViewGroup, int, Object)}")
+    fun setPrimaryItem(container: View?, position: Int, `object`: Any?) {
     }
 
     /**
@@ -212,21 +215,21 @@ public abstract class PagerAdapter {
      * @param container The containing View which is displaying this adapter's
      * page views.
      *
-     * @deprecated Use {@link #finishUpdate(ViewGroup)}
      */
-    public void finishUpdate(View container) {
+    @Deprecated("Use {@link #finishUpdate(ViewGroup)}")
+    fun finishUpdate(container: View?) {
     }
 
     /**
      * Determines whether a page View is associated with a specific key object
-     * as returned by {@link #instantiateItem(ViewGroup, int)}. This method is
+     * as returned by [.instantiateItem]. This method is
      * required for a PagerAdapter to function properly.
      *
-     * @param view Page View to check for association with <code>object</code>
-     * @param object Object to check for association with <code>view</code>
-     * @return true if <code>view</code> is associated with the key object <code>object</code>
+     * @param view Page View to check for association with `object`
+     * @param object Object to check for association with `view`
+     * @return true if `view` is associated with the key object `object`
      */
-    public abstract boolean isViewFromObject(View view, Object object);
+    abstract fun isViewFromObject(view: View?, `object`: Any?): Boolean
 
     /**
      * Save any instance state associated with this adapter and its pages that should be
@@ -234,53 +237,54 @@ public abstract class PagerAdapter {
      *
      * @return Saved state for this adapter
      */
-    public Parcelable saveState() {
-        return null;
+    fun saveState(): Parcelable? {
+        return null
     }
 
     /**
      * Restore any instance state associated with this adapter and its pages
-     * that was previously saved by {@link #saveState()}.
+     * that was previously saved by [.saveState].
      *
-     * @param state State previously saved by a call to {@link #saveState()}
+     * @param state State previously saved by a call to [.saveState]
      * @param loader A ClassLoader that should be used to instantiate any restored objects
      */
-    public void restoreState(Parcelable state, ClassLoader loader) {
+    fun restoreState(state: Parcelable?, loader: ClassLoader?) {
     }
 
     /**
      * Called when the host view is attempting to determine if an item's position
-     * has changed. Returns {@link #POSITION_UNCHANGED} if the position of the given
-     * item has not changed or {@link #POSITION_NONE} if the item is no longer present
+     * has changed. Returns [.POSITION_UNCHANGED] if the position of the given
+     * item has not changed or [.POSITION_NONE] if the item is no longer present
      * in the adapter.
      *
-     * <p>The default implementation assumes that items will never
-     * change position and always returns {@link #POSITION_UNCHANGED}.
+     *
+     * The default implementation assumes that items will never
+     * change position and always returns [.POSITION_UNCHANGED].
      *
      * @param object Object representing an item, previously returned by a call to
-     *               {@link #instantiateItem(View, int)}.
-     * @return object's new position index from [0, {@link #getCount()}),
-     *         {@link #POSITION_UNCHANGED} if the object's position has not changed,
-     *         or {@link #POSITION_NONE} if the item is no longer present.
+     * [.instantiateItem].
+     * @return object's new position index from [0, [.getCount]),
+     * [.POSITION_UNCHANGED] if the object's position has not changed,
+     * or [.POSITION_NONE] if the item is no longer present.
      */
-    public int getItemPosition(Object object) {
-        return POSITION_UNCHANGED;
+    fun getItemPosition(`object`: Any?): Int {
+        return POSITION_UNCHANGED
     }
 
     /**
      * This method should be called by the application if the data backing this adapter has changed
      * and associated views should update.
      */
-    public void notifyDataSetChanged() {
-        mObservable.notifyChanged();
+    fun notifyDataSetChanged() {
+        mObservable.notifyChanged()
     }
 
-    void registerDataSetObserver(DataSetObserver observer) {
-        mObservable.registerObserver(observer);
+    fun registerDataSetObserver(observer: DataSetObserver?) {
+        mObservable.registerObserver(observer)
     }
 
-    void unregisterDataSetObserver(DataSetObserver observer) {
-        mObservable.unregisterObserver(observer);
+    fun unregisterDataSetObserver(observer: DataSetObserver?) {
+        mObservable.unregisterObserver(observer)
     }
 
     /**
@@ -292,8 +296,8 @@ public abstract class PagerAdapter {
      * @param position The position of the title requested
      * @return A title for the requested page
      */
-    public CharSequence getPageTitle(int position) {
-        return null;
+    fun getPageTitle(position: Int): CharSequence? {
+        return null
     }
 
     /**
@@ -303,11 +307,18 @@ public abstract class PagerAdapter {
      * @param position The position of the page requested
      * @return Proportional width for the given page position
      */
-    public float getPageWidth(int position) {
-        return 1.f;
+    fun getPageWidth(position: Int): Float {
+        return 1f
     }
 
-    public float getPageHeight(int position) {
-        return 1.f;
+    fun getPageHeight(position: Int): Float {
+        return 1f
+    }
+
+    companion object {
+        @JvmField
+        val POSITION_UNCHANGED: Int = -1
+        @JvmField
+        val POSITION_NONE: Int = -2
     }
 }
