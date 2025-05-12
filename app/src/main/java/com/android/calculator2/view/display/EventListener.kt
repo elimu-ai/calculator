@@ -1,17 +1,17 @@
-package com.android.calculator2.view.display;
+package com.android.calculator2.view.display
 
-import android.view.View;
-import android.widget.EditText;
+import android.view.View
+import android.widget.EditText
 
 /**
  * Created by Will on 12/13/2014.
  */
-public interface EventListener {
-    public void onEditTextChanged(EditText editText);
+interface EventListener {
+    fun onEditTextChanged(editText: EditText?)
 
-    public void onRemoveView(View view);
+    fun onRemoveView(view: View?)
 
-    public View nextView(View currentView);
+    fun nextView(currentView: View?): View?
 
-    public View previousView(View currentView);
+    fun previousView(currentView: View?): View?
 }
