@@ -64,6 +64,7 @@ import com.xlythe.math.GraphModule
 import com.xlythe.math.History
 import com.xlythe.math.HistoryEntry
 import com.xlythe.math.Persist
+import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -456,7 +457,9 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         } else if (errorResourceId != INVALID_RES_ID) {
             onError(errorResourceId)
         } else if (!TextUtils.isEmpty(result)) {
-            mHistory!!.enter(expr, result)
+            expr?.let {
+                mHistory!!.enter(expr, result)
+            }
             mDisplayView!!.scrollToMostRecent()
             onResult(result!!)
         } else if (mCurrentState == CalculatorState.EVALUATE) {

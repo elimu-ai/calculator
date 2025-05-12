@@ -13,115 +13,110 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.xlythe.math
 
-package com.xlythe.math;
+import androidx.recyclerview.widget.RecyclerView
+import java.io.DataInput
+import java.io.DataOutput
+import java.io.IOException
+import java.util.Vector
 
-import androidx.recyclerview.widget.RecyclerView;
-import android.widget.BaseAdapter;
+class History {
+    val entries: Vector<HistoryEntry> = Vector<HistoryEntry>()
+    private var mPos = 0
+    private var mObserver: RecyclerView.Adapter<*>? = null
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.Vector;
-
-public class History {
-    private static final int VERSION_1 = 1;
-    private static final int MAX_ENTRIES = 100;
-    private Vector<HistoryEntry> mEntries = new Vector<HistoryEntry>();
-    private int mPos;
-    private RecyclerView.Adapter mObserver;
-
-    History() {
-        clear();
+    internal constructor() {
+        clear()
     }
 
-    public void clear() {
-        mEntries.clear();
-        mEntries.add(new HistoryEntry("", ""));
-        mPos = 0;
-        notifyChanged();
+    fun clear() {
+        entries.clear()
+        entries.add(HistoryEntry("", ""))
+        mPos = 0
+        notifyChanged()
     }
 
-    private void notifyChanged() {
-        if(mObserver != null) {
-            mObserver.notifyDataSetChanged();
+    private fun notifyChanged() {
+        if (mObserver != null) {
+            mObserver!!.notifyDataSetChanged()
         }
     }
 
-    History(int version, DataInput in) throws IOException {
-        if(version >= VERSION_1) {
-            int size = in.readInt();
-            for(int i = 0; i < size; ++i) {
-                mEntries.add(new HistoryEntry(version, in));
+    internal constructor(version: Int, `in`: DataInput) {
+        if (version >= VERSION_1) {
+            val size = `in`.readInt()
+            for (i in 0..<size) {
+                entries.add(HistoryEntry(version, `in`))
             }
-            mPos = in.readInt();
+            mPos = `in`.readInt()
         } else {
-            throw new IOException("invalid version " + version);
+            throw IOException("invalid version " + version)
         }
     }
 
-    public void setObserver(RecyclerView.Adapter observer) {
-        mObserver = observer;
+    fun setObserver(observer: RecyclerView.Adapter<*>?) {
+        mObserver = observer
     }
 
-    void write(DataOutput out) throws IOException {
-        out.writeInt(mEntries.size());
-        for(HistoryEntry entry : mEntries) {
-            entry.write(out);
+    @Throws(IOException::class)
+    fun write(out: DataOutput) {
+        out.writeInt(entries.size)
+        for (entry in this.entries) {
+            entry.write(out)
         }
-        out.writeInt(mPos);
+        out.writeInt(mPos)
     }
 
-    void update(String text) {
-        current().setEdited(text);
+    fun update(text: String?) {
+        current()!!.edited = text
     }
 
-    public HistoryEntry current() {
-        return mEntries.elementAt(mPos);
+    fun current(): HistoryEntry? {
+        return entries.elementAt(mPos)
     }
 
-    boolean moveToPrevious() {
-        if(mPos > 0) {
-            --mPos;
-            return true;
+    fun moveToPrevious(): Boolean {
+        if (mPos > 0) {
+            --mPos
+            return true
         }
-        return false;
+        return false
     }
 
-    boolean moveToNext() {
-        if(mPos < mEntries.size() - 1) {
-            ++mPos;
-            return true;
+    fun moveToNext(): Boolean {
+        if (mPos < entries.size - 1) {
+            ++mPos
+            return true
         }
-        return false;
+        return false
     }
 
-    public void enter(String formula, String result) {
-        current().clearEdited();
-        if(mEntries.size() >= MAX_ENTRIES) {
-            mEntries.remove(0);
+    fun enter(formula: String, result: String?) {
+        current()!!.clearEdited()
+        if (entries.size >= MAX_ENTRIES) {
+            entries.removeAt(0)
         }
-        if((mEntries.size() < 2 || !formula.equals(mEntries.elementAt(mEntries.size() - 2).getBase())) && !formula.isEmpty() && !formula.isEmpty()) {
-            mEntries.insertElementAt(new HistoryEntry(formula, result), mEntries.size() - 1);
+        if ((entries.size < 2 || formula != entries.elementAt(entries.size - 2).base) && !formula.isEmpty() && !formula.isEmpty()) {
+            entries.insertElementAt(HistoryEntry(formula, result), entries.size - 1)
         }
-        mPos = mEntries.size() - 1;
-        notifyChanged();
+        mPos = entries.size - 1
+        notifyChanged()
     }
 
-    public String getText() {
-        return current().getEdited();
+    val text: String?
+        get() = current()!!.edited
+
+    val base: String
+        get() = current()!!.base
+
+    fun remove(he: HistoryEntry?) {
+        entries.remove(he)
+        mPos--
     }
 
-    public String getBase() {
-        return current().getBase();
-    }
-
-    public void remove(HistoryEntry he) {
-        mEntries.remove(he);
-        mPos--;
-    }
-
-    public Vector<HistoryEntry> getEntries() {
-        return mEntries;
+    companion object {
+        private const val VERSION_1 = 1
+        private const val MAX_ENTRIES = 100
     }
 }
