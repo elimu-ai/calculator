@@ -13,66 +13,61 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.android.calculator2;
+package com.android.calculator2
 
-import com.xlythe.math.Base;
-import com.xlythe.math.Solver;
+import ai.elimu.calculator.R
+import com.xlythe.math.Base
+import com.xlythe.math.Solver
+import org.javia.arity.SyntaxException
 
-import org.javia.arity.SyntaxException;
-import ai.elimu.calculator.R;
+class CalculatorExpressionEvaluator(tokenizer: CalculatorExpressionTokenizer) {
+    val solver: Solver = Solver()
+    private val mTokenizer: CalculatorExpressionTokenizer = tokenizer
 
-public class CalculatorExpressionEvaluator {
-    private final Solver mSolver;
-    private final CalculatorExpressionTokenizer mTokenizer;
-
-    public CalculatorExpressionEvaluator(CalculatorExpressionTokenizer tokenizer) {
-        mSolver = new Solver();
-        mTokenizer = tokenizer;
+    fun evaluate(expr: CharSequence, callback: EvaluateCallback) {
+        evaluate(expr.toString(), callback)
     }
 
-    public void evaluate(CharSequence expr, EvaluateCallback callback) {
-        evaluate(expr.toString(), callback);
-    }
-
-    public void evaluate(String expr, EvaluateCallback callback) {
-        expr = mTokenizer.getNormalizedExpression(expr);
+    fun evaluate(expr: String, callback: EvaluateCallback) {
+        var expr = expr
+        expr = mTokenizer.getNormalizedExpression(expr)
 
         // remove any trailing operators
-        while (expr.length() > 0 && "+-/*".indexOf(expr.charAt(expr.length() - 1)) != -1) {
-            expr = expr.substring(0, expr.length() - 1);
+        while (expr.isNotEmpty() && "+-/*".indexOf(expr.get(expr.length - 1)) != -1) {
+            expr = expr.substring(0, expr.length - 1)
         }
 
         try {
-            if (expr.length() == 0 || Double.valueOf(expr) != null) {
-                callback.onEvaluate(expr, null, Calculator.INVALID_RES_ID);
-                return;
+            if (expr.length == 0 || expr.toDouble() != null) {
+                callback.onEvaluate(expr, null, Calculator.INVALID_RES_ID)
+                return
             }
-        } catch (NumberFormatException e) {
+        } catch (e: NumberFormatException) {
             // expr is not a simple number
         }
 
         try {
-            String result = mSolver.solve(expr);
-            callback.onEvaluate(expr, mTokenizer.getLocalizedExpression(result), Calculator.INVALID_RES_ID);
-        } catch (SyntaxException e) {
-            callback.onEvaluate(expr, null, R.string.error_syntax);
+            val result = solver.solve(expr)
+            callback.onEvaluate(
+                expr,
+                mTokenizer.getLocalizedExpression(result),
+                Calculator.INVALID_RES_ID
+            )
+        } catch (e: SyntaxException) {
+            callback.onEvaluate(expr, null, R.string.error_syntax)
         }
     }
 
-    public void setBase(String expr, Base base, EvaluateCallback callback) {
+    fun setBase(expr: String?, base: Base?, callback: EvaluateCallback) {
         try {
-            String result = mSolver.getBaseModule().setBase(expr, base);
-            callback.onEvaluate(expr, result, Calculator.INVALID_RES_ID);
-        } catch (SyntaxException e) {
-            callback.onEvaluate(expr, null, R.string.error_syntax);
+            val result = solver.baseModule.setBase(expr, base)
+            callback.onEvaluate(expr, result, Calculator.INVALID_RES_ID)
+        } catch (e: SyntaxException) {
+            callback.onEvaluate(expr, null, R.string.error_syntax)
         }
     }
 
-    public Solver getSolver() {
-        return mSolver;
-    }
-
-    public interface EvaluateCallback {
-        public void onEvaluate(String expr, String result, int errorResourceId);
+    interface EvaluateCallback {
+        fun onEvaluate(expr: String?, result: String?, errorResourceId: Int)
     }
 }

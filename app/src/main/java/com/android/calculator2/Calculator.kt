@@ -192,8 +192,9 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             mEqualsGraphButton = findViewById<View>(R.id.pad_operator).findViewById<MultiButton>(R.id.equals_graph)
         }
 
-        mTokenizer = CalculatorExpressionTokenizer(this)
-        mEvaluator = CalculatorExpressionEvaluator(mTokenizer)
+        mTokenizer = CalculatorExpressionTokenizer(this).also { tokenizer ->
+            mEvaluator = CalculatorExpressionEvaluator(tokenizer)
+        }
 
         savedInstanceState = if (savedInstanceState == null) Bundle.EMPTY else savedInstanceState
         setState(
@@ -203,8 +204,8 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             )]
         )
 
-        mFormulaEditText!!.setSolver(mEvaluator!!.getSolver())
-        mResultEditText!!.setSolver(mEvaluator!!.getSolver())
+        mFormulaEditText!!.setSolver(mEvaluator!!.solver)
+        mResultEditText!!.setSolver(mEvaluator!!.solver)
 
         var base = Base.DECIMAL
         val baseOrdinal = savedInstanceState.getInt(KEY_BASE, -1)
@@ -254,7 +255,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
 
         val graphView: GraphView =
             findViewById<GraphView>(R.id.graphView)
-        val graphModule = GraphModule(mEvaluator!!.getSolver())
+        val graphModule = GraphModule(mEvaluator!!.solver)
         mGraphController = GraphController(graphView, graphModule, mDisplayView)
 
         var displayMode: DisplayOverlay.DisplayMode? = DisplayOverlay.DisplayMode.FORMULA
