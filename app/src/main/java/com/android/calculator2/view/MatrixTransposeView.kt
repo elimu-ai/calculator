@@ -13,35 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.android.calculator2.view
 
-package com.android.calculator2.view;
+import ai.elimu.calculator.R
+import android.content.Context
+import android.text.Html
+import android.text.InputType
+import android.widget.TextView
+import com.android.calculator2.view.display.AdvancedDisplay
 
-import android.content.Context;
-import android.text.Html;
-import android.text.InputType;
-import android.widget.TextView;
+class MatrixTransposeView : TextView {
+    constructor(context: Context?) : super(context)
 
-import com.android.calculator2.view.display.AdvancedDisplay;
-
-import ai.elimu.calculator.R;
-
-public class MatrixTransposeView extends TextView {
-    public final static String PATTERN = "^T";
-
-    public MatrixTransposeView(Context context) {
-        super(context);
+    constructor(display: AdvancedDisplay) : super(display.getContext()) {
+        setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+        setText(Html.fromHtml("<sup><small>T</small></sup>"))
+        setTextAppearance(display.getContext(), R.style.Theme_Calculator_Display)
+        setPadding(0, 0, 0, 0)
     }
 
-    public MatrixTransposeView(final AdvancedDisplay display) {
-        super(display.getContext());
-        setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        setText(Html.fromHtml("<sup><small>T</small></sup>"));
-        setTextAppearance(display.getContext(), R.style.Theme_Calculator_Display);
-        setPadding(0, 0, 0, 0);
+    override fun toString(): String {
+        return PATTERN
     }
 
-    @Override
-    public String toString() {
-        return PATTERN;
+    companion object {
+        const val PATTERN: String = "^T"
     }
 }
