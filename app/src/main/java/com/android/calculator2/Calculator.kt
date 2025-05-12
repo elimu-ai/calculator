@@ -397,21 +397,21 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             R.id.matrix_inverse -> mFormulaEditText!!.insert(MatrixInverseView.PATTERN)
             R.id.matrix_transpose -> mFormulaEditText!!.insert(MatrixTransposeView.PATTERN)
             R.id.plus_row -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).getMatrixView().addRow()
+                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView.addRow()
             }
 
             R.id.minus_row -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).getMatrixView()
+                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView
                     .removeRow()
             }
 
             R.id.plus_col -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).getMatrixView()
+                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView
                     .addColumn()
             }
 
             R.id.minus_col -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).getMatrixView()
+                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView
                     .removeColumn()
             }
 
