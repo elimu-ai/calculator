@@ -1,21 +1,17 @@
-package com.xlythe.floatingview;
+package com.xlythe.floatingview
 
-import android.animation.Animator;
+import android.animation.Animator
 
-public abstract class AnimationFinishedListener implements Animator.AnimatorListener {
-    @Override
-    public void onAnimationCancel(Animator animation) {}
+abstract class AnimationFinishedListener : Animator.AnimatorListener {
+    override fun onAnimationCancel(animation: Animator) {}
 
-    @Override
-    public void onAnimationRepeat(Animator animation) {}
+    override fun onAnimationRepeat(animation: Animator) {}
 
-    @Override
-    public void onAnimationStart(Animator animation) {}
+    override fun onAnimationStart(animation: Animator) {}
 
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        onAnimationFinished();
+    override fun onAnimationEnd(animation: Animator) {
+        onAnimationFinished()
     }
 
-    public abstract void onAnimationFinished();
+    abstract fun onAnimationFinished()
 }
