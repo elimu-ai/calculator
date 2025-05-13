@@ -20,6 +20,8 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.view.ViewGroup
+import androidx.core.view.size
+import androidx.core.view.isGone
 
 /**
  * A layout that places children in an evenly distributed grid based on the specified
@@ -64,12 +66,12 @@ open class CalculatorPadLayout @JvmOverloads constructor(
             Math.round((bottom - top - paddingTop - paddingBottom).toFloat()) / mRowCount
         var rowIndex = 0
         var columnIndex = 0
-        for (childIndex in 0..<getChildCount()) {
+        for (childIndex in 0..<size) {
             val childView = getChildAt(childIndex)
-            if (childView.getVisibility() == GONE) {
+            if (childView.isGone) {
                 continue
             }
-            val lp = childView.getLayoutParams() as MarginLayoutParams
+            val lp = childView.layoutParams as MarginLayoutParams
             val childTop = paddingTop + lp.topMargin + rowIndex * rowHeight
             val childBottom = childTop - lp.topMargin - lp.bottomMargin + rowHeight
             val childLeft =
@@ -77,8 +79,8 @@ open class CalculatorPadLayout @JvmOverloads constructor(
             val childRight = childLeft - lp.leftMargin - lp.rightMargin + columnWidth
             val childWidth = childRight - childLeft
             val childHeight = childBottom - childTop
-            if (childWidth != childView.getMeasuredWidth() ||
-                childHeight != childView.getMeasuredHeight()
+            if (childWidth != childView.measuredWidth ||
+                childHeight != childView.measuredHeight
             ) {
                 childView.measure(
                     MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY),
@@ -92,7 +94,7 @@ open class CalculatorPadLayout @JvmOverloads constructor(
     }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
-        return MarginLayoutParams(getContext(), attrs)
+        return MarginLayoutParams(context, attrs)
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
