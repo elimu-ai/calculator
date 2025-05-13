@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import androidx.core.net.toUri
 
 /**
  * Created by Will on 4/9/2014.
@@ -42,7 +43,7 @@ class FloatingCalculatorOpenShortCutActivity : Activity() {
     private fun requestSystemWindowPermission() {
         val intent = Intent(
             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.parse("package:" + getPackageName())
+            ("package:$packageName").toUri()
         )
         startActivityForResult(intent, REQUEST_SYSTEM_WINDOW_PERMISSION)
     }
