@@ -83,7 +83,7 @@ class CalculatorPadViewPager @JvmOverloads constructor(
         override fun transformPage(view: View, position: Float) {
             if (position < 0.0f) {
                 // Pin the left page to the left side.
-                view.translationX = getWidth() * -position
+                view.translationX = width * -position
                 view.setAlpha(max((1.0f + position).toDouble(), 0.0).toFloat())
             } else {
                 // Use the default slide transition when moving to the next page.
