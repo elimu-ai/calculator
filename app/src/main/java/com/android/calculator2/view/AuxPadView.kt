@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.android.calculator2.viewpager.PagerAdapter
 import com.android.calculator2.viewpager.VerticalViewPager
+import androidx.core.view.size
 
 /**
  * Container for a vertical view pager that adds indicator dots to show the currently
@@ -20,7 +21,7 @@ class AuxPadView : FrameLayout {
 
     internal class AuxPagerAdapter(private val mViewPager: VerticalViewPager) : PagerAdapter() {
         override val count: Int
-            get() = mViewPager.getChildCount()
+            get() = mViewPager.size
 
         public override fun instantiateItem(container: ViewGroup?, position: Int): Any? {
             return mViewPager.getChildAt(position)
@@ -41,13 +42,13 @@ class AuxPadView : FrameLayout {
         override fun onPageScrolled(
             position: Int,
             positionOffset: Float,
-            positionOffsetPixels: Int
+            positionOffsetPixels: Int,
         ) {
         }
 
         override fun onPageSelected(position: Int) {
-            mIndicatorView!!.getChildAt(mSelectedIndex).setSelected(false)
-            mIndicatorView!!.getChildAt(position).setSelected(true)
+            mIndicatorView!!.getChildAt(mSelectedIndex).isSelected = false
+            mIndicatorView!!.getChildAt(position).isSelected = true
             mSelectedIndex = position
         }
 
@@ -69,7 +70,7 @@ class AuxPadView : FrameLayout {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,
-        defStyleRes: Int
+        defStyleRes: Int,
     ) : super(context, attrs, defStyleAttr, defStyleRes)
 
     override fun onFinishInflate() {
@@ -79,11 +80,11 @@ class AuxPadView : FrameLayout {
         viewPager.setAdapter(AuxPagerAdapter(viewPager))
         viewPager.setOnPageChangeListener(PageChangeListener())
 
-        val margin = getContext().getResources()
+        val margin = context.resources
             .getDimensionPixelSize(R.dimen.viewpager_indicator_margin_size)
 
         mIndicatorView = findViewById<ViewGroup>(R.id.pageIndicators)
-        for (i in 0..<viewPager.getChildCount()) {
+        for (i in 0..<viewPager.size) {
             val imageView = ImageView(context)
             imageView.setImageResource(R.drawable.view_pager_indicator)
             imageView.setSelected(i == 0)
