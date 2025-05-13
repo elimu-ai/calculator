@@ -32,6 +32,8 @@ import com.xlythe.math.Solver.Companion.isOperator
 import java.util.Arrays
 import kotlin.math.max
 import kotlin.math.min
+import androidx.core.view.isEmpty
+import androidx.core.view.size
 
 class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDisplay(context, attrs),
     EventListener {
@@ -110,8 +112,8 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         )
         params.gravity = Gravity.CENTER_VERTICAL
         mRoot.setLayoutParams(params)
-        mRoot.setGravity(Gravity.RIGHT)
-        mRoot.setLongClickable(true)
+        mRoot.gravity = Gravity.RIGHT
+        mRoot.isLongClickable = true
         addView(mRoot)
 
         if (attrs != null) {
@@ -137,7 +139,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
             a.recycle()
 
             setTextSize(TypedValue.COMPLEX_UNIT_PX, mMaximumTextSize)
-            setMinimumHeight((mMaximumTextSize * 1.2).toInt() + getPaddingBottom() + getPaddingTop())
+            setMinimumHeight((mMaximumTextSize * 1.2).toInt() + paddingBottom + paddingTop)
         }
 
         val factory: Editable.Factory = CalculatorEditable.Factory()
@@ -317,7 +319,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
     private fun apply(view: View?, sync: Sync) {
         if (view is ViewGroup) {
             val vg = view
-            for (i in 0..<vg.getChildCount()) {
+            for (i in 0..<vg.size) {
                 apply(vg.getChildAt(i), sync)
             }
         } else if (view is TextView) {
@@ -395,7 +397,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
      */
     override fun nextView(currentView: View?): View? {
         var foundCurrentView = false
-        for (i in 0..<mRoot.getChildCount()) {
+        for (i in 0..<mRoot.size) {
             if (foundCurrentView) return mRoot.getChildAt(i)
             else if (currentView === mRoot.getChildAt(i)) foundCurrentView = true
         }
@@ -407,20 +409,20 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
      */
     override fun previousView(currentView: View?): View? {
         var foundCurrentView = false
-        for (i in mRoot.getChildCount() - 1 downTo 0) {
+        for (i in mRoot.size - 1 downTo 0) {
             if (foundCurrentView) return mRoot.getChildAt(i)
             else if (currentView === mRoot.getChildAt(i)) foundCurrentView = true
         }
-        return mRoot.getChildAt(mRoot.getChildCount() - 1)
+        return mRoot.getChildAt(mRoot.size - 1)
     }
 
     fun next() {
-        if (activeEditText!!.getSelectionStart() == activeEditText!!.getText().length) {
+        if (activeEditText!!.selectionStart == activeEditText!!.getText().length) {
             val v = activeEditText!!.focusSearch(FOCUS_FORWARD)
             if (v != null) v.requestFocus()
             activeEditText!!.setSelection(0)
         } else {
-            activeEditText!!.setSelection(activeEditText!!.getSelectionStart() + 1)
+            activeEditText!!.setSelection(activeEditText!!.selectionStart + 1)
         }
     }
 
@@ -433,7 +435,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
             return (view as AdvancedDisplayControls).hasNext()
         } else if (view is ViewGroup) {
             val vg = view
-            for (i in 0..<vg.getChildCount()) {
+            for (i in 0..<vg.size) {
                 if (hasNext(vg.getChildAt(i))) {
                     return true
                 }
@@ -619,7 +621,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
             }
 
             var text = ""
-            for (i in 0..<mRoot.getChildCount()) {
+            for (i in 0..<mRoot.size) {
                 text += mRoot.getChildAt(i).toString()
             }
             mCachedText = text
@@ -734,15 +736,15 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
 
         val lastView: View?
             get() {
-                if (getChildCount() == 0) return null
-                return getChildAt(getChildCount() - 1)
+                if (isEmpty()) return null
+                return getChildAt(childCount - 1)
             }
 
         /**
          * Returns the position of a view
          */
         fun getChildIndex(view: View?): Int {
-            for (i in 0..<getChildCount()) {
+            for (i in 0..<size) {
                 if (getChildAt(i) === view) return i
             }
             return -1
