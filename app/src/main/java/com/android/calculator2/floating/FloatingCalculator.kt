@@ -41,11 +41,11 @@ class FloatingCalculator : FloatingView() {
     }
 
     public override fun inflateButton(): View {
-        return View.inflate(getContext(), R.layout.floating_calculator_icon, null)
+        return View.inflate(context, R.layout.floating_calculator_icon, null)
     }
 
     public override fun inflateView(): View {
-        val child = View.inflate(getContext(), R.layout.floating_calculator, null)
+        val child = View.inflate(context, R.layout.floating_calculator, null)
 
         mTokenizer = CalculatorExpressionTokenizer(this)
         mEvaluator = CalculatorExpressionEvaluator(mTokenizer!!)
@@ -70,8 +70,8 @@ class FloatingCalculator : FloatingView() {
         mClear = child.findViewById<View?>(R.id.clear) as ImageButton
         mListener = object : View.OnClickListener {
             override fun onClick(v: View) {
-                if (v.getTag() != null && PlayerUtil.RAW_FILE_EQUALS != v.getTag()) {
-                    PlayerUtil.playRawFile(getContext(), v.getTag().toString())
+                if (v.tag != null && PlayerUtil.RAW_FILE_EQUALS != v.tag) {
+                    PlayerUtil.playRawFile(context, v.tag.toString())
                 }
 
                 if (v is Button) {
@@ -91,12 +91,12 @@ class FloatingCalculator : FloatingView() {
                                             DigitLabelHelper.getIdForDigit(result.toInt())
                                         )
                                         PlayerUtil.playResult(
-                                            getContext(),
-                                            view.getTag().toString()
+                                            context,
+                                            view.tag.toString()
                                         )
                                     } else {
                                         PlayerUtil.playRawFile(
-                                            getContext(),
+                                            context,
                                             PlayerUtil.RAW_FILE_EQUALS
                                         )
                                     }
@@ -104,7 +104,7 @@ class FloatingCalculator : FloatingView() {
                                 }
                             }
                         })
-                    } else if (v.getId() == R.id.parentheses) {
+                    } else if (v.id == R.id.parentheses) {
                         setText("(" + mDisplay!!.text + ")")
                     } else if (v.getText().toString().length >= 2) {
                         onInsert(v.getText().toString() + "(")
@@ -131,7 +131,7 @@ class FloatingCalculator : FloatingView() {
             }
         })
 
-        val adapter = FloatingCalculatorPageAdapter(getContext(), mListener, mHistory)
+        val adapter = FloatingCalculatorPageAdapter(context, mListener, mHistory)
         mPager!!.setAdapter(adapter)
         mPager!!.setCurrentItem(1)
 
@@ -185,17 +185,17 @@ class FloatingCalculator : FloatingView() {
         if (mState != state) {
             when (state) {
                 State.CLEAR -> {}
-                State.DELETE -> mDisplay!!.setTextColor(getResources().getColor(R.color.display_formula_text_color))
-                State.ERROR -> mDisplay!!.setTextColor(getResources().getColor(R.color.calculator_error_color))
+                State.DELETE -> mDisplay!!.setTextColor(resources.getColor(R.color.display_formula_text_color))
+                State.ERROR -> mDisplay!!.setTextColor(resources.getColor(R.color.calculator_error_color))
             }
             mState = state
         }
     }
 
     private fun copyContent(text: String) {
-        val clipboard = getContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
-        val toastText = String.format(getResources().getString(R.string.text_copied_toast), text)
-        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show()
+        val toastText = String.format(resources.getString(R.string.text_copied_toast), text)
+        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
     }
 }
