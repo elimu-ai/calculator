@@ -35,20 +35,20 @@ import com.android.calculator2.view.display.EventListener
 import com.xlythe.math.Constants
 
 class MatrixEditText(matrixView: MatrixView, listener: EventListener) :
-    EditText(matrixView.getContext()), OnFocusChangeListener {
+    EditText(matrixView.context), OnFocusChangeListener {
     val matrixView: MatrixView
     private val mListener: EventListener
 
     init {
         setCustomSelectionActionModeCallback(NoTextSelectionMode())
-        val imm = getContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
         val padding =
-            getContext().getResources().getDimensionPixelSize(R.dimen.matrix_edit_text_padding)
+            context.resources.getDimensionPixelSize(R.dimen.matrix_edit_text_padding)
         setPadding(padding, 0, padding, 0)
         this.matrixView = matrixView
         setKeyListener(MatrixKeyListener())
-        setOnFocusChangeListener(this)
+        onFocusChangeListener = this
         setGravity(Gravity.CENTER)
         mListener = listener
     }
