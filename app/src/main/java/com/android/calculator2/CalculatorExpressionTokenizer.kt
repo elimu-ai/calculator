@@ -38,7 +38,7 @@ class CalculatorExpressionTokenizer(context: Context) {
         }
 
         val symbols = DecimalFormatSymbols(locale)
-        val zeroDigit = symbols.getZeroDigit()
+        val zeroDigit = symbols.zeroDigit
 
         for (i in 0..9) {
             mReplacements.add(
