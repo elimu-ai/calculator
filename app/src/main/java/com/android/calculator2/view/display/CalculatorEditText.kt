@@ -96,7 +96,7 @@ class CalculatorEditText : EditText {
 
                 // Adjust the handle by removing any comas or spacing to the left
                 val cs = s.subSequence(0, mSelectionHandle).toString()
-                mSelectionHandle -= countOccurrences(cs, mSolver!!.getBaseModule().separator)
+                mSelectionHandle -= countOccurrences(cs, mSolver!!.baseModule.separator)
 
                 // Update the text with formatted (comas, etc) text
                 setText(formatText(mInput))
