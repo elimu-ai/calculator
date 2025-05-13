@@ -294,7 +294,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                 (lastFitTextSize + mStepTextSize).toDouble(),
                 mMaximumTextSize.toDouble()
             ).toFloat()
-            mTempPaint.setTextSize(nextSize)
+            mTempPaint.textSize = nextSize
             if (mTempPaint.measureText(text) > mWidthConstraint) {
                 break
             } else if (nextSize + nextSize * exponents / 2 > mHeightConstraint) {
@@ -349,14 +349,14 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         mWidthConstraint =
             MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight()
         mHeightConstraint =
-            MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom()
+            MeasureSpec.getSize(heightMeasureSpec) - paddingTop - paddingBottom
         setTextSize(TypedValue.COMPLEX_UNIT_PX, getVariableTextSize(this.text.toString()))
     }
 
     protected val selectionStart: Int
         get() {
             if (this.activeEditText == null) return 0
-            return this.activeEditText!!.getSelectionStart()
+            return this.activeEditText!!.selectionStart
         }
 
     protected fun setSelection(position: Int) {
@@ -376,7 +376,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         mRoot.removeAllViews()
 
         // Always start with a CalculatorEditText
-        this.activeEditText = getInstance(getContext(), mSolver, this)
+        this.activeEditText = getInstance(context, mSolver, this)
         addView(this.activeEditText)
 
         // Notify the text watcher
@@ -481,7 +481,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                 delta = delta.substring(0, chars)
 
                 if (delta.length == 0) {
-                    Toast.makeText(getContext(), R.string.text_max_chars, Toast.LENGTH_SHORT)
+                    Toast.makeText(context, R.string.text_max_chars, Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -490,7 +490,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                 // Logic to insert, split text if there's another view, etc
                 var cursor: Int
                 var cacheCursor: Int
-                cacheCursor = this.activeEditText!!.getSelectionStart()
+                cacheCursor = this.activeEditText!!.selectionStart
                 cursor = cacheCursor
                 val index = mRoot.getChildIndex(this.activeEditText)
                 val cache = StringBuilder()
@@ -508,7 +508,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                             // We found a custom view
                             mRoot.addView(
                                 c.getView<View?, Any?>(
-                                    getContext(),
+                                    context,
                                     mSolver,
                                     equation,
                                     this
@@ -545,7 +545,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                 this.activeEditText!!.getText().insert(cacheCursor, cache)
             } else {
                 // We let the custom edit text handle displaying the text
-                val cursor = this.activeEditText!!.getSelectionStart()
+                val cursor = this.activeEditText!!.selectionStart
                 this.activeEditText!!.getText().insert(cursor, delta)
             }
 
@@ -565,7 +565,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         this.activeEditText!!.setText(leftText)
 
         // Create a right EditText
-        val et: EditText = getInstance(getContext(), mSolver, this)
+        val et: EditText = getInstance(context, mSolver, this)
         et.setText(rightText)
         addView(et, index + 2)
 
@@ -632,7 +632,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
      * Set the text for the display
      */
     fun setText(resId: Int) {
-        setText(getContext().getString(resId))
+        setText(context.getString(resId))
     }
 
     /**
@@ -651,7 +651,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         if (text == null) return
 
         // Don't allow leading operators
-        while (text!!.length > 0 && isOperator(text.get(0))
+        while (text!!.length > 0 && isOperator(text[0])
             && !text.startsWith(Constants.MINUS.toString())
         ) {
             text = text.substring(1)
@@ -670,10 +670,10 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                     cache.setLength(0)
 
                     // We found a custom view
-                    mRoot.addView(c.getView<View?, Any?>(getContext(), mSolver, equation, this))
+                    mRoot.addView(c.getView<View?, Any?>(context, mSolver, equation, this))
 
                     // Keep EditTexts in between custom views
-                    addView(getInstance(getContext(), mSolver, this))
+                    addView(getInstance(context, mSolver, this))
 
                     // Update text and loop again
                     text = text!!.substring(equation.length)
@@ -682,7 +682,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
             }
 
             // Append the next character to the trailing EditText
-            cache.append(text!!.get(0))
+            cache.append(text!![0])
             text = text.substring(1)
         }
 
@@ -716,7 +716,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         attrs: AttributeSet? = null
     ) : LinearLayout(context, attrs) {
         init {
-            setOrientation(HORIZONTAL)
+            orientation = HORIZONTAL
         }
 
         override fun addView(child: View?, index: Int) {
