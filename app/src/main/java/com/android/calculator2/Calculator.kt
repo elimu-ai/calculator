@@ -259,18 +259,18 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         val graphModule = GraphModule(mEvaluator!!.solver)
         mGraphController = GraphController(graphView, graphModule, mDisplayView!!)
 
-        var displayMode: DisplayOverlay.DisplayMode? = DisplayOverlay.DisplayMode.FORMULA
+        var displayMode: DisplayOverlay.DisplayMode = DisplayOverlay.DisplayMode.FORMULA
         val modeOrdinal = savedInstanceState.getInt(KEY_DISPLAY_MODE, -1)
         if (modeOrdinal != -1) {
             displayMode = DisplayOverlay.DisplayMode.entries[modeOrdinal]
         }
-        mDisplayView!!.setMode(displayMode)
+        mDisplayView!!.mode = displayMode
         mDisplayView!!.getViewTreeObserver().addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     if (mDisplayView!!.getHeight() > 0) {
                         mDisplayView!!.initializeHistoryAndGraphView()
-                        if (mDisplayView!!.getMode() == DisplayOverlay.DisplayMode.GRAPH) {
+                        if (mDisplayView!!.mode == DisplayOverlay.DisplayMode.GRAPH) {
                             mGraphController!!.startGraph(mFormulaEditText!!.getText())
                         }
                     }
@@ -319,7 +319,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             mTokenizer!!.getNormalizedExpression(mFormulaEditText!!.getText())
         )
         outState.putInt(KEY_BASE, mBaseManager!!.numberBase.ordinal)
-        outState.putInt(KEY_DISPLAY_MODE, mDisplayView!!.getMode().ordinal)
+        outState.putInt(KEY_DISPLAY_MODE, mDisplayView!!.mode.ordinal)
     }
 
     private fun setClearVisibility(visible: Boolean) {
@@ -524,7 +524,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
     private fun reveal(sourceView: View, colorRes: Int, listener: Animator.AnimatorListener?) {
         // Make reveal cover the display and status bar.
         val revealView = View(this)
-        mLayoutParams.height = mDisplayView!!.getDisplayHeight()
+        mLayoutParams.height = mDisplayView!!.displayHeight
         mLayoutParams.gravity = Gravity.BOTTOM
         revealView.setLayoutParams(mLayoutParams)
         revealView.setBackgroundColor(getResources().getColor(colorRes))

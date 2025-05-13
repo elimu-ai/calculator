@@ -1,233 +1,219 @@
-package com.android.calculator2.view;
+package com.android.calculator2.view
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.content.Context;
-import androidx.core.view.MotionEventCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
-import com.android.calculator2.util.AnimationUtil;
-import com.android.calculator2.view.display.AdvancedDisplay;
-
-import ai.elimu.calculator.R;
+import ai.elimu.calculator.R
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.content.Context
+import android.util.AttributeSet
+import android.util.Log
+import android.view.MotionEvent
+import android.view.VelocityTracker
+import android.view.View
+import android.view.ViewConfiguration
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.core.view.MotionEventCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.calculator2.util.AnimationUtil
+import com.android.calculator2.view.display.AdvancedDisplay
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * The display overlay is a container that intercepts touch events on top of:
- *      1. the display, i.e. the formula and result views
- *      2. the history view, which is revealed by dragging down on the display
+ * 1. the display, i.e. the formula and result views
+ * 2. the history view, which is revealed by dragging down on the display
  *
  * This overlay passes vertical scrolling events down to the history recycler view
  * when applicable.  If the user attempts to scroll up and the recycler is already
  * scrolled all the way up, then we intercept the event and collapse the history.
  */
-public class DisplayOverlay extends FrameLayout {
-    /**
-     * Closing the history with a fling will finish at least this fast (ms)
-     */
-    private static final float MIN_SETTLE_DURATION = 200f;
+class DisplayOverlay : FrameLayout {
+    enum class DisplayMode {
+        FORMULA, GRAPH
+    }
 
-    /**
-     * Do not settle overlay if velocity is less than this
-     */
-    private static float VELOCITY_SLOP = 0.1f;
-
-    private static boolean DEBUG = false;
-    private static final String TAG = "DisplayOverlay";
-
-    public static enum DisplayMode { FORMULA, GRAPH };
-
-    private RecyclerView mRecyclerView;
-    private AdvancedDisplay mFormula;
-    private View mResult;
-    private View mGraphLayout;
-    private View mCloseGraphHandle;
-    private View mMainDisplay;
-    private DisplayMode mMode;
-    private LinearLayoutManager mLayoutManager;
-    private float mInitialMotionY;
-    private float mLastMotionY;
-    private float mLastDeltaY;
-    private int mTouchSlop;
-    private int mMaxTranslationInParent = -1;
-    private VelocityTracker mVelocityTracker;
-    private float mMinVelocity = -1;
-    private int mParentHeight = -1;
+    private var mRecyclerView: RecyclerView? = null
+    private var mFormula: AdvancedDisplay? = null
+    private var mResult: View? = null
+    private var mGraphLayout: View? = null
+    private var mCloseGraphHandle: View? = null
+    private var mMainDisplay: View? = null
+    private var mMode: DisplayMode? = null
+    private var mLayoutManager: LinearLayoutManager? = null
+    private var mInitialMotionY = 0f
+    private var mLastMotionY = 0f
+    private var mLastDeltaY = 0f
+    private var mTouchSlop = 0
+    private var mMaxTranslationInParent = -1
+    private var mVelocityTracker: VelocityTracker? = null
+    private var mMinVelocity = -1f
+    private var mParentHeight = -1
 
     /**
      * Reports when state changes to expanded or collapsed (partial is ignored)
      */
-    public static interface TranslateStateListener {
-        public void onTranslateStateChanged(TranslateState newState);
-    }
-    private TranslateStateListener mTranslateStateListener;
-
-    public DisplayOverlay(Context context) {
-        super(context);
-        setup();
+    interface TranslateStateListener {
+        fun onTranslateStateChanged(newState: TranslateState?)
     }
 
-    public DisplayOverlay(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setup();
+    var translateStateListener: TranslateStateListener? = null
+
+    constructor(context: Context) : super(context) {
+        setup()
     }
 
-    public DisplayOverlay(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setup();
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        setup()
     }
 
-    public DisplayOverlay(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        setup();
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        setup()
     }
 
-    private void setup() {
-        ViewConfiguration vc = ViewConfiguration.get(getContext());
-        mTouchSlop = vc.getScaledTouchSlop();
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(context, attrs, defStyleAttr, defStyleRes) {
+        setup()
     }
 
-    public static enum TranslateState {
+    private fun setup() {
+        val vc = ViewConfiguration.get(getContext())
+        mTouchSlop = vc.getScaledTouchSlop()
+    }
+
+    enum class TranslateState {
         EXPANDED, COLLAPSED, PARTIAL
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        mRecyclerView = (RecyclerView)findViewById(R.id.historyRecycler);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mLayoutManager.setStackFromEnd(true);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        mRecyclerView = findViewById<RecyclerView>(R.id.historyRecycler)
+        mLayoutManager = LinearLayoutManager(context)
+        mLayoutManager!!.setOrientation(LinearLayoutManager.VERTICAL)
+        mLayoutManager!!.setStackFromEnd(true)
+        mRecyclerView!!.setLayoutManager(mLayoutManager)
 
-        mFormula = (AdvancedDisplay)findViewById(R.id.formula);
-        mResult = findViewById(R.id.result);
-        mGraphLayout = findViewById(R.id.graphLayout);
-        mMainDisplay = findViewById(R.id.mainDisplay);
-        mCloseGraphHandle = findViewById(R.id.closeGraphHandle);
+        mFormula = findViewById<AdvancedDisplay>(R.id.formula)
+        mResult = findViewById(R.id.result)
+        mGraphLayout = findViewById(R.id.graphLayout)
+        mCloseGraphHandle = findViewById(R.id.closeGraphHandle)
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        int action = MotionEventCompat.getActionMasked(ev);
-        float y = ev.getRawY();
-        TranslateState state = getTranslateState();
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        val action = MotionEventCompat.getActionMasked(ev)
+        val y = ev.getRawY()
+        val state = this.translateState
 
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mInitialMotionY = y;
-                mLastMotionY = y;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float dy = y - mInitialMotionY;
-                if (Math.abs(dy) < mTouchSlop) {
-                    return false;
+        when (action) {
+            MotionEvent.ACTION_DOWN -> {
+                mInitialMotionY = y
+                mLastMotionY = y
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                val dy = y - mInitialMotionY
+                if (abs(dy.toDouble()) < mTouchSlop) {
+                    return false
                 }
 
                 // in graph mode let move events apply to the graph,
                 // unless the touch is on the "close handle"
                 if (mMode == DisplayMode.GRAPH) {
-                    return isInBounds(ev.getX(), ev.getY(), mCloseGraphHandle);
+                    return isInBounds(ev.getX(), ev.getY(), mCloseGraphHandle!!)
                 }
 
                 if (dy < 0) {
-                    return isScrolledToEnd() && state != TranslateState.COLLAPSED;
+                    return this.isScrolledToEnd && state != TranslateState.COLLAPSED
                 } else if (dy > 0) {
-                    return state != TranslateState.EXPANDED;
+                    return state != TranslateState.EXPANDED
                 }
-
-                break;
+            }
         }
 
-        return false;
+        return false
     }
 
-    private boolean isScrolledToEnd() {
-        return mLayoutManager.findLastCompletelyVisibleItemPosition() ==
-                mRecyclerView.getAdapter().getItemCount() - 1;
-    }
+    private val isScrolledToEnd: Boolean
+        get() = mLayoutManager!!.findLastCompletelyVisibleItemPosition() ==
+                mRecyclerView!!.getAdapter()!!.getItemCount() - 1
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int action = MotionEventCompat.getActionMasked(event);
-        initVelocityTrackerIfNotExists();
-        mVelocityTracker.addMovement(event);
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val action = MotionEventCompat.getActionMasked(event)
+        initVelocityTrackerIfNotExists()
+        mVelocityTracker!!.addMovement(event)
 
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                handleMove(event);
-                break;
-            case MotionEvent.ACTION_UP:
-                handleUp(event);
-                recycleVelocityTracker();
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                recycleVelocityTracker();
-                break;
+        when (action) {
+            MotionEvent.ACTION_DOWN -> {}
+            MotionEvent.ACTION_MOVE -> handleMove(event)
+            MotionEvent.ACTION_UP -> {
+                handleUp(event)
+                recycleVelocityTracker()
+            }
+
+            MotionEvent.ACTION_CANCEL -> recycleVelocityTracker()
         }
 
-        return true;
+        return true
     }
 
-    private void handleMove(MotionEvent event) {
-        TranslateState state = getTranslateState();
-        float y = event.getRawY();
-        float dy = y - mLastMotionY;
+    private fun handleMove(event: MotionEvent) {
+        val state = this.translateState
+        val y = event.getRawY()
+        val dy = y - mLastMotionY
         if (DEBUG) {
-            Log.v(TAG, "handleMove y=" + y + ", dy=" + dy);
+            Log.v(TAG, "handleMove y=" + y + ", dy=" + dy)
         }
 
         if (dy < 0 && state != TranslateState.COLLAPSED) {
-            updateTranslation(dy);
+            updateTranslation(dy)
         } else if (dy > 0 && state != TranslateState.EXPANDED) {
-            updateTranslation(dy);
+            updateTranslation(dy)
         }
-        mLastMotionY = y;
-        mLastDeltaY = dy;
+        mLastMotionY = y
+        mLastDeltaY = dy
     }
 
-    private void handleUp(MotionEvent event) {
-        mVelocityTracker.computeCurrentVelocity(1);
-        float yvel = mVelocityTracker.getYVelocity();
+    private fun handleUp(event: MotionEvent?) {
+        mVelocityTracker!!.computeCurrentVelocity(1)
+        val yvel = mVelocityTracker!!.getYVelocity()
         if (DEBUG) {
-            Log.v(TAG, "handleUp yvel=" + yvel + ", mLastDeltaY=" + mLastDeltaY);
+            Log.v(TAG, "handleUp yvel=" + yvel + ", mLastDeltaY=" + mLastDeltaY)
         }
 
-        TranslateState curState = getTranslateState();
+        val curState = this.translateState
         if (curState != TranslateState.PARTIAL) {
             // already settled
-            if (mTranslateStateListener != null) {
-                mTranslateStateListener.onTranslateStateChanged(curState);
+            if (this.translateStateListener != null) {
+                translateStateListener!!.onTranslateStateChanged(curState)
             }
-        } else if (Math.abs(yvel) > VELOCITY_SLOP) {
+        } else if (abs(yvel.toDouble()) > VELOCITY_SLOP) {
             // the sign on velocity seems unreliable, so use last delta to determine direction
-            float destTx = mLastDeltaY > 0 ? getMaxTranslation() : 0;
-            float velocity = Math.max(Math.abs(yvel), Math.abs(mMinVelocity));
-            settleAt(destTx, velocity);
+            val destTx = (if (mLastDeltaY > 0) this.maxTranslation else 0).toFloat()
+            val velocity = max(abs(yvel.toDouble()), abs(mMinVelocity.toDouble())).toFloat()
+            settleAt(destTx, velocity)
         }
     }
 
-    public void expandHistory() {
-        settleAt(getMaxTranslation(), mMinVelocity);
+    fun expandHistory() {
+        settleAt(this.maxTranslation.toFloat(), mMinVelocity)
     }
 
-    public void collapseHistory() {
-        settleAt(0, mMinVelocity);
+    fun collapseHistory() {
+        settleAt(0f, mMinVelocity)
     }
 
-    public int getDisplayHeight() {
-        return mFormula.getHeight() + mResult.getHeight();
-    }
+    val displayHeight: Int
+        get() = mFormula!!.getHeight() + mResult!!.getHeight()
 
     /**
      * Smoothly translates the display overlay to the given target
@@ -235,96 +221,101 @@ public class DisplayOverlay extends FrameLayout {
      * @param destTx target translation
      * @param yvel velocity at point of release
      */
-    private void settleAt(float destTx, float yvel) {
-        if (yvel != 0) {
-            float dist = destTx - getTranslationY();
-            float dt = Math.abs(dist / yvel);
+    private fun settleAt(destTx: Float, yvel: Float) {
+        if (yvel != 0f) {
+            val dist = destTx - getTranslationY()
+            val dt = abs((dist / yvel).toDouble()).toFloat()
             if (DEBUG) {
-                Log.v(TAG, "settle display overlay yvel=" + yvel +
-                        ", dt = " + dt);
+                Log.v(
+                    TAG, "settle display overlay yvel=" + yvel +
+                            ", dt = " + dt
+                )
             }
 
-            ObjectAnimator anim =
-                    ObjectAnimator.ofFloat(this, "translationY",
-                            getTranslationY(), destTx);
-            anim.setDuration((long)dt);
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {}
+            val anim =
+                ObjectAnimator.ofFloat(
+                    this, "translationY",
+                    getTranslationY(), destTx
+                )
+            anim.setDuration(dt.toLong())
+            anim.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    if (mTranslateStateListener != null) {
-                        mTranslateStateListener.onTranslateStateChanged(getTranslateState());
+                override fun onAnimationEnd(animation: Animator) {
+                    if (translateStateListener != null) {
+                        translateStateListener!!.onTranslateStateChanged(translateState)
                     }
                 }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {}
+                override fun onAnimationCancel(animation: Animator) {}
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {}
-            });
-            anim.start();
+                override fun onAnimationRepeat(animation: Animator) {}
+            })
+            anim.start()
         }
     }
 
-    /**
-     * The distance that we are able to pull down the display to reveal history.
-     */
-    private int getMaxTranslation() {
-        if (mMaxTranslationInParent < 0) {
-            int bottomPadding = getContext().getResources()
-                    .getDimensionPixelOffset(R.dimen.history_view_bottom_margin);
-            mMaxTranslationInParent = getParentHeight() - getDisplayHeight() - bottomPadding;
-            if (DEBUG) {
-                Log.v(TAG, "mMaxTranslationInParent = " + mMaxTranslationInParent);
+    private val maxTranslation: Int
+        /**
+         * The distance that we are able to pull down the display to reveal history.
+         */
+        get() {
+            if (mMaxTranslationInParent < 0) {
+                val bottomPadding = getContext().getResources()
+                    .getDimensionPixelOffset(R.dimen.history_view_bottom_margin)
+                mMaxTranslationInParent = this.parentHeight - this.displayHeight - bottomPadding
+                if (DEBUG) {
+                    Log.v(
+                        TAG,
+                        "mMaxTranslationInParent = " + mMaxTranslationInParent
+                    )
+                }
+            }
+            return mMaxTranslationInParent
+        }
+
+    private fun updateTranslation(dy: Float) {
+        val txY = getTranslationY() + dy
+        val clampedY = min(max(txY.toDouble(), 0.0), this.maxTranslation.toDouble()).toFloat()
+        setTranslationY(clampedY)
+    }
+
+    private val translateState: TranslateState
+        get() {
+            val txY = getTranslationY()
+            if (txY <= 0) {
+                return TranslateState.COLLAPSED
+            } else if (txY >= this.maxTranslation) {
+                return TranslateState.EXPANDED
+            } else {
+                return TranslateState.PARTIAL
             }
         }
-        return mMaxTranslationInParent;
-    }
 
-    private void updateTranslation(float dy) {
-        float txY = getTranslationY() + dy;
-        float clampedY = Math.min(Math.max(txY, 0), getMaxTranslation());
-        setTranslationY(clampedY);
-    }
+    val historyView: RecyclerView
+        get() = mRecyclerView!!
 
-    private TranslateState getTranslateState() {
-        float txY = getTranslationY();
-        if (txY <= 0) {
-            return TranslateState.COLLAPSED;
-        } else if (txY >= getMaxTranslation()) {
-            return TranslateState.EXPANDED;
-        } else {
-            return TranslateState.PARTIAL;
-        }
-    }
-
-    public RecyclerView getHistoryView() {
-        return mRecyclerView;
-    }
-
-    private void initVelocityTrackerIfNotExists() {
+    private fun initVelocityTrackerIfNotExists() {
         if (mVelocityTracker == null) {
-            mVelocityTracker = VelocityTracker.obtain();
+            mVelocityTracker = VelocityTracker.obtain()
         }
     }
 
-    private void recycleVelocityTracker() {
+    private fun recycleVelocityTracker() {
         if (mVelocityTracker != null) {
-            mVelocityTracker.recycle();
-            mVelocityTracker = null;
+            mVelocityTracker!!.recycle()
+            mVelocityTracker = null
         }
     }
 
-    private int getParentHeight() {
-        if (mParentHeight < 0) {
-            ViewGroup parent = (ViewGroup)getParent();
-            mParentHeight = parent.getHeight();
+    private val parentHeight: Int
+        get() {
+            if (mParentHeight < 0) {
+                val parent = getParent() as ViewGroup
+                mParentHeight = parent.getHeight()
+            }
+            return mParentHeight
         }
-        return mParentHeight;
-    }
 
     /**
      * Set the size and offset of the history view / graph view
@@ -339,70 +330,80 @@ public class DisplayOverlay extends FrameLayout {
      * To account for this, we make this method available to setup the history and graph
      * views after layout completes.
      */
-    public void initializeHistoryAndGraphView() {
-        int maxTx = getMaxTranslation();
-        if (mRecyclerView.getLayoutParams().height <= 0
-                || mGraphLayout.getLayoutParams().height <= 0) {
-            MarginLayoutParams historyParams = (MarginLayoutParams)mRecyclerView.getLayoutParams();
-            historyParams.height = maxTx;
+    fun initializeHistoryAndGraphView() {
+        val maxTx = this.maxTranslation
+        if (mRecyclerView!!.getLayoutParams().height <= 0
+            || mGraphLayout!!.getLayoutParams().height <= 0
+        ) {
+            val historyParams = mRecyclerView!!.getLayoutParams() as MarginLayoutParams
+            historyParams.height = maxTx
 
-            MarginLayoutParams graphParams = (MarginLayoutParams)mGraphLayout.getLayoutParams();
-            graphParams.height = maxTx + getDisplayHeight();
+            val graphParams = mGraphLayout!!.getLayoutParams() as MarginLayoutParams
+            graphParams.height = maxTx + this.displayHeight
             if (DEBUG) {
-                Log.v(TAG, "Set history height to " + maxTx
-                        + ", graph height to " + graphParams.height);
+                Log.v(
+                    TAG, ("Set history height to " + maxTx
+                            + ", graph height to " + graphParams.height)
+                )
             }
 
-            MarginLayoutParams overlayParams =
-                    (MarginLayoutParams)getLayoutParams();
-            overlayParams.topMargin = -maxTx;
-            requestLayout();
-            scrollToMostRecent();
+            val overlayParams =
+                getLayoutParams() as MarginLayoutParams
+            overlayParams.topMargin = -maxTx
+            requestLayout()
+            scrollToMostRecent()
         }
 
         if (mMinVelocity < 0) {
-            int txDist = getMaxTranslation();
-            mMinVelocity = txDist / MIN_SETTLE_DURATION;
+            val txDist = this.maxTranslation
+            mMinVelocity = txDist / MIN_SETTLE_DURATION
         }
     }
 
-    public void scrollToMostRecent() {
-        mRecyclerView.scrollToPosition(mRecyclerView.getAdapter().getItemCount()-1);
+    fun scrollToMostRecent() {
+        mRecyclerView!!.scrollToPosition(mRecyclerView!!.getAdapter()!!.getItemCount() - 1)
     }
 
-    public void setTranslateStateListener(TranslateStateListener listener) {
-        mTranslateStateListener = listener;
+    private fun isInBounds(x: Float, y: Float, v: View): Boolean {
+        return y >= v.getTop() && y <= v.getBottom() && x >= v.getLeft() && x <= v.getRight()
     }
 
-    public TranslateStateListener getTranslateStateListener() {
-        return mTranslateStateListener;
-    }
+    fun animateModeTransition() {
+        when (mMode) {
+            DisplayMode.GRAPH -> {
+                expandHistory()
+                AnimationUtil.fadeOut(mMainDisplay!!)
+                AnimationUtil.fadeIn(mGraphLayout!!)
+            }
 
-    private boolean isInBounds(float x, float y, View v) {
-        return y >= v.getTop() && y <= v.getBottom() &&
-                x >= v.getLeft() && x <= v.getRight();
-    }
+            DisplayMode.FORMULA -> {
+                collapseHistory()
+                AnimationUtil.fadeIn(mMainDisplay!!)
+                AnimationUtil.fadeOut(mGraphLayout!!)
+            }
 
-    public void animateModeTransition() {
-        switch (mMode) {
-            case GRAPH:
-                expandHistory();
-                AnimationUtil.INSTANCE.fadeOut(mMainDisplay);
-                AnimationUtil.INSTANCE.fadeIn(mGraphLayout);
-                break;
-            case FORMULA:
-                collapseHistory();
-                AnimationUtil.INSTANCE.fadeIn(mMainDisplay);
-                AnimationUtil.INSTANCE.fadeOut(mGraphLayout);
-                break;
+            null -> TODO()
         }
     }
 
-    public void setMode(DisplayMode mode) {
-        mMode = mode;
-    }
+    var mode: DisplayMode
+        get() = mMode!!
+        set(mode) {
+            mMode = mode
+        }
 
-    public DisplayMode getMode() {
-        return mMode;
+    companion object {
+        /**
+         * Closing the history with a fling will finish at least this fast (ms)
+         */
+        private const val MIN_SETTLE_DURATION = 200f
+
+        /**
+         * Do not settle overlay if velocity is less than this
+         */
+        private const val VELOCITY_SLOP = 0.1f
+
+        private const val DEBUG = false
+        private const val TAG = "DisplayOverlay"
     }
 }
