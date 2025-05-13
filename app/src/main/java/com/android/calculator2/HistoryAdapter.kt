@@ -67,8 +67,8 @@ open class HistoryAdapter(val context: Context?, history: History, callback: His
                 mCallback.onHistoryItemSelected(entry)
             }
         })
-        holder.historyExpr.setText(formatText(entry.base))
-        holder.historyResult.setText(entry.edited)
+        holder.historyExpr.text = formatText(entry.base)
+        holder.historyResult.text = entry.edited
     }
 
     override fun getItemCount(): Int {
