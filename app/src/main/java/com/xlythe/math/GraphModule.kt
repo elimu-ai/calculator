@@ -68,7 +68,7 @@ class GraphModule(solver: Solver?) : Module(solver) {
             mSolver.mSymbols.pushFrame()
             var x = mMinX
             while (x <= mMaxX) {
-                if (isCancelled()) {
+                if (isCancelled) {
                     return null
                 }
 
