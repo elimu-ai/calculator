@@ -51,9 +51,9 @@ class GraphModule(solver: Solver?) : Module(solver) {
         override fun doInBackground(vararg eq: String?): MutableList<Point?>? {
             try {
                 return graph(
-                    mSolver.getBaseModule().updateTextToNewMode(
-                        eq[0],
-                        mSolver.getBaseModule().getBase(), Base.DECIMAL
+                    mSolver.baseModule.updateTextToNewMode(
+                        eq[0] ?: "",
+                        mSolver.baseModule.base, Base.DECIMAL
                     )
                 )
             } catch (e: SyntaxException) {
