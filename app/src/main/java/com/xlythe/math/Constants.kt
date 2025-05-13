@@ -49,8 +49,8 @@ object Constants {
         DECIMAL_FORMAT = DecimalFormatSymbols()
 
         // These will already be known by Java
-        DECIMAL_POINT = DECIMAL_FORMAT!!.getDecimalSeparator()
-        DECIMAL_SEPARATOR = DECIMAL_FORMAT!!.getGroupingSeparator()
+        DECIMAL_POINT = DECIMAL_FORMAT!!.decimalSeparator
+        DECIMAL_SEPARATOR = DECIMAL_FORMAT!!.groupingSeparator
 
         // Use a space for Bin and Hex
         BINARY_SEPARATOR = ' '
