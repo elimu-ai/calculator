@@ -14,8 +14,8 @@ class DigitLabelHelper {
     }
 
     private fun getDecimalFormatForCurrentLocale(context: Context): DecimalFormatSymbols {
-        val resources = context.getResources()
-        var locale = resources.getConfiguration().locale
+        val resources = context.resources
+        var locale = resources.configuration.locale
         if (locale.hashCode() != mCachedLocaleHash) {
             if (!resources.getBoolean(R.bool.use_localized_digits)) {
                 locale = Locale.Builder()
@@ -31,11 +31,11 @@ class DigitLabelHelper {
 
     fun getTextForDigits(context: Context, callback: DigitLabelHelperCallback) {
         val symbols = getDecimalFormatForCurrentLocale(context)
-        val zeroDigit = symbols.getZeroDigit()
+        val zeroDigit = symbols.zeroDigit
         for (i in sDigitIds.indices) {
             val id: Int = sDigitIds[i]
             if (id == R.id.dec_point) {
-                callback.setDigitText(id, symbols.getDecimalSeparator().toString())
+                callback.setDigitText(id, symbols.decimalSeparator.toString())
             } else {
                 callback.setDigitText(id, (zeroDigit.code + i).toChar().toString())
             }
