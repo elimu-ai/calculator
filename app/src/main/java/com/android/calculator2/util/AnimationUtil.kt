@@ -92,8 +92,8 @@ object AnimationUtil {
                 0f,
                 1f,
                 0f,
-                (view1.getWidth() / 2).toFloat(),
-                (view1.getHeight() / 2).toFloat()
+                (view1.width / 2).toFloat(),
+                (view1.height / 2).toFloat()
             )
         val growAnim =
             ScaleAnimation(
@@ -101,16 +101,16 @@ object AnimationUtil {
                 1f,
                 0f,
                 1f,
-                (view2.getWidth() / 2).toFloat(),
-                (view2.getHeight() / 2).toFloat()
+                (view2.width / 2).toFloat(),
+                (view2.height / 2).toFloat()
             )
         shrinkAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                view1.setVisibility(View.INVISIBLE)
-                view2.setVisibility(View.VISIBLE)
+                view1.visibility = View.INVISIBLE
+                view2.visibility = View.VISIBLE
                 view2.startAnimation(growAnim)
             }
 
