@@ -44,6 +44,7 @@ import com.xlythe.math.Constants
 import com.xlythe.math.EquationFormatter
 import com.xlythe.math.Solver
 import kotlin.math.min
+import androidx.core.view.size
 
 class CalculatorEditText : EditText {
     private val mShowCursor = SystemClock.uptimeMillis()
@@ -69,7 +70,7 @@ class CalculatorEditText : EditText {
     }
 
     private fun setUp() {
-        setLongClickable(false)
+        isLongClickable = false
 
         // Disable highlighting text
         setCustomSelectionActionModeCallback(NoTextSelectionMode())
@@ -92,7 +93,7 @@ class CalculatorEditText : EditText {
                     .replace(mSolver!!.baseModule.separator.toString() + "", "")
 
                 // Get the selection handle, since we're setting text and that'll overwrite it
-                mSelectionHandle = getSelectionStart()
+                mSelectionHandle = selectionStart
 
                 // Adjust the handle by removing any comas or spacing to the left
                 val cs = s.subSequence(0, mSelectionHandle).toString()
@@ -109,8 +110,8 @@ class CalculatorEditText : EditText {
         setOnKeyListener(object : OnKeyListener {
             override fun onKey(view: View?, i: Int, keyEvent: KeyEvent): Boolean {
                 if (i == KeyEvent.KEYCODE_DEL) {
-                    val sel = getSelectionStart()
-                    val edit = getEditableText().toString()
+                    val sel = selectionStart
+                    val edit = editableText.toString()
 
                     // If we're trying to delete a separator shift the selector over
                     if (sel >= 1
@@ -124,11 +125,11 @@ class CalculatorEditText : EditText {
             }
         })
 
-        setOnFocusChangeListener(object : OnFocusChangeListener {
+        onFocusChangeListener = object : OnFocusChangeListener {
             override fun onFocusChange(v: View?, hasFocus: Boolean) {
                 if (hasFocus) mEventListener!!.onEditTextChanged(this@CalculatorEditText)
             }
-        })
+        }
     }
 
     private fun formatText(input: String): Spanned? {
@@ -159,23 +160,23 @@ class CalculatorEditText : EditText {
     }
 
     override fun focusSearch(direction: Int): View? {
-        val p = getParent()
+        val p = parent
         if (p is AdvancedDisplay) {
             val parent = p
             var v: View?
             when (direction) {
                 FOCUS_FORWARD -> {
                     v = parent.nextView(this)
-                    while (!v!!.isFocusable()) v = parent.nextView(v)
+                    while (!v!!.isFocusable) v = parent.nextView(v)
                     return v
                 }
 
                 FOCUS_BACKWARD -> {
                     v = parent.previousView(this)
-                    while (!v!!.isFocusable()) v = parent.previousView(v)
+                    while (!v!!.isFocusable) v = parent.previousView(v)
                     if (MatrixView::class.java.isAssignableFrom(v.javaClass)) {
-                        v = (v as ViewGroup).getChildAt(v.getChildCount() - 1)
-                        v = (v as ViewGroup).getChildAt(v.getChildCount() - 1)
+                        v = (v as ViewGroup).getChildAt(v.size - 1)
+                        v = (v as ViewGroup).getChildAt(v.size - 1)
                     }
                     return v
                 }
@@ -190,18 +191,18 @@ class CalculatorEditText : EditText {
         super.onDraw(canvas)
         // TextViews don't draw the cursor if textLength is 0. Because we're an
         // array of TextViews, we'd prefer that it did.
-        if (getText().length == 0 && isEnabled() && (isFocused() || isPressed())) {
+        if (getText().length == 0 && isEnabled && (isFocused || isPressed)) {
             if ((SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
-                mHighlightPaint.setColor(getCurrentTextColor())
-                mHighlightPaint.setStyle(Paint.Style.STROKE)
+                mHighlightPaint.setColor(currentTextColor)
+                mHighlightPaint.style = Paint.Style.STROKE
                 if (Build.VERSION.SDK_INT >= 21) {
-                    mHighlightPaint.setStrokeWidth(6f)
+                    mHighlightPaint.strokeWidth = 6f
                 }
                 canvas.drawLine(
-                    (getWidth() / 2).toFloat(),
+                    (width / 2).toFloat(),
                     0f,
-                    (getWidth() / 2).toFloat(),
-                    getHeight().toFloat(),
+                    (width / 2).toFloat(),
+                    height.toFloat(),
                     mHighlightPaint
                 )
                 mHandler.postAtTime(mRefresher, SystemClock.uptimeMillis() + BLINK)
