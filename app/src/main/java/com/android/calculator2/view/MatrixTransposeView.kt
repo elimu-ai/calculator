@@ -25,10 +25,10 @@ import com.android.calculator2.view.display.AdvancedDisplay
 class MatrixTransposeView : TextView {
     constructor(context: Context?) : super(context)
 
-    constructor(display: AdvancedDisplay) : super(display.getContext()) {
+    constructor(display: AdvancedDisplay) : super(display.context) {
         setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
-        setText(Html.fromHtml("<sup><small>T</small></sup>"))
-        setTextAppearance(display.getContext(), R.style.Theme_Calculator_Display)
+        text = Html.fromHtml("<sup><small>T</small></sup>")
+        setTextAppearance(display.context, R.style.Theme_Calculator_Display)
         setPadding(0, 0, 0, 0)
     }
 
