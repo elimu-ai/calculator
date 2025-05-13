@@ -43,7 +43,7 @@ internal class MenuHandler(private val mDisplay: AdvancedDisplay) :
         get() = mDisplay.context
 
     val text: String?
-        get() = mDisplay.getText()
+        get() = mDisplay.text
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return onTextContextMenuItem(item.getTitle())
@@ -75,7 +75,9 @@ internal class MenuHandler(private val mDisplay: AdvancedDisplay) :
     }
 
     private fun pasteContent() {
-        mDisplay.insert(paste(this.context))
+        paste(this.context)?.let {
+            mDisplay.insert(it)
+        }
     }
 
     companion object {

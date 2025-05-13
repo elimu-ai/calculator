@@ -1,765 +1,763 @@
-package com.android.calculator2.view.display;
+package com.android.calculator2.view.display
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.Paint;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.TextWatcher;
-import android.text.method.KeyListener;
-import android.text.method.NumberKeyListener;
-import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.ContextMenu;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import ai.elimu.calculator.R
+import android.content.Context
+import android.graphics.Paint
+import android.text.Editable
+import android.text.InputType
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.TextWatcher
+import android.text.method.KeyListener
+import android.text.method.NumberKeyListener
+import android.util.AttributeSet
+import android.util.TypedValue
+import android.view.ContextMenu
+import android.view.Gravity
+import android.view.KeyEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import com.android.calculator2.view.CalculatorEditable
+import com.android.calculator2.view.ScrollableDisplay
+import com.android.calculator2.view.TextUtil.countOccurrences
+import com.android.calculator2.view.display.CalculatorEditText.Companion.getInstance
+import com.xlythe.math.Constants
+import com.xlythe.math.Solver
+import com.xlythe.math.Solver.Companion.isOperator
+import java.util.Arrays
+import kotlin.math.max
+import kotlin.math.min
 
-import com.android.calculator2.Clipboard;
-import ai.elimu.calculator.R;
-import com.android.calculator2.view.CalculatorEditable;
-import com.android.calculator2.view.ScrollableDisplay;
-import com.android.calculator2.view.TextUtil;
-import com.xlythe.math.Constants;
-import com.xlythe.math.Solver;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-public class AdvancedDisplay extends ScrollableDisplay implements EventListener {
-
-    // Restrict keys from hardware keyboards
-    private static final char[] ACCEPTED_CHARS = "0123456789.+-*/\u2212\u00d7\u00f7()!%^".toCharArray();
-
-    // The maximum allowed text edit chars - no limit can cause FC
-    private static final int MAX_TEXT_EDIT_CHARS = 500;
-
+class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDisplay(context, attrs),
+    EventListener {
     // For cut, copy, and paste
-    MenuHandler mMenuHandler = new MenuHandler(this);
+    internal var mMenuHandler: MenuHandler = MenuHandler(this)
 
     // Currently focused text box
-    private EditText mActiveEditText;
+    var activeEditText: EditText? = null
+        private set
 
     // The LinearLayout inside of this HorizontalScrollView
-    private Root mRoot;
+    private val mRoot: Root
 
     // Math library
-    private Solver mSolver;
+    private var mSolver: Solver? = null
 
     // A cached copy of getText so we don't calculate it every time its called
-    private String mCachedText;
+    private var mCachedText: String? = null
 
     // Try and use as large a text as possible, if the width allows it
-    private int mWidthConstraint = -1;
-    private int mHeightConstraint = -1;
-    private final Paint mTempPaint = new TextPaint();
-    private OnTextSizeChangeListener mOnTextSizeChangeListener;
+    private var mWidthConstraint = -1
+    private var mHeightConstraint = -1
+    private val mTempPaint: Paint = TextPaint()
+    private var mOnTextSizeChangeListener: OnTextSizeChangeListener? = null
 
     // Variables for setting custom views (like Matrices)
-    private final Set<DisplayComponent> mComponents = new HashSet<DisplayComponent>();
+    val components: MutableCollection<DisplayComponent> = HashSet<DisplayComponent>()
 
     // Variables to apply to underlying EditTexts
-    private Map<String, Sync> mRegisteredSyncs = new HashMap<String, Sync>();
-    private float mMaximumTextSize;
-    private float mMinimumTextSize;
-    private float mStepTextSize;
-    private float mTextSize;
-    private int mTextColor;
-    private Editable.Factory mFactory;
-    private KeyListener mKeyListener;
-    private boolean mTextIsUpdating = false;
-    private final List<TextWatcher> mTextWatchers = new ArrayList<TextWatcher>();
-    private final TextWatcher mTextWatcher = new TextWatcher() {
+    private val mRegisteredSyncs: MutableMap<String?, Sync?> = HashMap<String?, Sync?>()
+    private var mMaximumTextSize = 0f
+    private var mMinimumTextSize = 0f
+    private var mStepTextSize = 0f
+    private var mTextSize = 0f
+    var currentTextColor: Int = 0
+        private set
+    private var mFactory: Editable.Factory? = null
+    private var mKeyListener: KeyListener? = null
+    private var mTextIsUpdating = false
+    private val mTextWatchers: MutableList<TextWatcher> = ArrayList<TextWatcher>()
+    private val mTextWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            if (mTextIsUpdating) return
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            if(mTextIsUpdating) return;
-
-            CharSequence text = getText();
-            for(TextWatcher watcher : mTextWatchers) {
-                watcher.beforeTextChanged(text, 0, 0, text.length());
+            val text: CharSequence = text
+            for (watcher in mTextWatchers) {
+                watcher.beforeTextChanged(text, 0, 0, text.length)
             }
-            mCachedText = null;
+            mCachedText = null
         }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(mTextIsUpdating) return;
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (mTextIsUpdating) return
 
-            CharSequence text = getText();
-            for(TextWatcher watcher : mTextWatchers) {
-                watcher.onTextChanged(text, 0, 0, text.length());
+            val text: CharSequence = text
+            for (watcher in mTextWatchers) {
+                watcher.onTextChanged(text, 0, 0, text.length)
             }
         }
 
-        @Override
-        public void afterTextChanged(Editable s) {
-            if(mTextIsUpdating) return;
+        override fun afterTextChanged(s: Editable?) {
+            if (mTextIsUpdating) return
 
-            Editable e = mFactory.newEditable(getText());
-            for(TextWatcher watcher : mTextWatchers) {
-                watcher.afterTextChanged(e);
+            val e = mFactory!!.newEditable(text)
+            for (watcher in mTextWatchers) {
+                watcher.afterTextChanged(e)
             }
         }
-    };
+    }
 
-    public AdvancedDisplay(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    init {
+        mRoot = Root(context)
+        val params = LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.WRAP_CONTENT
+        )
+        params.gravity = Gravity.CENTER_VERTICAL
+        mRoot.setLayoutParams(params)
+        mRoot.setGravity(Gravity.RIGHT)
+        mRoot.setLongClickable(true)
+        addView(mRoot)
 
-        mRoot = new Root(context);
-        ScrollableDisplay.LayoutParams params = new ScrollableDisplay.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.CENTER_VERTICAL;
-        mRoot.setLayoutParams(params);
-        mRoot.setGravity(Gravity.RIGHT);
-        mRoot.setLongClickable(true);
-        addView(mRoot);
-
-        if(attrs != null) {
-            final TypedArray a = context.obtainStyledAttributes(
-                    attrs, R.styleable.CalculatorEditText, 0, 0);
-            mTextSize = mMaximumTextSize = mMinimumTextSize = a.getDimension(
-                    R.styleable.CalculatorEditText_textSize, getTextSize());
-            mMaximumTextSize = a.getDimension(
-                    R.styleable.CalculatorEditText_maxTextSize, getTextSize());
+        if (attrs != null) {
+            val a = context.obtainStyledAttributes(
+                attrs, R.styleable.CalculatorEditText, 0, 0
+            )
             mMinimumTextSize = a.getDimension(
-                    R.styleable.CalculatorEditText_minTextSize, getTextSize());
-            mStepTextSize = a.getDimension(R.styleable.CalculatorEditText_stepTextSize,
-                    (mMaximumTextSize - mMinimumTextSize) / 3);
-            mTextColor = a.getColor(R.styleable.CalculatorEditText_textColor, 0);
-            a.recycle();
+                R.styleable.CalculatorEditText_textSize, this.textSize
+            )
+            mMaximumTextSize = mMinimumTextSize
+            mTextSize = mMaximumTextSize
+            mMaximumTextSize = a.getDimension(
+                R.styleable.CalculatorEditText_maxTextSize, this.textSize
+            )
+            mMinimumTextSize = a.getDimension(
+                R.styleable.CalculatorEditText_minTextSize, this.textSize
+            )
+            mStepTextSize = a.getDimension(
+                R.styleable.CalculatorEditText_stepTextSize,
+                (mMaximumTextSize - mMinimumTextSize) / 3
+            )
+            this.currentTextColor = a.getColor(R.styleable.CalculatorEditText_textColor, 0)
+            a.recycle()
 
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, mMaximumTextSize);
-            setMinimumHeight((int) (mMaximumTextSize * 1.2) + getPaddingBottom() + getPaddingTop());
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, mMaximumTextSize)
+            setMinimumHeight((mMaximumTextSize * 1.2).toInt() + getPaddingBottom() + getPaddingTop())
         }
 
-        Editable.Factory factory = new CalculatorEditable.Factory();
-        setEditableFactory(factory);
+        val factory: Editable.Factory = CalculatorEditable.Factory()
+        setEditableFactory(factory)
 
-        final List<String> keywords = Arrays.asList(
-                context.getString(R.string.arcsin) + "(",
-                context.getString(R.string.arccos) + "(",
-                context.getString(R.string.arctan) + "(",
-                context.getString(R.string.fun_sin) + "(",
-                context.getString(R.string.fun_cos) + "(",
-                context.getString(R.string.fun_tan) + "(",
-                context.getString(R.string.fun_log) + "(",
-                context.getString(R.string.mod) + "(",
-                context.getString(R.string.fun_ln) + "(",
-                context.getString(R.string.det) + "(",
-                context.getString(R.string.dx),
-                context.getString(R.string.dy),
-                context.getString(R.string.cbrt) + "(");
-        NumberKeyListener calculatorKeyListener = new NumberKeyListener() {
-            @Override
-            public int getInputType() {
-                return EditorInfo.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+        val keywords = Arrays.asList<String?>(
+            context.getString(R.string.arcsin) + "(",
+            context.getString(R.string.arccos) + "(",
+            context.getString(R.string.arctan) + "(",
+            context.getString(R.string.fun_sin) + "(",
+            context.getString(R.string.fun_cos) + "(",
+            context.getString(R.string.fun_tan) + "(",
+            context.getString(R.string.fun_log) + "(",
+            context.getString(R.string.mod) + "(",
+            context.getString(R.string.fun_ln) + "(",
+            context.getString(R.string.det) + "(",
+            context.getString(R.string.dx),
+            context.getString(R.string.dy),
+            context.getString(R.string.cbrt) + "("
+        )
+        val calculatorKeyListener: NumberKeyListener = object : NumberKeyListener() {
+            override fun getInputType(): Int {
+                return EditorInfo.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             }
 
-            @Override
-            protected char[] getAcceptedChars() {
-                return ACCEPTED_CHARS;
+            override fun getAcceptedChars(): CharArray {
+                return ACCEPTED_CHARS
             }
 
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            override fun filter(
+                source: CharSequence?,
+                start: Int,
+                end: Int,
+                dest: Spanned?,
+                dstart: Int,
+                dend: Int
+            ): CharSequence? {
                 /*
                  * the EditText should still accept letters (eg. 'sin') coming from the on-screen touch buttons, so don't filter anything.
                  */
-                return null;
+                return null
             }
 
-            @Override
-            public boolean onKeyDown(View view, Editable content, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_DEL) {
-                    int selectionHandle = getSelectionStart();
-                    if(selectionHandle == 0) {
+            override fun onKeyDown(
+                view: View?,
+                content: Editable?,
+                keyCode: Int,
+                event: KeyEvent?
+            ): Boolean {
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    val selectionHandle: Int = selectionStart
+                    if (selectionHandle == 0) {
                         // Remove the view in front
-                        int index = getChildIndex(getActiveEditText());
-                        if(index > 0) {
-                            removeView(getChildAt(index - 1));
-                            return true;
+                        val index = getChildIndex(activeEditText)
+                        if (index > 0) {
+                            removeView(getChildAt(index - 1))
+                            return true
                         }
                     } else {
                         // Check and remove keywords
-                        String textBeforeInsertionHandle = getActiveEditText().getText().toString().substring(0, selectionHandle);
-                        String textAfterInsertionHandle = getActiveEditText().getText().toString().substring(selectionHandle, getActiveEditText().getText().toString().length());
+                        val textBeforeInsertionHandle =
+                            activeEditText?.getText().toString().substring(0, selectionHandle)
+                        val textAfterInsertionHandle = activeEditText?.getText().toString()
+                            .substring(
+                                selectionHandle,
+                                activeEditText?.getText().toString().length
+                            )
 
-                        for(String s : keywords) {
-                            if(textBeforeInsertionHandle.endsWith(s)) {
-                                int deletionLength = s.length();
-                                String text = textBeforeInsertionHandle.substring(0, textBeforeInsertionHandle.length() - deletionLength) + textAfterInsertionHandle;
-                                getActiveEditText().setText(text);
-                                setSelection(selectionHandle - deletionLength);
-                                return true;
+                        for (s in keywords) {
+                            if (textBeforeInsertionHandle.endsWith(s)) {
+                                val deletionLength = s.length
+                                val text = textBeforeInsertionHandle.substring(
+                                    0,
+                                    textBeforeInsertionHandle.length - deletionLength
+                                ) + textAfterInsertionHandle
+                                activeEditText?.setText(text)
+                                setSelection(selectionHandle - deletionLength)
+                                return true
                             }
                         }
                     }
                 }
-                return super.onKeyDown(view, content, keyCode, event);
+                return super.onKeyDown(view, content, keyCode, event)
             }
-        };
-        setKeyListener(calculatorKeyListener);
+        }
+        setKeyListener(calculatorKeyListener)
     }
 
-    public void setEditableFactory(Editable.Factory factory) {
-        mFactory = factory;
-        registerSync(new Sync("setEditableFactory") {
-            @Override
-            public void apply(TextView textView) {
-                textView.setEditableFactory(mFactory);
+    fun setEditableFactory(factory: Editable.Factory) {
+        mFactory = factory
+        registerSync(object : Sync("setEditableFactory") {
+            public override fun apply(textView: TextView?) {
+                textView?.setEditableFactory(mFactory)
             }
-        });
+        })
     }
 
-    public void setKeyListener(KeyListener input) {
-        mKeyListener = input;
-        registerSync(new Sync("setKeyListener") {
-            @Override
-            public void apply(TextView textView) {
-                textView.setKeyListener(mKeyListener);
+    fun setKeyListener(input: KeyListener?) {
+        mKeyListener = input
+        registerSync(object : Sync("setKeyListener") {
+            public override fun apply(textView: TextView?) {
+                textView?.setKeyListener(mKeyListener)
             }
-        });
+        })
     }
 
-    public void setTextColor(int color) {
-        mTextColor = color;
-        registerSync(new Sync("setTextColor") {
-            @Override
-            public void apply(TextView textView) {
-                textView.setTextColor(mTextColor);
+    fun setTextColor(color: Int) {
+        this.currentTextColor = color
+        registerSync(object : Sync("setTextColor") {
+            public override fun apply(textView: TextView?) {
+                textView?.setTextColor(currentTextColor)
             }
-        });
+        })
     }
 
-    public int getCurrentTextColor() {
-        return mTextColor;
-    }
-
-    public void setTextSize(float size) {
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
-    }
-
-    public void setTextSize(final int unit, float size) {
-        final float oldTextSize = mTextSize;
-        mTextSize = size;
-        registerSync(new Sync("setTextSize") {
-            @Override
-            public void apply(TextView textView) {
-                textView.setTextSize(unit, mTextSize);
+    fun setTextSize(unit: Int, size: Float) {
+        val oldTextSize = mTextSize
+        mTextSize = size
+        registerSync(object : Sync("setTextSize") {
+            public override fun apply(textView: TextView?) {
+                textView?.setTextSize(unit, mTextSize)
             }
-        });
-        if (mOnTextSizeChangeListener != null && getTextSize() != oldTextSize) {
-            mOnTextSizeChangeListener.onTextSizeChanged(this, oldTextSize);
+        })
+        if (mOnTextSizeChangeListener != null && this.textSize != oldTextSize) {
+            mOnTextSizeChangeListener!!.onTextSizeChanged(this, oldTextSize)
         }
     }
 
-    public float getTextSize() {
-        return mTextSize;
+    var textSize: Float
+        get() = mTextSize
+        set(size) {
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
+        }
+
+    fun setOnTextSizeChangeListener(listener: OnTextSizeChangeListener?) {
+        mOnTextSizeChangeListener = listener
     }
 
-    public void setOnTextSizeChangeListener(OnTextSizeChangeListener listener) {
-        mOnTextSizeChangeListener = listener;
-    }
-
-    public float getVariableTextSize(String text) {
+    fun getVariableTextSize(text: String): Float {
         if (mWidthConstraint < 0 || mMaximumTextSize <= mMinimumTextSize) {
             // Not measured, bail early.
-            return getTextSize();
+            return this.textSize
         }
 
         // Count exponents, which aren't measured properly.
-        int exponents = TextUtil.countOccurrences(text, '^');
+        val exponents = countOccurrences(text, '^')
 
         // Step through increasing text sizes until the text would no longer fit.
-        float lastFitTextSize = mMinimumTextSize;
+        var lastFitTextSize = mMinimumTextSize
         while (lastFitTextSize < mMaximumTextSize) {
-            final float nextSize = Math.min(lastFitTextSize + mStepTextSize, mMaximumTextSize);
-            mTempPaint.setTextSize(nextSize);
+            val nextSize = min(
+                (lastFitTextSize + mStepTextSize).toDouble(),
+                mMaximumTextSize.toDouble()
+            ).toFloat()
+            mTempPaint.setTextSize(nextSize)
             if (mTempPaint.measureText(text) > mWidthConstraint) {
-                break;
-            } else if(nextSize + nextSize * exponents / 2 > mHeightConstraint) {
-                break;
+                break
+            } else if (nextSize + nextSize * exponents / 2 > mHeightConstraint) {
+                break
             } else {
-                lastFitTextSize = nextSize;
+                lastFitTextSize = nextSize
             }
         }
 
-        return lastFitTextSize;
+        return lastFitTextSize
     }
 
-    public void addTextChangedListener(TextWatcher watcher) {
-        mTextWatchers.add(watcher);
+    fun addTextChangedListener(watcher: TextWatcher?) {
+        mTextWatchers.add(watcher!!)
     }
 
-    protected void registerSync(Sync sync) {
-        mRegisteredSyncs.put(sync.tag, sync);
-        apply(this, sync);
+    protected fun registerSync(sync: Sync) {
+        mRegisteredSyncs.put(sync.tag, sync)
+        apply(this, sync)
     }
 
-    private void apply(View view, Sync sync) {
-        if(view instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup) view;
-            for(int i=0;i<vg.getChildCount();i++) {
-                apply(vg.getChildAt(i), sync);
+    private fun apply(view: View?, sync: Sync) {
+        if (view is ViewGroup) {
+            val vg = view
+            for (i in 0..<vg.getChildCount()) {
+                apply(vg.getChildAt(i), sync)
             }
-        }
-        else if(view instanceof TextView) {
-            sync.apply((TextView) view);
+        } else if (view is TextView) {
+            sync.apply(view)
         }
     }
 
-    @Override
-    public void removeView(View view) {
-        int index = mRoot.getChildIndex(view);
-        if(index == -1) return;
+    override fun removeView(view: View?) {
+        val index = mRoot.getChildIndex(view)
+        if (index == -1) return
 
         // Remove the requested view
-        mRoot.removeViewAt(index);
+        mRoot.removeViewAt(index)
 
         // Combine the 2 EditTexts on either side
-        CalculatorEditText leftSide = (CalculatorEditText) mRoot.getChildAt(index - 1);
-        CalculatorEditText rightSide = (CalculatorEditText) mRoot.getChildAt(index);
-        int cursor = leftSide.getText().length();
-        leftSide.setText(leftSide.getText().toString() + rightSide.getText().toString());
-        mRoot.removeViewAt(index); // Remove the second EditText
-        leftSide.requestFocus();
-        leftSide.setSelection(cursor);
+        val leftSide = mRoot.getChildAt(index - 1) as CalculatorEditText
+        val rightSide = mRoot.getChildAt(index) as CalculatorEditText
+        val cursor = leftSide.getText().length
+        leftSide.setText(leftSide.getText().toString() + rightSide.getText().toString())
+        mRoot.removeViewAt(index) // Remove the second EditText
+        leftSide.requestFocus()
+        leftSide.setSelection(cursor)
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         mWidthConstraint =
-                MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
+            MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight()
         mHeightConstraint =
-                MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom();
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, getVariableTextSize(getText().toString()));
+            MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom()
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, getVariableTextSize(this.text.toString()))
     }
 
-    protected int getSelectionStart() {
-        if(getActiveEditText() == null) return 0;
-        return getActiveEditText().getSelectionStart();
-    }
+    protected val selectionStart: Int
+        get() {
+            if (this.activeEditText == null) return 0
+            return this.activeEditText!!.getSelectionStart()
+        }
 
-    protected void setSelection(int position) {
-        getActiveEditText().setSelection(position);
+    protected fun setSelection(position: Int) {
+        this.activeEditText!!.setSelection(position)
     }
 
     /**
      * Clears the text in the display
-     * */
-    public void clear() {
-        mCachedText = null;
+     */
+    fun clear() {
+        mCachedText = null
 
         // Notify the text watcher
-        mTextWatcher.beforeTextChanged(null, 0, 0, 0);
+        mTextWatcher.beforeTextChanged(null, 0, 0, 0)
 
         // Clear all views
-        mRoot.removeAllViews();
+        mRoot.removeAllViews()
 
         // Always start with a CalculatorEditText
-        mActiveEditText = CalculatorEditText.getInstance(getContext(), mSolver, this);
-        addView(mActiveEditText);
+        this.activeEditText = getInstance(getContext(), mSolver, this)
+        addView(this.activeEditText)
 
         // Notify the text watcher
-        mTextWatcher.onTextChanged(null, 0, 0, 0);
-        mTextWatcher.afterTextChanged(null);
+        mTextWatcher.onTextChanged(null, 0, 0, 0)
+        mTextWatcher.afterTextChanged(null)
     }
 
-    @Override
-    public void onEditTextChanged(EditText editText) {
-        mActiveEditText = editText;
+    override fun onEditTextChanged(editText: EditText?) {
+        this.activeEditText = editText
     }
 
-    @Override
-    public void onRemoveView(View view) {
-        removeView(view);
-    }
-    
-    /**
-     * Loop around when arrow keys are pressed
-     * */
-    @Override
-     public View nextView(View currentView) {
-        boolean foundCurrentView = false;
-        for(int i = 0; i < mRoot.getChildCount(); i++) {
-            if(foundCurrentView) return mRoot.getChildAt(i);
-            else if(currentView == mRoot.getChildAt(i)) foundCurrentView = true;
-        }
-        return mRoot.getChildAt(0);
+    override fun onRemoveView(view: View?) {
+        removeView(view)
     }
 
     /**
      * Loop around when arrow keys are pressed
-     * */
-    @Override
-     public View previousView(View currentView) {
-        boolean foundCurrentView = false;
-        for(int i = mRoot.getChildCount() - 1; i >= 0; i--) {
-            if(foundCurrentView) return mRoot.getChildAt(i);
-            else if(currentView == mRoot.getChildAt(i)) foundCurrentView = true;
+     */
+    override fun nextView(currentView: View?): View? {
+        var foundCurrentView = false
+        for (i in 0..<mRoot.getChildCount()) {
+            if (foundCurrentView) return mRoot.getChildAt(i)
+            else if (currentView === mRoot.getChildAt(i)) foundCurrentView = true
         }
-        return mRoot.getChildAt(mRoot.getChildCount() - 1);
+        return mRoot.getChildAt(0)
     }
 
-    public void next() {
-        if(mActiveEditText.getSelectionStart() == mActiveEditText.getText().length()) {
-            View v = mActiveEditText.focusSearch(View.FOCUS_FORWARD);
-            if(v != null) v.requestFocus();
-            mActiveEditText.setSelection(0);
+    /**
+     * Loop around when arrow keys are pressed
+     */
+    override fun previousView(currentView: View?): View? {
+        var foundCurrentView = false
+        for (i in mRoot.getChildCount() - 1 downTo 0) {
+            if (foundCurrentView) return mRoot.getChildAt(i)
+            else if (currentView === mRoot.getChildAt(i)) foundCurrentView = true
+        }
+        return mRoot.getChildAt(mRoot.getChildCount() - 1)
+    }
+
+    fun next() {
+        if (activeEditText!!.getSelectionStart() == activeEditText!!.getText().length) {
+            val v = activeEditText!!.focusSearch(FOCUS_FORWARD)
+            if (v != null) v.requestFocus()
+            activeEditText!!.setSelection(0)
         } else {
-            mActiveEditText.setSelection(mActiveEditText.getSelectionStart() + 1);
+            activeEditText!!.setSelection(activeEditText!!.getSelectionStart() + 1)
         }
     }
 
-    public boolean hasNext() {
-        return hasNext(this);
+    fun hasNext(): Boolean {
+        return hasNext(this)
     }
 
-    private boolean hasNext(View view) {
-        if(view instanceof AdvancedDisplayControls) {
-            return ((AdvancedDisplayControls) view).hasNext();
-        }
-        else if(view instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup) view;
-            for(int i=0;i<vg.getChildCount();i++) {
-                if(hasNext(vg.getChildAt(i))) {
-                    return true;
+    private fun hasNext(view: View?): Boolean {
+        if (view is AdvancedDisplayControls) {
+            return (view as AdvancedDisplayControls).hasNext()
+        } else if (view is ViewGroup) {
+            val vg = view
+            for (i in 0..<vg.getChildCount()) {
+                if (hasNext(vg.getChildAt(i))) {
+                    return true
                 }
             }
-            return false;
+            return false
         }
-        return false;
+        return false
     }
 
-    public void backspace() {
-        EditText aet = getActiveEditText();
-        if (aet != null)
-            aet.dispatchKeyEvent(new KeyEvent(0, KeyEvent.KEYCODE_DEL));
+    fun backspace() {
+        val aet = this.activeEditText
+        if (aet != null) aet.dispatchKeyEvent(KeyEvent(0, KeyEvent.KEYCODE_DEL))
     }
 
     /**
      * Inserts text at the cursor of the active EditText
-     * */
-    public void insert(CharSequence delta) {
-        insert(delta.toString());
+     */
+    fun insert(delta: CharSequence) {
+        insert(delta.toString())
     }
 
     /**
      * Inserts text at the cursor of the active EditText
-     * */
-    public void insert(String delta) {
-        if(mActiveEditText == null) {
-            setText(delta);
-        }
-        else {
+     */
+    fun insert(delta: String) {
+        var delta = delta
+        if (this.activeEditText == null) {
+            setText(delta)
+        } else {
             // Notify the text watcher
-            mTextWatcher.beforeTextChanged(null, 0, 0, 0);
-            mTextIsUpdating = true;
+            mTextWatcher.beforeTextChanged(null, 0, 0, 0)
+            mTextIsUpdating = true
 
 
             // limit the max number of characters the edit text can have
-            if (delta.length() > 0 &&
-                    getActiveEditText().length() + delta.length() > MAX_TEXT_EDIT_CHARS) {
-                final int chars = Math.min(delta.length(),
-                        Math.max(0, MAX_TEXT_EDIT_CHARS - getActiveEditText().length()));
-                delta = delta.substring(0, chars);
+            if (delta.length > 0 &&
+                this.activeEditText!!.length() + delta.length > MAX_TEXT_EDIT_CHARS
+            ) {
+                val chars = min(
+                    delta.length.toDouble(),
+                    max(0.0, (MAX_TEXT_EDIT_CHARS - this.activeEditText!!.length()).toDouble())
+                ).toInt()
+                delta = delta.substring(0, chars)
 
-                if (delta.length() == 0) {
+                if (delta.length == 0) {
                     Toast.makeText(getContext(), R.string.text_max_chars, Toast.LENGTH_SHORT)
-                            .show();
+                        .show()
                 }
             }
 
-            if(CalculatorEditText.class.isInstance(getActiveEditText())) {
+            if (CalculatorEditText::class.java.isInstance(this.activeEditText)) {
                 // Logic to insert, split text if there's another view, etc
-                int cursor, cacheCursor;
-                cursor = cacheCursor = getActiveEditText().getSelectionStart();
-                final int index = mRoot.getChildIndex(getActiveEditText());
-                StringBuilder cache = new StringBuilder();
+                var cursor: Int
+                var cacheCursor: Int
+                cacheCursor = this.activeEditText!!.getSelectionStart()
+                cursor = cacheCursor
+                val index = mRoot.getChildIndex(this.activeEditText)
+                val cache = StringBuilder()
 
                 // Loop over the text, adding custom views when needed
-                loop: while(!delta.isEmpty()) {
-                    for(DisplayComponent c : mComponents) {
-                        String equation = c.parse(delta);
-                        if(equation != null) {
+                loop@ while (!delta.isEmpty()) {
+                    for (c in this.components) {
+                        val equation = c.parse(delta)
+                        if (equation != null) {
                             // Update the EditText with the cached text
-                            getActiveEditText().getText().insert(cursor, cache);
-                            cache.setLength(0);
-                            cacheCursor = 0;
+                            this.activeEditText!!.getText().insert(cursor, cache)
+                            cache.setLength(0)
+                            cacheCursor = 0
 
                             // We found a custom view
-                            mRoot.addView(c.getView(getContext(), mSolver, equation, this));
+                            mRoot.addView(
+                                c.getView<View?, Any?>(
+                                    getContext(),
+                                    mSolver,
+                                    equation,
+                                    this
+                                )
+                            )
 
                             // Keep EditTexts in between custom views
-                            splitText(cursor, index, delta);
-                            mRoot.getChildAt(index + 2).requestFocus();
+                            splitText(cursor, index, delta)
+                            mRoot.getChildAt(index + 2).requestFocus()
 
                             // Update text and loop again
-                            delta = delta.substring(equation.length());
-                            continue loop;
+                            delta = delta.substring(equation.length)
+                            continue@loop
                         }
                     }
 
                     // Don't allow leading operators
-                    if(cursor == 0 && getActiveEditText() == mRoot.getChildAt(0)
-                            && Solver.isOperator(delta)
-                            && !delta.equals(String.valueOf(Constants.MINUS))) {
-                        delta = delta.substring(1);
-                        continue loop;
+                    if (cursor == 0 && this.activeEditText === mRoot.getChildAt(0) && isOperator(
+                            delta
+                        )
+                        && (delta != Constants.MINUS.toString())
+                    ) {
+                        delta = delta.substring(1)
+                        continue@loop
                     }
 
                     // Append the next character to the EditText
-                    cache.append(delta.charAt(0));
-                    delta = delta.substring(1);
-                    cursor++;
+                    cache.append(delta.get(0))
+                    delta = delta.substring(1)
+                    cursor++
                 }
 
                 // Update the EditText with the cached text
-                getActiveEditText().getText().insert(cacheCursor, cache);
-            }
-            else {
+                this.activeEditText!!.getText().insert(cacheCursor, cache)
+            } else {
                 // We let the custom edit text handle displaying the text
-                int cursor = getActiveEditText().getSelectionStart();
-                getActiveEditText().getText().insert(cursor, delta);
+                val cursor = this.activeEditText!!.getSelectionStart()
+                this.activeEditText!!.getText().insert(cursor, delta)
             }
 
             // Notify the text watcher
-            mTextIsUpdating = false;
-            mTextWatcher.onTextChanged(null, 0, 0, 0);
-            mTextWatcher.afterTextChanged(null);
+            mTextIsUpdating = false
+            mTextWatcher.onTextChanged(null, 0, 0, 0)
+            mTextWatcher.afterTextChanged(null)
         }
     }
 
-    private void splitText(int cursor, int index, String text) {
+    private fun splitText(cursor: Int, index: Int, text: String) {
         // Grab the left and right strings
-        final String leftText = getActiveEditText().getText().toString().substring(0, cursor);
-        final String rightText = getActiveEditText().getText().toString().substring(cursor);
+        val leftText = this.activeEditText!!.getText().toString().substring(0, cursor)
+        val rightText = this.activeEditText!!.getText().toString().substring(cursor)
 
         // Update the left EditText
-        getActiveEditText().setText(leftText);
+        this.activeEditText!!.setText(leftText)
 
         // Create a right EditText
-        EditText et = CalculatorEditText.getInstance(getContext(), mSolver, this);
-        et.setText(rightText);
-        addView(et, index + 2);
+        val et: EditText = getInstance(getContext(), mSolver, this)
+        et.setText(rightText)
+        addView(et, index + 2)
 
         // Decide who needs focus
-        if(text.isEmpty()) {
-            mRoot.getChildAt(index + 1).requestFocus();
+        if (text.isEmpty()) {
+            mRoot.getChildAt(index + 1).requestFocus()
         } else {
-            mRoot.getChildAt(index + 2).requestFocus();
-            ((CalculatorEditText) mRoot.getChildAt(index + 2)).setSelection(0);
+            mRoot.getChildAt(index + 2).requestFocus()
+            (mRoot.getChildAt(index + 2) as CalculatorEditText).setSelection(0)
         }
     }
 
-    public void setSolver(Solver solver) {
-        mSolver = solver;
+    fun setSolver(solver: Solver?) {
+        mSolver = solver
     }
 
-    public EditText getActiveEditText() {
-        return mActiveEditText;
-    }
-
-    @Override
-    public void addView(View child) {
-        if(child == mRoot) {
-            super.addView(child);
-            return;
+    override fun addView(child: View?) {
+        if (child === mRoot) {
+            super.addView(child)
+            return
         }
-        mRoot.addView(child);
+        mRoot.addView(child)
     }
 
-    @Override
-    public void addView(View child, int index) {
-        if(child == mRoot) {
-            super.addView(child, index);
-            return;
+    override fun addView(child: View?, index: Int) {
+        if (child === mRoot) {
+            super.addView(child, index)
+            return
         }
-        mRoot.addView(child, index);
+        mRoot.addView(child, index)
     }
 
-    public int getChildIndex(View child) {
-        return mRoot.getChildIndex(child);
+    fun getChildIndex(child: View?): Int {
+        return mRoot.getChildIndex(child)
     }
 
-    @Override
-    public void setEnabled(final boolean enabled) {
+    override fun setEnabled(enabled: Boolean) {
         // We only want to disable our children. So we're not calling super on purpose.
-        registerSync(new Sync("setEnabled") {
-            @Override
-            public void apply(TextView textView) {
-                textView.setEnabled(enabled);
+        registerSync(object : Sync("setEnabled") {
+            public override fun apply(textView: TextView?) {
+                textView?.setEnabled(enabled)
             }
-        });
+        })
     }
 
-    /**
-     * Returns the text in the display
-     * */
-    public String getText() {
-        if(mCachedText != null) {
-            return mCachedText;
+    val text: String
+        /**
+         * Returns the text in the display
+         */
+        get() {
+            if (mCachedText != null) {
+                return mCachedText!!
+            }
+
+            var text = ""
+            for (i in 0..<mRoot.getChildCount()) {
+                text += mRoot.getChildAt(i).toString()
+            }
+            mCachedText = text
+            return text
         }
 
-        String text = "";
-        for(int i = 0; i < mRoot.getChildCount(); i++) {
-            text += mRoot.getChildAt(i).toString();
-        }
-        mCachedText = text;
-        return text;
+    /**
+     * Set the text for the display
+     */
+    fun setText(resId: Int) {
+        setText(getContext().getString(resId))
     }
 
     /**
      * Set the text for the display
-     * */
-    public void setText(int resId) {
-        setText(getContext().getString(resId));
-    }
-
-    /**
-     * Set the text for the display
-     * */
-    public void setText(String text) {
+     */
+    fun setText(text: String?) {
         // Notify the text watcher
-        mTextWatcher.beforeTextChanged(null, 0, 0, 0);
-        mTextIsUpdating = true;
+        var text = text
+        mTextWatcher.beforeTextChanged(null, 0, 0, 0)
+        mTextIsUpdating = true
 
         // Remove existing text
-        clear();
+        clear()
 
         // Clear on null
-        if(text == null) return;
+        if (text == null) return
 
         // Don't allow leading operators
-        while(text.length() > 0
-                && Solver.isOperator(text.charAt(0))
-                && !text.startsWith(String.valueOf(Constants.MINUS))) {
-            text = text.substring(1);
+        while (text!!.length > 0 && isOperator(text.get(0))
+            && !text.startsWith(Constants.MINUS.toString())
+        ) {
+            text = text.substring(1)
         }
 
-        StringBuilder cache = new StringBuilder();
+        val cache = StringBuilder()
 
         // Loop over the text, adding custom views when needed
-        loop: while(!text.isEmpty()) {
-            for(DisplayComponent c : mComponents) {
-                String equation = c.parse(text);
-                if(equation != null) {
+        loop@ while (!text!!.isEmpty()) {
+            for (c in this.components) {
+                val equation = c.parse(text)
+                if (equation != null) {
                     // Apply the cache
-                    EditText trailingText = ((CalculatorEditText) mRoot.getLastView());
-                    trailingText.setText(cache);
-                    cache.setLength(0);
+                    val trailingText: EditText = (mRoot.lastView as CalculatorEditText)
+                    trailingText.setText(cache)
+                    cache.setLength(0)
 
                     // We found a custom view
-                    mRoot.addView(c.getView(getContext(), mSolver, equation, this));
+                    mRoot.addView(c.getView<View?, Any?>(getContext(), mSolver, equation, this))
 
                     // Keep EditTexts in between custom views
-                    addView(CalculatorEditText.getInstance(getContext(), mSolver, this));
+                    addView(getInstance(getContext(), mSolver, this))
 
                     // Update text and loop again
-                    text = text.substring(equation.length());
-                    continue loop;
+                    text = text!!.substring(equation.length)
+                    continue@loop
                 }
             }
 
             // Append the next character to the trailing EditText
-            cache.append(text.charAt(0));
-            text = text.substring(1);
+            cache.append(text!!.get(0))
+            text = text.substring(1)
         }
 
         // Apply the cache
-        EditText trailingText = ((CalculatorEditText) mRoot.getLastView());
-        trailingText.setText(cache);
-        trailingText.setSelection(trailingText.length());
-        trailingText.requestFocus();
+        val trailingText: EditText = (mRoot.lastView as CalculatorEditText)
+        trailingText.setText(cache)
+        trailingText.setSelection(trailingText.length())
+        trailingText.requestFocus()
 
         // Notify the text watcher
-        mTextIsUpdating = false;
-        mTextWatcher.onTextChanged(null, 0, 0, 0);
-        mTextWatcher.afterTextChanged(null);
+        mTextIsUpdating = false
+        mTextWatcher.onTextChanged(null, 0, 0, 0)
+        mTextWatcher.afterTextChanged(null)
     }
 
-    public void registerComponent(DisplayComponent component) {
-        mComponents.add(component);
+    fun registerComponent(component: DisplayComponent) {
+        components.add(component)
     }
 
-    public void registerComponents(Collection<DisplayComponent> components) {
-        mComponents.addAll(components);
-    }
-
-    public Set<DisplayComponent> getComponents() {
-        return mComponents;
+    fun registerComponents(components: MutableCollection<DisplayComponent>) {
+        components.addAll(components)
     }
 
     // Everything below is for copy/paste
-
-    public interface OnTextSizeChangeListener {
-        void onTextSizeChanged(AdvancedDisplay textView, float oldSize);
+    interface OnTextSizeChangeListener {
+        fun onTextSizeChanged(textView: AdvancedDisplay?, oldSize: Float)
     }
 
-    class Root extends LinearLayout {
-        public Root(Context context) {
-            this(context, null);
+    internal inner class Root @JvmOverloads constructor(
+        context: Context?,
+        attrs: AttributeSet? = null
+    ) : LinearLayout(context, attrs) {
+        init {
+            setOrientation(HORIZONTAL)
         }
 
-        public Root(Context context, AttributeSet attrs) {
-            super(context, attrs);
-            setOrientation(HORIZONTAL);
-        }
+        override fun addView(child: View?, index: Int) {
+            super.addView(child, index)
 
-        @Override
-        public void addView(View child, int index) {
-            super.addView(child, index);
-
-            for(Map.Entry<String, Sync> sync : mRegisteredSyncs.entrySet()) {
+            for (sync in mRegisteredSyncs.entries) {
                 // Apply all our custom variables to our lovely children
-                apply(child, sync.getValue());
+                apply(child, sync.value!!)
             }
 
-            apply(child, new Sync("addTextChangedListener") {
-                @Override
-                public void apply(TextView textView) {
-                    textView.addTextChangedListener(mTextWatcher);
+            apply(child, object : Sync("addTextChangedListener") {
+                public override fun apply(textView: TextView?) {
+                    textView?.addTextChangedListener(mTextWatcher)
                 }
-            });
+            })
         }
 
-        public View getLastView() {
-            if(getChildCount() == 0) return null;
-            return getChildAt(getChildCount() - 1);
-        }
+        val lastView: View?
+            get() {
+                if (getChildCount() == 0) return null
+                return getChildAt(getChildCount() - 1)
+            }
 
         /**
          * Returns the position of a view
-         * */
-        public int getChildIndex(View view) {
-            for(int i = 0; i < getChildCount(); i++) {
-                if(getChildAt(i) == view) return i;
+         */
+        fun getChildIndex(view: View?): Int {
+            for (i in 0..<getChildCount()) {
+                if (getChildAt(i) === view) return i
             }
-            return -1;
+            return -1
         }
 
-        @Override
-        public void onCreateContextMenu(ContextMenu menu) {
-            mMenuHandler.onCreateContextMenu(menu);
+        public override fun onCreateContextMenu(menu: ContextMenu) {
+            mMenuHandler.onCreateContextMenu(menu)
         }
+    }
+
+    companion object {
+        // Restrict keys from hardware keyboards
+        private val ACCEPTED_CHARS = "0123456789.+-*/\u2212\u00d7\u00f7()!%^".toCharArray()
+
+        // The maximum allowed text edit chars - no limit can cause FC
+        private const val MAX_TEXT_EDIT_CHARS = 500
     }
 }
