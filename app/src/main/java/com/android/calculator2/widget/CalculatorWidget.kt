@@ -10,7 +10,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.preference.PreferenceManager
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
@@ -26,6 +25,7 @@ import com.xlythe.math.Persist
 import com.xlythe.math.Solver
 import org.javia.arity.SyntaxException
 import java.text.DecimalFormatSymbols
+import androidx.core.text.isDigitsOnly
 
 class CalculatorWidget : AppWidgetProvider() {
     private var mClearText = false
@@ -33,92 +33,92 @@ class CalculatorWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0)
         var value: String? = getValue(context, appWidgetId)
-        if (value == context.getResources().getString(R.string.error_syntax)) {
+        if (value == context.resources.getString(R.string.error_syntax)) {
             value = ""
         }
         mClearText = intent.getBooleanExtra(SHOW_CLEAR, false)
 
         // Play audio for numbers and operators
-        val action = intent.getAction()!!.substring(intent.getAction()!!.lastIndexOf(".") + 1)
+        val action = intent.action!!.substring(intent.action!!.lastIndexOf(".") + 1)
         if (PlayerUtil.RAW_FILE_EQUALS != action) {
             PlayerUtil.playRawFile(context, action)
         }
 
-        if (intent.getAction() == DIGIT_0) {
+        if (intent.action == DIGIT_0) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "0"
-        } else if (intent.getAction() == DIGIT_1) {
+        } else if (intent.action == DIGIT_1) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "1"
-        } else if (intent.getAction() == DIGIT_2) {
+        } else if (intent.action == DIGIT_2) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "2"
-        } else if (intent.getAction() == DIGIT_3) {
+        } else if (intent.action == DIGIT_3) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "3"
-        } else if (intent.getAction() == DIGIT_4) {
+        } else if (intent.action == DIGIT_4) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "4"
-        } else if (intent.getAction() == DIGIT_5) {
+        } else if (intent.action == DIGIT_5) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "5"
-        } else if (intent.getAction() == DIGIT_6) {
+        } else if (intent.action == DIGIT_6) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "6"
-        } else if (intent.getAction() == DIGIT_7) {
+        } else if (intent.action == DIGIT_7) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "7"
-        } else if (intent.getAction() == DIGIT_8) {
+        } else if (intent.action == DIGIT_8) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "8"
-        } else if (intent.getAction() == DIGIT_9) {
+        } else if (intent.action == DIGIT_9) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value += "9"
-        } else if (intent.getAction() == DOT) {
+        } else if (intent.action == DOT) {
             if (mClearText) {
                 value = ""
                 mClearText = false
             }
             value = addDecimal(value)
-        } else if (intent.getAction() == DIV) {
-            value = Companion.addOperator(value!!, Constants.DIV)
-        } else if (intent.getAction() == MUL) {
-            value = Companion.addOperator(value!!, Constants.MUL)
-        } else if (intent.getAction() == MINUS) {
-            value = Companion.addOperator(value!!, Constants.MINUS)
-        } else if (intent.getAction() == PLUS) {
-            value = Companion.addOperator(value!!, Constants.PLUS)
-        } else if (intent.getAction() == EQUALS) {
+        } else if (intent.action == DIV) {
+            value = addOperator(value!!, Constants.DIV)
+        } else if (intent.action == MUL) {
+            value = addOperator(value!!, Constants.MUL)
+        } else if (intent.action == MINUS) {
+            value = addOperator(value!!, Constants.MINUS)
+        } else if (intent.action == PLUS) {
+            value = addOperator(value!!, Constants.PLUS)
+        } else if (intent.action == EQUALS) {
             if (mClearText) {
                 value = ""
                 mClearText = false
@@ -137,14 +137,14 @@ class CalculatorWidget : AppWidgetProvider() {
                 val output = logic.solve(input) ?: ""
                 value = tokenizer.getLocalizedExpression(output)
             } catch (e: SyntaxException) {
-                value = context.getResources().getString(R.string.error_syntax)
+                value = context.resources.getString(R.string.error_syntax)
             }
 
             // Try to save it to history
-            if (value != context.getResources().getString(R.string.error_syntax)) {
+            if (value != context.resources.getString(R.string.error_syntax)) {
                 // Play audio for result
 
-                if (TextUtils.isDigitsOnly(value) && value.toInt() < 10) {
+                if (value.isDigitsOnly() && value.toInt() < 10) {
                     PlayerUtil.playResult(context, PlayerUtil.NUMBER_RAW_FILES[value.toInt()])
                 } else {
                     PlayerUtil.playRawFile(context, PlayerUtil.RAW_FILE_EQUALS)
@@ -157,9 +157,9 @@ class CalculatorWidget : AppWidgetProvider() {
                 history.enter(input, value)
                 persist.save()
             }
-        } else if (intent.getAction() == CLR) {
+        } else if (intent.action == CLR) {
             value = ""
-        } else if (intent.getAction() == DEL) {
+        } else if (intent.action == DEL) {
             if (value!!.length > 0) value = value.substring(0, value.length - 1)
         }
         setValue(context, appWidgetId, value)
@@ -188,7 +188,7 @@ class CalculatorWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val remoteViews = RemoteViews(context.getPackageName(), R.layout.widget)
+        val remoteViews = RemoteViews(context.packageName, R.layout.widget)
 
         var value: String = getValue(context, appWidgetId)
 
@@ -385,7 +385,7 @@ class CalculatorWidget : AppWidgetProvider() {
         private val decimal: Char
             get() {
                 val dfs = DecimalFormatSymbols()
-                return dfs.getDecimalSeparator()
+                return dfs.decimalSeparator
             }
 
         private fun setValue(context: Context?, appWidgetId: Int, newValue: String?) {
@@ -396,7 +396,7 @@ class CalculatorWidget : AppWidgetProvider() {
 
         private fun addOperator(equation: String, op: Char): String {
             var equation = equation
-            if (equation.length == 0) {
+            if (equation.isEmpty()) {
                 if (op == Constants.MINUS) {
                     equation += op
                 }
@@ -406,8 +406,8 @@ class CalculatorWidget : AppWidgetProvider() {
                     equation += op
                 }
             } else {
-                val lastChar = equation.get(equation.length - 1)
-                val lastlastChar = equation.get(equation.length - 2)
+                val lastChar = equation[equation.length - 1]
+                val lastlastChar = equation[equation.length - 2]
 
                 if (Solver.isOperator(lastlastChar) && Solver.isOperator(lastChar)) {
                     if (op != Constants.MINUS) {
