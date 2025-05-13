@@ -134,7 +134,7 @@ class CalculatorWidget : AppWidgetProvider() {
             logic.setLineLength(7)
 
             try {
-                val output = logic.solve(input)
+                val output = logic.solve(input) ?: ""
                 value = tokenizer.getLocalizedExpression(output)
             } catch (e: SyntaxException) {
                 value = context.getResources().getString(R.string.error_syntax)

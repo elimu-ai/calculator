@@ -47,7 +47,7 @@ class CalculatorExpressionEvaluator(tokenizer: CalculatorExpressionTokenizer) {
         }
 
         try {
-            val result = solver.solve(expr)
+            val result = solver.solve(expr) ?: ""
             callback.onEvaluate(
                 expr,
                 mTokenizer.getLocalizedExpression(result),
