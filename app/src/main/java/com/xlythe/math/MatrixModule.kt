@@ -215,10 +215,10 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
                 val m = matrix.numRows()
                 val n = matrix.numCols()
                 if (m != n) throw SyntaxException()
-                val decomp = SimpleEVD<SimpleMatrix>(matrix.getMatrix())
+                val decomp = SimpleEVD<SimpleMatrix>(matrix.matrix)
                 val evals = DoubleArray(m)
                 for (i1 in 0..<m) {
-                    evals[i1] = sqrt(decomp.getEigenvalue(i1).getMagnitude())
+                    evals[i1] = sqrt(decomp.getEigenvalue(i1).magnitude)
                 }
                 val D = SimpleMatrix.diag(*evals)
                 val V = SimpleMatrix(m, n)
@@ -238,10 +238,10 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
                 val m = matrix.numRows()
                 val n = matrix.numCols()
                 if (m != n) throw SyntaxException()
-                val decomp = SimpleEVD<SimpleMatrix>(matrix.getMatrix())
+                val decomp = SimpleEVD<SimpleMatrix>(matrix.matrix)
                 val evals = DoubleArray(m)
                 for (i1 in 0..<m) {
-                    evals[i1] = cbrt(decomp.getEigenvalue(i1).getMagnitude())
+                    evals[i1] = cbrt(decomp.getEigenvalue(i1).magnitude)
                 }
                 val D = SimpleMatrix.diag(*evals)
                 val V = SimpleMatrix(m, n)
@@ -389,7 +389,7 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
             if (m != n) throw SyntaxException()
             val b = r as Double
             if (b > floor(b)) {
-                val decomp = SimpleSVD<SimpleMatrix>(a.getMatrix(), false)
+                val decomp = SimpleSVD<SimpleMatrix>(a.matrix, false)
                 val S = decomp.getW()
                 for (i1 in 0..<m) {
                     for (j in 0..<n) {
@@ -414,7 +414,7 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
             if (m != n) throw SyntaxException()
             val b = l as Double
             if (b > floor(b)) {
-                val decomp = SimpleSVD<SimpleMatrix>(a.getMatrix(), false)
+                val decomp = SimpleSVD<SimpleMatrix>(a.matrix, false)
                 val S = decomp.getW()
                 for (i1 in 0..<m) {
                     for (j in 0..<n) {
