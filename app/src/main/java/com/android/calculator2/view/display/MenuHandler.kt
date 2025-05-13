@@ -31,11 +31,11 @@ internal class MenuHandler(private val mDisplay: AdvancedDisplay) :
             menu.add(Menu.NONE, i, i, mMenuItemsStrings[i]).setOnMenuItemClickListener(this)
         }
         if (this.text!!.isEmpty()) {
-            menu.getItem(CUT).setVisible(false)
-            menu.getItem(COPY).setVisible(false)
+            menu.getItem(CUT).isVisible = false
+            menu.getItem(COPY).isVisible = false
         }
         if (!canPaste(this.context)) {
-            menu.getItem(PASTE).setVisible(false)
+            menu.getItem(PASTE).isVisible = false
         }
     }
 
@@ -46,7 +46,7 @@ internal class MenuHandler(private val mDisplay: AdvancedDisplay) :
         get() = mDisplay.text
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        return onTextContextMenuItem(item.getTitle())
+        return onTextContextMenuItem(item.title)
     }
 
     fun onTextContextMenuItem(title: CharSequence?): Boolean {
