@@ -87,8 +87,8 @@ class DisplayOverlay : FrameLayout {
     }
 
     private fun setup() {
-        val vc = ViewConfiguration.get(getContext())
-        mTouchSlop = vc.getScaledTouchSlop()
+        val vc = ViewConfiguration.get(context)
+        mTouchSlop = vc.scaledTouchSlop
     }
 
     enum class TranslateState {
@@ -111,7 +111,7 @@ class DisplayOverlay : FrameLayout {
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         val action = MotionEventCompat.getActionMasked(ev)
-        val y = ev.getRawY()
+        val y = ev.rawY
         val state = this.translateState
 
         when (action) {
@@ -129,7 +129,7 @@ class DisplayOverlay : FrameLayout {
                 // in graph mode let move events apply to the graph,
                 // unless the touch is on the "close handle"
                 if (mMode == DisplayMode.GRAPH) {
-                    return isInBounds(ev.getX(), ev.getY(), mCloseGraphHandle!!)
+                    return isInBounds(ev.x, ev.y, mCloseGraphHandle!!)
                 }
 
                 if (dy < 0) {
@@ -145,7 +145,7 @@ class DisplayOverlay : FrameLayout {
 
     private val isScrolledToEnd: Boolean
         get() = mLayoutManager!!.findLastCompletelyVisibleItemPosition() ==
-                mRecyclerView!!.getAdapter()!!.getItemCount() - 1
+                mRecyclerView!!.adapter!!.itemCount - 1
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val action = MotionEventCompat.getActionMasked(event)
@@ -168,7 +168,7 @@ class DisplayOverlay : FrameLayout {
 
     private fun handleMove(event: MotionEvent) {
         val state = this.translateState
-        val y = event.getRawY()
+        val y = event.rawY
         val dy = y - mLastMotionY
         if (DEBUG) {
             Log.v(TAG, "handleMove y=" + y + ", dy=" + dy)
@@ -185,7 +185,7 @@ class DisplayOverlay : FrameLayout {
 
     private fun handleUp(event: MotionEvent?) {
         mVelocityTracker!!.computeCurrentVelocity(1)
-        val yvel = mVelocityTracker!!.getYVelocity()
+        val yvel = mVelocityTracker!!.yVelocity
         if (DEBUG) {
             Log.v(TAG, "handleUp yvel=" + yvel + ", mLastDeltaY=" + mLastDeltaY)
         }
@@ -213,7 +213,7 @@ class DisplayOverlay : FrameLayout {
     }
 
     val displayHeight: Int
-        get() = mFormula!!.getHeight() + mResult!!.getHeight()
+        get() = mFormula!!.height + mResult!!.height
 
     /**
      * Smoothly translates the display overlay to the given target
@@ -223,7 +223,7 @@ class DisplayOverlay : FrameLayout {
      */
     private fun settleAt(destTx: Float, yvel: Float) {
         if (yvel != 0f) {
-            val dist = destTx - getTranslationY()
+            val dist = destTx - translationY
             val dt = abs((dist / yvel).toDouble()).toFloat()
             if (DEBUG) {
                 Log.v(
@@ -235,7 +235,7 @@ class DisplayOverlay : FrameLayout {
             val anim =
                 ObjectAnimator.ofFloat(
                     this, "translationY",
-                    getTranslationY(), destTx
+                    translationY, destTx
                 )
             anim.setDuration(dt.toLong())
             anim.addListener(object : Animator.AnimatorListener {
@@ -261,7 +261,7 @@ class DisplayOverlay : FrameLayout {
          */
         get() {
             if (mMaxTranslationInParent < 0) {
-                val bottomPadding = getContext().getResources()
+                val bottomPadding = context.resources
                     .getDimensionPixelOffset(R.dimen.history_view_bottom_margin)
                 mMaxTranslationInParent = this.parentHeight - this.displayHeight - bottomPadding
                 if (DEBUG) {
@@ -275,14 +275,14 @@ class DisplayOverlay : FrameLayout {
         }
 
     private fun updateTranslation(dy: Float) {
-        val txY = getTranslationY() + dy
+        val txY = translationY + dy
         val clampedY = min(max(txY.toDouble(), 0.0), this.maxTranslation.toDouble()).toFloat()
-        setTranslationY(clampedY)
+        translationY = clampedY
     }
 
     private val translateState: TranslateState
         get() {
-            val txY = getTranslationY()
+            val txY = translationY
             if (txY <= 0) {
                 return TranslateState.COLLAPSED
             } else if (txY >= this.maxTranslation) {
@@ -311,8 +311,8 @@ class DisplayOverlay : FrameLayout {
     private val parentHeight: Int
         get() {
             if (mParentHeight < 0) {
-                val parent = getParent() as ViewGroup
-                mParentHeight = parent.getHeight()
+                val parent = parent as ViewGroup
+                mParentHeight = parent.height
             }
             return mParentHeight
         }
@@ -332,13 +332,13 @@ class DisplayOverlay : FrameLayout {
      */
     fun initializeHistoryAndGraphView() {
         val maxTx = this.maxTranslation
-        if (mRecyclerView!!.getLayoutParams().height <= 0
-            || mGraphLayout!!.getLayoutParams().height <= 0
+        if (mRecyclerView!!.layoutParams.height <= 0
+            || mGraphLayout!!.layoutParams.height <= 0
         ) {
-            val historyParams = mRecyclerView!!.getLayoutParams() as MarginLayoutParams
+            val historyParams = mRecyclerView!!.layoutParams as MarginLayoutParams
             historyParams.height = maxTx
 
-            val graphParams = mGraphLayout!!.getLayoutParams() as MarginLayoutParams
+            val graphParams = mGraphLayout!!.layoutParams as MarginLayoutParams
             graphParams.height = maxTx + this.displayHeight
             if (DEBUG) {
                 Log.v(
@@ -348,7 +348,7 @@ class DisplayOverlay : FrameLayout {
             }
 
             val overlayParams =
-                getLayoutParams() as MarginLayoutParams
+                layoutParams as MarginLayoutParams
             overlayParams.topMargin = -maxTx
             requestLayout()
             scrollToMostRecent()
@@ -361,11 +361,11 @@ class DisplayOverlay : FrameLayout {
     }
 
     fun scrollToMostRecent() {
-        mRecyclerView!!.scrollToPosition(mRecyclerView!!.getAdapter()!!.getItemCount() - 1)
+        mRecyclerView!!.scrollToPosition(mRecyclerView!!.adapter!!.itemCount - 1)
     }
 
     private fun isInBounds(x: Float, y: Float, v: View): Boolean {
-        return y >= v.getTop() && y <= v.getBottom() && x >= v.getLeft() && x <= v.getRight()
+        return y >= v.top && y <= v.bottom && x >= v.left && x <= v.right
     }
 
     fun animateModeTransition() {
