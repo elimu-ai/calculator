@@ -190,7 +190,7 @@ class CalculatorWidget : AppWidgetProvider() {
     ) {
         val remoteViews = RemoteViews(context.getPackageName(), R.layout.widget)
 
-        var value: String? = getValue(context, appWidgetId)
+        var value: String = getValue(context, appWidgetId)
 
         val formatter = EquationFormatter()
         value = formatter.addComas(Solver(), value)
