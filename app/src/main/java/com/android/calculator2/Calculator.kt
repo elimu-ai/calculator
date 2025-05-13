@@ -64,7 +64,6 @@ import com.xlythe.math.GraphModule
 import com.xlythe.math.History
 import com.xlythe.math.HistoryEntry
 import com.xlythe.math.Persist
-import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -107,7 +106,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         override fun onKey(view: View?, keyCode: Int, keyEvent: KeyEvent): Boolean {
             when (keyCode) {
                 KeyEvent.KEYCODE_NUMPAD_ENTER, KeyEvent.KEYCODE_ENTER -> {
-                    if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                    if (keyEvent.action == KeyEvent.ACTION_UP) {
                         val v = mEqualsGraphButton!!.enabledView
                         mCurrentButton = v
                         if (v != null) {
@@ -155,21 +154,21 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         val buttonOperatorSub: Button = findViewById<Button>(R.id.op_sub)
         val buttonOperatorAdd: Button = findViewById<Button>(R.id.op_add)
         val sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val numeracySkillSet = sharedPreferences.getStringSet(
             StudentUpdatedReceiver.PREF_STUDENT_NUMERACY_SKILLS,
             null
         )
         Log.d(javaClass.getName(), "numeracySkillSet: " + numeracySkillSet)
         if (numeracySkillSet == null) {
-            buttonOperatorMul.setVisibility(View.INVISIBLE)
-            buttonOperatorSub.setVisibility(View.INVISIBLE)
+            buttonOperatorMul.visibility = View.INVISIBLE
+            buttonOperatorSub.visibility = View.INVISIBLE
         } else {
             if (!numeracySkillSet.contains(NumeracySkill.MULTIPLICATION.toString())) {
-                buttonOperatorMul.setVisibility(View.INVISIBLE)
+                buttonOperatorMul.visibility = View.INVISIBLE
             }
             if (!numeracySkillSet.contains(NumeracySkill.SUBTRACTION.toString())) {
-                buttonOperatorSub.setVisibility(View.INVISIBLE)
+                buttonOperatorSub.visibility = View.INVISIBLE
             }
         }
 
@@ -188,7 +187,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         mClearButton = findViewById(R.id.clr)
 
         if (mEqualsGraphButton == null ||
-            mEqualsGraphButton!!.getVisibility() != View.VISIBLE
+            mEqualsGraphButton!!.visibility != View.VISIBLE
         ) {
             mEqualsGraphButton = findViewById<View>(R.id.pad_operator).findViewById<MultiButton>(R.id.equals_graph)
         }
@@ -252,7 +251,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // but it might change a decimal point from . to ,
         Constants.rebuildConstants()
         val dot: Button = findViewById<Button>(R.id.dec_point)
-        dot.setText(Constants.DECIMAL_POINT.toString())
+        dot.text = Constants.DECIMAL_POINT.toString()
 
         val graphView: GraphView =
             findViewById<GraphView>(R.id.graphView)
@@ -268,7 +267,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         mDisplayView!!.getViewTreeObserver().addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    if (mDisplayView!!.getHeight() > 0) {
+                    if (mDisplayView!!.height > 0) {
                         mDisplayView!!.initializeHistoryAndGraphView()
                         if (mDisplayView!!.mode == DisplayOverlay.DisplayMode.GRAPH) {
                             mGraphController!!.startGraph(mFormulaEditText!!.text)
@@ -323,8 +322,8 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
     }
 
     private fun setClearVisibility(visible: Boolean) {
-        mClearButton!!.setVisibility(if (visible) View.VISIBLE else View.GONE)
-        mDeleteButton!!.setVisibility(if (visible) View.GONE else View.VISIBLE)
+        mClearButton!!.visibility = if (visible) View.VISIBLE else View.GONE
+        mDeleteButton!!.visibility = if (visible) View.GONE else View.VISIBLE
     }
 
     private fun setState(state: CalculatorState) {
@@ -333,36 +332,34 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             setClearVisibility(state == CalculatorState.RESULT || state == CalculatorState.ERROR)
 
             if (state == CalculatorState.ERROR) {
-                val errorColor = getResources().getColor(R.color.calculator_error_color)
+                val errorColor = resources.getColor(R.color.calculator_error_color)
                 mFormulaEditText!!.setTextColor(errorColor)
                 mResultEditText!!.setTextColor(errorColor)
                 if (Build.VERSION.SDK_INT >= 21) {
-                    getWindow().setStatusBarColor(errorColor)
+                    window.statusBarColor = errorColor
                 }
             } else {
                 mFormulaEditText!!.setTextColor(
-                    getResources().getColor(R.color.display_formula_text_color)
+                    resources.getColor(R.color.display_formula_text_color)
                 )
                 mResultEditText!!.setTextColor(
-                    getResources().getColor(R.color.display_result_text_color)
+                    resources.getColor(R.color.display_result_text_color)
                 )
                 if (Build.VERSION.SDK_INT >= 21) {
-                    getWindow().setStatusBarColor(
-                        getResources().getColor(R.color.calculator_accent_color)
-                    )
+                    window.statusBarColor = resources.getColor(R.color.calculator_accent_color)
                 }
             }
         }
     }
 
     override fun onBackPressed() {
-        if (mPadViewPager == null || mPadViewPager!!.getCurrentItem() == 0) {
+        if (mPadViewPager == null || mPadViewPager!!.currentItem == 0) {
             // If the user is currently looking at the first pad (or the pad is not paged),
             // allow the system to handle the Back button.
             super.onBackPressed()
         } else {
             // Otherwise, select the previous pad.
-            mPadViewPager!!.setCurrentItem(mPadViewPager!!.getCurrentItem() - 1)
+            mPadViewPager!!.setCurrentItem(mPadViewPager!!.currentItem - 1)
         }
     }
 
@@ -378,12 +375,12 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
     fun onButtonClick(view: View) {
         // Play audio for numbers and operators
 
-        if ((view.getTag() != null) && PlayerUtil.RAW_FILE_EQUALS != view.getTag()) {
-            PlayerUtil.playRawFile(this, view.getTag().toString())
+        if ((view.tag != null) && PlayerUtil.RAW_FILE_EQUALS != view.tag) {
+            PlayerUtil.playRawFile(this, view.tag.toString())
         }
 
         mCurrentButton = view
-        when (view.getId()) {
+        when (view.id) {
             R.id.eq -> onEquals()
             R.id.graph -> onGraph()
             R.id.del -> onDelete()
@@ -440,7 +437,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
 
     override fun onLongClick(view: View): Boolean {
         mCurrentButton = view
-        if (view.getId() == R.id.del) {
+        if (view.id == R.id.del) {
             onClear()
             return true
         }
@@ -481,13 +478,13 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         val translationX: Float
         if (Build.VERSION.SDK_INT >= 17) {
             translationX = (1.0f - textScale) *
-                    (textView.getWidth() / 2.0f - textView.getPaddingEnd())
+                    (textView.width / 2.0f - textView.getPaddingEnd())
         } else {
             translationX = (1.0f - textScale) *
-                    (textView.getWidth() / 2.0f - textView.getPaddingRight())
+                    (textView.width / 2.0f - textView.getPaddingRight())
         }
         val translationY = (1.0f - textScale) *
-                (textView.getHeight() / 2.0f - textView.getPaddingBottom())
+                (textView.height / 2.0f - textView.paddingBottom)
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(
             ObjectAnimator.ofFloat<View?>(textView, View.SCALE_X, textScale, 1.0f),
@@ -496,9 +493,9 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             ObjectAnimator.ofFloat<View?>(textView, View.TRANSLATION_Y, translationY, 0.0f)
         )
         animatorSet.setDuration(
-            getResources().getInteger(android.R.integer.config_mediumAnimTime).toLong()
+            resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
         )
-        animatorSet.setInterpolator(AccelerateDecelerateInterpolator())
+        animatorSet.interpolator = AccelerateDecelerateInterpolator()
         animatorSet.start()
     }
 
@@ -528,20 +525,20 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         mLayoutParams.height = mDisplayView!!.displayHeight
         mLayoutParams.gravity = Gravity.BOTTOM
         revealView.setLayoutParams(mLayoutParams)
-        revealView.setBackgroundColor(getResources().getColor(colorRes))
+        revealView.setBackgroundColor(resources.getColor(colorRes))
         mDisplayView!!.addView(revealView)
 
         val revealAnimator: Animator
         if (Build.VERSION.SDK_INT >= 21) {
             val clearLocation = IntArray(2)
             sourceView.getLocationInWindow(clearLocation)
-            clearLocation[0] += sourceView.getWidth() / 2
-            clearLocation[1] += sourceView.getHeight() / 2
-            val revealCenterX = clearLocation[0] - revealView.getLeft()
-            val revealCenterY = clearLocation[1] - revealView.getTop()
-            val x1_2 = (revealView.getLeft() - revealCenterX).toDouble().pow(2.0)
-            val x2_2 = (revealView.getRight() - revealCenterX).toDouble().pow(2.0)
-            val y_2 = (revealView.getTop() - revealCenterY).toDouble().pow(2.0)
+            clearLocation[0] += sourceView.width / 2
+            clearLocation[1] += sourceView.height / 2
+            val revealCenterX = clearLocation[0] - revealView.left
+            val revealCenterY = clearLocation[1] - revealView.top
+            val x1_2 = (revealView.left - revealCenterX).toDouble().pow(2.0)
+            val x2_2 = (revealView.right - revealCenterX).toDouble().pow(2.0)
+            val y_2 = (revealView.top - revealCenterY).toDouble().pow(2.0)
             val revealRadius = max(sqrt(x1_2 + y_2), sqrt(x2_2 + y_2)).toFloat()
 
             revealAnimator =
@@ -552,19 +549,15 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         } else {
             revealAnimator = ObjectAnimator.ofFloat<View?>(revealView, View.ALPHA, 0.0f, 1f)
         }
-        revealAnimator.setDuration(
-            getResources().getInteger(android.R.integer.config_longAnimTime).toLong()
-        )
+        revealAnimator.duration = resources.getInteger(android.R.integer.config_longAnimTime).toLong()
 
         val alphaAnimator: Animator = ObjectAnimator.ofFloat<View?>(revealView, View.ALPHA, 0.0f)
-        alphaAnimator.setDuration(
-            getResources().getInteger(android.R.integer.config_mediumAnimTime).toLong()
-        )
+        alphaAnimator.duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
         alphaAnimator.addListener(listener)
 
         val animatorSet = AnimatorSet()
         animatorSet.play(revealAnimator).before(alphaAnimator)
-        animatorSet.setInterpolator(AccelerateDecelerateInterpolator())
+        animatorSet.interpolator = AccelerateDecelerateInterpolator()
         animatorSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 mDisplayView!!.removeView(revealView)
@@ -579,7 +572,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         if (TextUtils.isEmpty(mFormulaEditText!!.text)) {
             return
         }
-        val sourceView = (if (mClearButton?.getVisibility() == android.view.View.VISIBLE)
+        val sourceView = (if (mClearButton?.visibility == android.view.View.VISIBLE)
             mClearButton
         else
             mDeleteButton)!!
@@ -613,7 +606,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
 
         if (TextUtils.isDigitsOnly(result) && (result.toInt() < 10)) {
             val view = findViewById<View>(DigitLabelHelper.getIdForDigit(result.toInt()))
-            PlayerUtil.playResult(this, view.getTag().toString())
+            PlayerUtil.playResult(this, view.tag.toString())
         } else {
             PlayerUtil.playRawFile(this, PlayerUtil.RAW_FILE_EQUALS)
         }
@@ -628,16 +621,16 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         val resultTranslationX: Float
         if (Build.VERSION.SDK_INT >= 17) {
             resultTranslationX = (1.0f - resultScale) *
-                    (mResultEditText!!.getWidth() / 2.0f - mResultEditText!!.getPaddingEnd())
+                    (mResultEditText!!.width / 2.0f - mResultEditText!!.getPaddingEnd())
         } else {
             resultTranslationX = (1.0f - resultScale) *
-                    (mResultEditText!!.getWidth() / 2.0f - mResultEditText!!.getPaddingRight())
+                    (mResultEditText!!.width / 2.0f - mResultEditText!!.getPaddingRight())
         }
         val resultTranslationY = (1.0f - resultScale) *
-                (mResultEditText!!.getHeight() / 2.0f - mResultEditText!!.getPaddingBottom()) +
-                (mFormulaEditText!!.getBottom() - mResultEditText!!.getBottom()) +
-                (mResultEditText!!.getPaddingBottom() - mFormulaEditText!!.getPaddingBottom())
-        val formulaTranslationY = -mFormulaEditText!!.getBottom().toFloat()
+                (mResultEditText!!.height / 2.0f - mResultEditText!!.paddingBottom) +
+                (mFormulaEditText!!.bottom - mResultEditText!!.bottom) +
+                (mResultEditText!!.paddingBottom - mFormulaEditText!!.paddingBottom)
+        val formulaTranslationY = -mFormulaEditText!!.bottom.toFloat()
 
         // Use a value animator to fade to the final text color over the course of the animation.
         val resultTextColor = mResultEditText!!.currentTextColor
@@ -660,20 +653,20 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             ObjectAnimator.ofFloat<View?>(mFormulaEditText, View.TRANSLATION_Y, formulaTranslationY)
         )
         animatorSet.setDuration(
-            getResources().getInteger(android.R.integer.config_longAnimTime).toLong()
+            resources.getInteger(android.R.integer.config_longAnimTime).toLong()
         )
-        animatorSet.setInterpolator(AccelerateDecelerateInterpolator())
+        animatorSet.interpolator = AccelerateDecelerateInterpolator()
         animatorSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator) {}
 
             override fun onAnimationEnd(animation: Animator) {
                 // Reset all of the values modified during the animation.
                 mResultEditText!!.setTextColor(resultTextColor)
-                mResultEditText!!.setScaleX(1.0f)
-                mResultEditText!!.setScaleY(1.0f)
-                mResultEditText!!.setTranslationX(0.0f)
-                mResultEditText!!.setTranslationY(0.0f)
-                mFormulaEditText!!.setTranslationY(0.0f)
+                mResultEditText!!.scaleX = 1.0f
+                mResultEditText!!.scaleY = 1.0f
+                mResultEditText!!.translationX = 0.0f
+                mResultEditText!!.translationY = 0.0f
+                mFormulaEditText!!.translationY = 0.0f
 
                 // Finally update the formula to use the current result.
                 mFormulaEditText!!.setText(result)
@@ -729,9 +722,9 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
     }
 
     private fun setSelectedBaseButton(base: Base) {
-        findViewById<View?>(R.id.hex).setSelected(base == Base.HEXADECIMAL)
-        findViewById<View?>(R.id.bin).setSelected(base == Base.BINARY)
-        findViewById<View?>(R.id.dec).setSelected(base == Base.DECIMAL)
+        findViewById<View?>(R.id.hex).isSelected = base == Base.HEXADECIMAL
+        findViewById<View?>(R.id.bin).isSelected = base == Base.BINARY
+        findViewById<View?>(R.id.dec).isSelected = base == Base.DECIMAL
     }
 
     companion object {
