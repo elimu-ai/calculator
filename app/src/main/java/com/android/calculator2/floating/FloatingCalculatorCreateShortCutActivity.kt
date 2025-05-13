@@ -13,7 +13,7 @@ class FloatingCalculatorCreateShortCutActivity : Activity() {
     public override fun onCreate(state: Bundle?) {
         super.onCreate(state)
 
-        if (Intent.ACTION_CREATE_SHORTCUT == getIntent().getAction()) {
+        if (Intent.ACTION_CREATE_SHORTCUT == intent.action) {
             // create shortcut if requested
             val icon = ShortcutIconResource.fromContext(this, R.drawable.ic_launcher_floating)
 
