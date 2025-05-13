@@ -6,6 +6,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.ScaleAnimation
+import androidx.core.view.isVisible
 
 /**
  * Utility for transition animations
@@ -28,11 +29,11 @@ object AnimationUtil {
      */
     @JvmOverloads
     fun fadeIn(view: View, duration: Int = DEFAULT_FADE_DURATION) {
-        if (view.getVisibility() == View.VISIBLE) {
+        if (view.isVisible) {
             return
         }
         view.setAlpha(0f)
-        view.setVisibility(View.VISIBLE)
+        view.visibility = View.VISIBLE
         val anim = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
         anim.setDuration(duration.toLong())
         anim.start()
