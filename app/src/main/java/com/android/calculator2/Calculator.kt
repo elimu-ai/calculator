@@ -227,23 +227,23 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
                 savedInstanceState.getString(KEY_CURRENT_EXPRESSION, "")
             )
         )
-        if (TextUtils.isEmpty(mFormulaEditText!!.getText())) {
+        if (TextUtils.isEmpty(mFormulaEditText!!.text)) {
             mEqualsGraphButton!!.setEnabled(R.id.eq)
         }
 
-        mEvaluator!!.evaluate(mFormulaEditText!!.getText(), this)
-        mFormulaEditText!!.setTextColor(getResources().getColor(R.color.display_formula_text_color))
+        mEvaluator!!.evaluate(mFormulaEditText!!.text, this)
+        mFormulaEditText!!.setTextColor(resources.getColor(R.color.display_formula_text_color))
         mDeleteButton!!.setOnLongClickListener(this)
-        mResultEditText!!.setTextColor(getResources().getColor(R.color.display_result_text_color))
-        mResultEditText!!.setEnabled(false)
+        mResultEditText!!.setTextColor(resources.getColor(R.color.display_result_text_color))
+        mResultEditText!!.isEnabled = false
 
         mFormulaEditText!!.registerComponent(MVDisplayComponent())
-        mResultEditText!!.registerComponents(mFormulaEditText!!.getComponents())
+        mResultEditText?.registerComponents(mFormulaEditText!!.components)
 
         mDisplayView!!.bringToFront()
 
         // Disable IME for this application
-        getWindow().setFlags(
+        window.setFlags(
             WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
             WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
         )
@@ -271,7 +271,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
                     if (mDisplayView!!.getHeight() > 0) {
                         mDisplayView!!.initializeHistoryAndGraphView()
                         if (mDisplayView!!.mode == DisplayOverlay.DisplayMode.GRAPH) {
-                            mGraphController!!.startGraph(mFormulaEditText!!.getText())
+                            mGraphController!!.startGraph(mFormulaEditText!!.text)
                         }
                     }
                 }
@@ -316,7 +316,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         outState.putInt(KEY_CURRENT_STATE, mCurrentState!!.ordinal)
         outState.putString(
             KEY_CURRENT_EXPRESSION,
-            mTokenizer!!.getNormalizedExpression(mFormulaEditText!!.getText())
+            mTokenizer!!.getNormalizedExpression(mFormulaEditText!!.text)
         )
         outState.putInt(KEY_BASE, mBaseManager!!.numberBase.ordinal)
         outState.putInt(KEY_DISPLAY_MODE, mDisplayView!!.mode.ordinal)
@@ -397,22 +397,22 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             R.id.matrix -> mFormulaEditText!!.insert(MatrixView.getPattern())
             R.id.matrix_inverse -> mFormulaEditText!!.insert(MatrixInverseView.PATTERN)
             R.id.matrix_transpose -> mFormulaEditText!!.insert(MatrixTransposeView.PATTERN)
-            R.id.plus_row -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView.addRow()
+            R.id.plus_row -> if (mFormulaEditText!!.activeEditText is MatrixEditText) {
+                (mFormulaEditText!!.activeEditText as MatrixEditText).matrixView.addRow()
             }
 
-            R.id.minus_row -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView
+            R.id.minus_row -> if (mFormulaEditText!!.activeEditText is MatrixEditText) {
+                (mFormulaEditText!!.activeEditText as MatrixEditText).matrixView
                     .removeRow()
             }
 
-            R.id.plus_col -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView
+            R.id.plus_col -> if (mFormulaEditText!!.activeEditText is MatrixEditText) {
+                (mFormulaEditText!!.activeEditText as MatrixEditText).matrixView
                     .addColumn()
             }
 
-            R.id.minus_col -> if (mFormulaEditText!!.getActiveEditText() is MatrixEditText) {
-                (mFormulaEditText!!.getActiveEditText() as MatrixEditText).matrixView
+            R.id.minus_col -> if (mFormulaEditText!!.activeEditText is MatrixEditText) {
+                (mFormulaEditText!!.activeEditText as MatrixEditText).matrixView
                     .removeColumn()
             }
 
@@ -449,7 +449,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
 
     override fun onEvaluate(expr: String?, result: String?, errorResourceId: Int) {
         if (mCurrentState == CalculatorState.INPUT) {
-            if (result == null || result == mFormulaEditText!!.getText()) {
+            if (result == null || result == mFormulaEditText!!.text) {
                 mResultEditText!!.clear()
             } else {
                 mResultEditText!!.setText("=" + result)
@@ -468,7 +468,8 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         }
     }
 
-    override fun onTextSizeChanged(textView: AdvancedDisplay, oldSize: Float) {
+    override fun onTextSizeChanged(textView: AdvancedDisplay?, oldSize: Float) {
+        textView ?: return
         if (mCurrentState != CalculatorState.INPUT) {
             // Only animate text changes that occur from user input.
             return
@@ -476,7 +477,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
 
         // Calculate the values needed to perform the scale and translation animations,
         // maintaining the same apparent baseline for the displayed text.
-        val textScale = oldSize / textView.getTextSize()
+        val textScale = oldSize / textView.textSize
         val translationX: Float
         if (Build.VERSION.SDK_INT >= 17) {
             translationX = (1.0f - textScale) *
@@ -507,13 +508,13 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
                 mFormulaEditText!!.next()
             } else {
                 setState(CalculatorState.EVALUATE)
-                mEvaluator!!.evaluate(mFormulaEditText!!.getText(), this)
+                mEvaluator!!.evaluate(mFormulaEditText!!.text, this)
             }
         }
     }
 
     private fun onGraph() {
-        mGraphController!!.startGraph(mFormulaEditText!!.getText())
+        mGraphController!!.startGraph(mFormulaEditText!!.text)
     }
 
     private fun onDelete() {
@@ -575,7 +576,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
     }
 
     private fun onClear() {
-        if (TextUtils.isEmpty(mFormulaEditText!!.getText())) {
+        if (TextUtils.isEmpty(mFormulaEditText!!.text)) {
             return
         }
         val sourceView = (if (mClearButton?.getVisibility() == android.view.View.VISIBLE)
@@ -623,7 +624,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // Calculate the values needed to perform the scale and translation animations,
         // accounting for how the scale will affect the final position of the text.
         val resultScale =
-            mFormulaEditText!!.getVariableTextSize(result) / mResultEditText!!.getTextSize()
+            mFormulaEditText!!.getVariableTextSize(result) / mResultEditText!!.textSize
         val resultTranslationX: Float
         if (Build.VERSION.SDK_INT >= 17) {
             resultTranslationX = (1.0f - resultScale) *
@@ -639,8 +640,8 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         val formulaTranslationY = -mFormulaEditText!!.getBottom().toFloat()
 
         // Use a value animator to fade to the final text color over the course of the animation.
-        val resultTextColor = mResultEditText!!.getCurrentTextColor()
-        val formulaTextColor = mFormulaEditText!!.getCurrentTextColor()
+        val resultTextColor = mResultEditText!!.currentTextColor
+        val formulaTextColor = mFormulaEditText!!.currentTextColor
         val textColorAnimator =
             ValueAnimator.ofObject(ArgbEvaluator(), resultTextColor, formulaTextColor)
         textColorAnimator.addUpdateListener(object : AnimatorUpdateListener {
@@ -692,7 +693,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         mBaseManager!!.numberBase = base
 
         // Update the evaluator, which handles the math
-        mEvaluator!!.setBase(mFormulaEditText!!.getText(), base, object : EvaluateCallback {
+        mEvaluator!!.setBase(mFormulaEditText!!.text, base, object : EvaluateCallback {
             override fun onEvaluate(expr: String?, result: String?, errorResourceId: Int) {
                 if (errorResourceId != INVALID_RES_ID) {
                     onError(errorResourceId)

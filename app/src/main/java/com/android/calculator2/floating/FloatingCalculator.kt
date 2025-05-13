@@ -61,7 +61,7 @@ class FloatingCalculator : FloatingView() {
         mDisplay!!.setSolver(mEvaluator!!.solver)
         mDisplay!!.setOnLongClickListener(object : OnLongClickListener {
             override fun onLongClick(v: View?): Boolean {
-                copyContent(mDisplay!!.getText())
+                copyContent(mDisplay!!.text)
                 return true
             }
         })
@@ -76,7 +76,7 @@ class FloatingCalculator : FloatingView() {
 
                 if (v is Button) {
                     if (v.getText().toString() == "=") {
-                        mEvaluator!!.evaluate(mDisplay!!.getText(), object : EvaluateCallback {
+                        mEvaluator!!.evaluate(mDisplay!!.text, object : EvaluateCallback {
                             override fun onEvaluate(
                                 expr: String?,
                                 result: String?,
@@ -105,7 +105,7 @@ class FloatingCalculator : FloatingView() {
                             }
                         })
                     } else if (v.getId() == R.id.parentheses) {
-                        setText("(" + mDisplay!!.getText() + ")")
+                        setText("(" + mDisplay!!.text + ")")
                     } else if (v.getText().toString().length >= 2) {
                         onInsert(v.getText().toString() + "(")
                     } else {
@@ -169,7 +169,9 @@ class FloatingCalculator : FloatingView() {
         }
 
         setState(State.DELETE)
-        mDisplay!!.insert(text)
+        text?.let {
+            mDisplay!!.insert(text)
+        }
     }
 
     private fun onError(resId: Int) {
