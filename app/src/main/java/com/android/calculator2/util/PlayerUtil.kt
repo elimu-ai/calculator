@@ -24,7 +24,7 @@ object PlayerUtil {
     )
 
     fun playRawFile(context: Context, rawFile: String?) {
-        val rawId = context.getResources().getIdentifier(rawFile, "raw", context.getPackageName())
+        val rawId = context.resources.getIdentifier(rawFile, "raw", context.packageName)
         if (rawId != 0) {
             val mediaPlayer = MediaPlayer.create(context, rawId)
             mediaPlayer.start()
@@ -33,7 +33,7 @@ object PlayerUtil {
 
     fun playResult(context: Context, result: String?) {
         val rawId =
-            context.getResources().getIdentifier(RAW_FILE_EQUALS, "raw", context.getPackageName())
+            context.resources.getIdentifier(RAW_FILE_EQUALS, "raw", context.packageName)
         if (rawId != 0) {
             val mediaPlayer = MediaPlayer.create(context, rawId)
             mediaPlayer.setOnCompletionListener(object : OnCompletionListener {
