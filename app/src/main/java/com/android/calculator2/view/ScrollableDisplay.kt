@@ -91,7 +91,7 @@ open class ScrollableDisplay @JvmOverloads constructor(
                 val child = getChildAt(0)
                 scrollRange = max(
                     0.0,
-                    (child.getWidth() - (getWidth() - getPaddingLeft() - getPaddingRight())).toDouble()
+                    (child.width - (width - getPaddingLeft() - getPaddingRight())).toDouble()
                 ).toInt()
             }
             return scrollRange
