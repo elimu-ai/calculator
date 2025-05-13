@@ -58,7 +58,7 @@ class CalculatorExpressionEvaluator(tokenizer: CalculatorExpressionTokenizer) {
         }
     }
 
-    fun setBase(expr: String?, base: Base?, callback: EvaluateCallback) {
+    fun setBase(expr: String, base: Base, callback: EvaluateCallback) {
         try {
             val result = solver.baseModule.setBase(expr, base)
             callback.onEvaluate(expr, result, Calculator.INVALID_RES_ID)

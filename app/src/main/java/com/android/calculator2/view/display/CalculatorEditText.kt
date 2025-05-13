@@ -89,14 +89,14 @@ class CalculatorEditText : EditText {
 
                 mInput = s.toString()
                     .replace(Constants.PLACEHOLDER, Constants.POWER)
-                    .replace(mSolver!!.getBaseModule().getSeparator().toString() + "", "")
+                    .replace(mSolver!!.baseModule.separator.toString() + "", "")
 
                 // Get the selection handle, since we're setting text and that'll overwrite it
                 mSelectionHandle = getSelectionStart()
 
                 // Adjust the handle by removing any comas or spacing to the left
                 val cs = s.subSequence(0, mSelectionHandle).toString()
-                mSelectionHandle -= countOccurrences(cs, mSolver!!.getBaseModule().getSeparator())
+                mSelectionHandle -= countOccurrences(cs, mSolver!!.getBaseModule().separator)
 
                 // Update the text with formatted (comas, etc) text
                 setText(formatText(mInput))
@@ -114,7 +114,7 @@ class CalculatorEditText : EditText {
 
                     // If we're trying to delete a separator shift the selector over
                     if (sel >= 1
-                        && edit.get(sel - 1) == mSolver!!.getBaseModule().getSeparator()
+                        && edit.get(sel - 1) == mSolver!!.baseModule.separator
                     ) {
                         setSelection(sel - 1)
                     }
