@@ -136,7 +136,7 @@ class CalculatorEditText : EditText {
         if (mSolver != null) {
             // Add grouping, and then split on the selection handle
             // which is saved as a unique char
-            val grouped = mEquationFormatter!!.addComas(mSolver, input, mSelectionHandle)
+            val grouped = mEquationFormatter!!.addComas(mSolver!!, input, mSelectionHandle)
             if (grouped.contains(BaseModule.SELECTION_HANDLE.toString())) {
                 val temp = grouped.split(BaseModule.SELECTION_HANDLE.toString().toRegex())
                     .dropLastWhile { it.isEmpty() }.toTypedArray()
