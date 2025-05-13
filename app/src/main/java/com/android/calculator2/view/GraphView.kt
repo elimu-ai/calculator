@@ -50,30 +50,30 @@ class GraphView : View {
     }
 
     private fun setup() {
-        val res = getContext().getResources()
+        val res = context.resources
 
         mBackgroundPaint = Paint()
         mBackgroundPaint!!.setColor(res.getColor(R.color.graph_background_color))
-        mBackgroundPaint!!.setStyle(Paint.Style.FILL)
+        mBackgroundPaint!!.style = Paint.Style.FILL
 
         mTextPaintSize = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             16f,
-            getResources().getDisplayMetrics()
+            resources.displayMetrics
         ).toInt()
         mTextPaint = Paint()
         mTextPaint!!.setColor(res.getColor(R.color.graph_labels_color))
-        mTextPaint!!.setTextSize(mTextPaintSize.toFloat())
+        mTextPaint!!.textSize = mTextPaintSize.toFloat()
 
         mAxisPaint = Paint()
         mAxisPaint!!.setColor(res.getColor(R.color.graph_grid_color))
-        mAxisPaint!!.setStyle(Paint.Style.STROKE)
-        mAxisPaint!!.setStrokeWidth(2f)
+        mAxisPaint!!.style = Paint.Style.STROKE
+        mAxisPaint!!.strokeWidth = 2f
 
         mGraphPaint = Paint()
         mGraphPaint!!.setColor(res.getColor(R.color.graph_line_color))
-        mGraphPaint!!.setStyle(Paint.Style.STROKE)
-        mGraphPaint!!.setStrokeWidth(6f)
+        mGraphPaint!!.style = Paint.Style.STROKE
+        mGraphPaint!!.strokeWidth = 6f
 
         zoomReset()
 
@@ -86,7 +86,7 @@ class GraphView : View {
         mOffsetX = mOffsetY
         mDragRemainderY = mOffsetX
         mDragRemainderX = mDragRemainderY
-        onSizeChanged(getWidth(), getHeight(), 0, 0)
+        onSizeChanged(width, height, 0, 0)
         invalidate()
         if (this.panListener != null) panListener!!.panApplied()
         if (this.zoomListener != null) zoomListener!!.zoomApplied(mZoomLevel)
@@ -116,20 +116,20 @@ class GraphView : View {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // Update mode if pointer count changes
-        if (mPointers != event.getPointerCount()) {
+        if (mPointers != event.pointerCount) {
             setMode(event)
         }
 
-        when (event.getAction()) {
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> setMode(event)
             MotionEvent.ACTION_UP -> {}
             MotionEvent.ACTION_MOVE -> if (mMode == DRAG) {
                 mOffsetX += mDragOffsetX
                 mOffsetY += mDragOffsetY
-                mDragOffsetX = (event.getX() - mStartX).toInt() / mLineMargin
-                mDragOffsetY = (event.getY() - mStartY).toInt() / mLineMargin
-                mDragRemainderX = (event.getX() - mStartX).toInt() % mLineMargin
-                mDragRemainderY = (event.getY() - mStartY).toInt() % mLineMargin
+                mDragOffsetX = (event.x - mStartX).toInt() / mLineMargin
+                mDragOffsetY = (event.y - mStartY).toInt() / mLineMargin
+                mDragRemainderX = (event.x - mStartX).toInt() % mLineMargin
+                mDragRemainderY = (event.y - mStartY).toInt() % mLineMargin
                 mOffsetX -= mDragOffsetX
                 mOffsetY -= mDragOffsetY
                 if (this.panListener != null) panListener!!.panApplied()
@@ -153,7 +153,7 @@ class GraphView : View {
         mMinLineMargin = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             25f,
-            getResources().getDisplayMetrics()
+            resources.displayMetrics
         ).toInt()
         mLineMargin = mMinLineMargin
         // Center the offsets
@@ -169,12 +169,12 @@ class GraphView : View {
         canvas.drawPaint(mBackgroundPaint!!)
 
         // draw bounding box
-        mAxisPaint!!.setStrokeWidth(BOX_STROKE.toFloat())
+        mAxisPaint!!.strokeWidth = BOX_STROKE.toFloat()
         canvas.drawRect(
             mLineMargin.toFloat(),
             mLineMargin.toFloat(),
-            (getWidth() - BOX_STROKE / 2).toFloat(),
-            (getHeight() - BOX_STROKE / 2).toFloat(),
+            (width - BOX_STROKE / 2).toFloat(),
+            (height - BOX_STROKE / 2).toFloat(),
             mAxisPaint!!
         )
 
@@ -184,7 +184,7 @@ class GraphView : View {
         run {
             var i = 1
             var j = mOffsetX
-            while (i * mLineMargin < getWidth()) {
+            while (i * mLineMargin < width) {
                 // Draw vertical lines
                 val x = i * mLineMargin + mDragRemainderX
                 if (x < mLineMargin || x - previousLine < mMinLineMargin) {
@@ -194,13 +194,13 @@ class GraphView : View {
                 }
                 previousLine = x
 
-                if (j == 0) mAxisPaint!!.setStrokeWidth(6f)
-                else mAxisPaint!!.setStrokeWidth(2f)
+                if (j == 0) mAxisPaint!!.strokeWidth = 6f
+                else mAxisPaint!!.strokeWidth = 2f
                 canvas.drawLine(
                     x.toFloat(),
                     mLineMargin.toFloat(),
                     x.toFloat(),
-                    getHeight().toFloat(),
+                    height.toFloat(),
                     mAxisPaint!!
                 )
 
@@ -208,13 +208,13 @@ class GraphView : View {
                 val text = mFormat.format((j * mZoomLevel).toDouble())
                 val textLength =
                     ((if (text.startsWith("-")) text.length - 1 else text.length) + 1) / 2
-                mTextPaint!!.setTextSize((mTextPaintSize / textLength).toFloat())
+                mTextPaint!!.textSize = (mTextPaintSize / textLength).toFloat()
                 mTextPaint!!.getTextBounds(text, 0, text.length, bounds)
                 val textWidth = bounds.right - bounds.left
                 canvas.drawText(
                     text,
                     (x - textWidth / 2).toFloat(),
-                    mLineMargin / 2 + mTextPaint!!.getTextSize() / 2,
+                    mLineMargin / 2 + mTextPaint!!.textSize / 2,
                     mTextPaint!!
                 )
                 i++
@@ -224,7 +224,7 @@ class GraphView : View {
         previousLine = 0
         var i = 1
         var j = mOffsetY
-        while (i * mLineMargin < getHeight()) {
+        while (i * mLineMargin < height) {
             // Draw horizontal lines
             val y = i * mLineMargin + mDragRemainderY
             if (y < mLineMargin || y - previousLine < mMinLineMargin) {
@@ -234,12 +234,12 @@ class GraphView : View {
             }
             previousLine = y
 
-            if (j == 0) mAxisPaint!!.setStrokeWidth(6f)
-            else mAxisPaint!!.setStrokeWidth(2f)
+            if (j == 0) mAxisPaint!!.strokeWidth = 6f
+            else mAxisPaint!!.strokeWidth = 2f
             canvas.drawLine(
                 mLineMargin.toFloat(),
                 y.toFloat(),
-                getWidth().toFloat(),
+                width.toFloat(),
                 y.toFloat(),
                 mAxisPaint!!
             )
@@ -247,7 +247,7 @@ class GraphView : View {
             // Draw label on left
             val text = mFormat.format((-j * mZoomLevel).toDouble())
             val textLength = ((if (text.startsWith("-")) text.length - 1 else text.length) + 1) / 2
-            mTextPaint!!.setTextSize((mTextPaintSize / textLength).toFloat())
+            mTextPaint!!.textSize = (mTextPaintSize / textLength).toFloat()
             mTextPaint!!.getTextBounds(text, 0, text.length, bounds)
             val textHeight = bounds.bottom - bounds.top
             val textWidth = bounds.right - bounds.left
@@ -264,7 +264,7 @@ class GraphView : View {
         // Restrict drawing the graph to the grid
         canvas.clipRect(
             mLineMargin, mLineMargin,
-            getWidth() - BOX_STROKE, getHeight() - BOX_STROKE
+            width - BOX_STROKE, height - BOX_STROKE
         )
 
         // Create a path to draw smooth arcs
@@ -358,7 +358,7 @@ class GraphView : View {
         get() {
             var num = mOffsetX
             var i = 1
-            while (i * mLineMargin < getWidth()) {
+            while (i * mLineMargin < width) {
                 i++
                 num++
             }
@@ -372,7 +372,7 @@ class GraphView : View {
         get() {
             var num = mOffsetY
             var i = 1
-            while (i * mLineMargin < getHeight()) {
+            while (i * mLineMargin < height) {
                 i++
                 num++
             }
@@ -384,8 +384,8 @@ class GraphView : View {
     }
 
     private fun setMode(e: MotionEvent) {
-        mPointers = e.getPointerCount()
-        when (e.getPointerCount()) {
+        mPointers = e.pointerCount
+        when (e.pointerCount) {
             1 ->                 // Drag
                 setMode(DRAG, e)
 
@@ -398,8 +398,8 @@ class GraphView : View {
         mMode = mode
         when (mode) {
             DRAG -> {
-                mStartX = e.getX()
-                mStartY = e.getY()
+                mStartX = e.x
+                mStartY = e.y
                 mDragOffsetX = 0
                 mDragOffsetY = 0
             }
