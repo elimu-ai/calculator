@@ -22,8 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import java.util.Objects
 import kotlin.math.max
+import androidx.core.view.size
 
 class CalculatorPadViewPager @JvmOverloads constructor(
     context: Context,
@@ -33,7 +33,7 @@ class CalculatorPadViewPager @JvmOverloads constructor(
 
     private val mStaticPagerAdapter: PagerAdapter = object : PagerAdapter() {
         override fun getCount(): Int {
-            return getChildCount()
+            return size
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -59,20 +59,20 @@ class CalculatorPadViewPager @JvmOverloads constructor(
                 var enabled = enabled
                 if (view is ViewGroup) {
                     val viewGroup = view
-                    for (childIndex in 0..<viewGroup.getChildCount()) {
+                    for (childIndex in 0..<viewGroup.size) {
                         recursivelyEnable(viewGroup.getChildAt(childIndex), enabled)
                     }
                 } else {
                     if (mBaseManager != null) {
-                        enabled = enabled and !mBaseManager!!.isViewDisabled(view.getId())
+                        enabled = enabled and !mBaseManager!!.isViewDisabled(view.id)
                     }
                     view.setEnabled(enabled)
                 }
             }
 
             override fun onPageSelected(position: Int) {
-                if (getAdapter() === mStaticPagerAdapter) {
-                    for (childIndex in 0..<getChildCount()) {
+                if (adapter === mStaticPagerAdapter) {
+                    for (childIndex in 0..<size) {
                         recursivelyEnable(getChildAt(childIndex), childIndex == position)
                     }
                 }
@@ -83,11 +83,11 @@ class CalculatorPadViewPager @JvmOverloads constructor(
         override fun transformPage(view: View, position: Float) {
             if (position < 0.0f) {
                 // Pin the left page to the left side.
-                view.setTranslationX(getWidth() * -position)
+                view.translationX = getWidth() * -position
                 view.setAlpha(max((1.0f + position).toDouble(), 0.0).toFloat())
             } else {
                 // Use the default slide transition when moving to the next page.
-                view.setTranslationX(0.0f)
+                view.translationX = 0.0f
                 view.setAlpha(1.0f)
             }
         }
@@ -95,9 +95,9 @@ class CalculatorPadViewPager @JvmOverloads constructor(
 
     init {
         setAdapter(mStaticPagerAdapter)
-        setBackgroundColor(getResources().getColor(android.R.color.black))
+        setBackgroundColor(resources.getColor(android.R.color.black))
         setOnPageChangeListener(mOnPageChangeListener)
-        setPageMargin(getResources().getDimensionPixelSize(R.dimen.pad_page_margin))
+        setPageMargin(resources.getDimensionPixelSize(R.dimen.pad_page_margin))
         setPageTransformer(false, mPageTransformer)
     }
 
@@ -105,7 +105,7 @@ class CalculatorPadViewPager @JvmOverloads constructor(
         super.onFinishInflate()
 
         // Invalidate the adapter's data set since children may have been added during inflation.
-        if (getAdapter() === mStaticPagerAdapter) {
+        if (adapter === mStaticPagerAdapter) {
             mStaticPagerAdapter.notifyDataSetChanged()
         }
     }
