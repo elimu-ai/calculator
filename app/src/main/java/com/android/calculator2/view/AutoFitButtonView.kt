@@ -62,7 +62,7 @@ class AutoFitButtonView : Button {
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyle: Int) {
-        val scaledDensity = context.getResources().getDisplayMetrics().scaledDensity
+        val scaledDensity = context.resources.displayMetrics.scaledDensity
         var sizeToFit = true
         var minTextSize: Int = scaledDensity.toInt() * DEFAULT_MIN_TEXT_SIZE
         var precision: Float = PRECISION
@@ -129,10 +129,10 @@ class AutoFitButtonView : Button {
         var r = Resources.getSystem()
 
         if (context != null) {
-            r = context.getResources()
+            r = context.resources
         }
 
-        setRawTextSize(TypedValue.applyDimension(unit, size, r.getDisplayMetrics()))
+        setRawTextSize(TypedValue.applyDimension(unit, size, r.displayMetrics))
     }
 
     private fun setRawTextSize(size: Float) {
@@ -156,10 +156,10 @@ class AutoFitButtonView : Button {
         var r = Resources.getSystem()
 
         if (context != null) {
-            r = context.getResources()
+            r = context.resources
         }
 
-        setRawMinTextSize(TypedValue.applyDimension(unit, minSize, r.getDisplayMetrics()))
+        setRawMinTextSize(TypedValue.applyDimension(unit, minSize, r.displayMetrics))
     }
 
     /**
@@ -242,27 +242,26 @@ class AutoFitButtonView : Button {
         }
 
         var text = getText()
-        val method = getTransformationMethod()
+        val method = transformationMethod
         if (method != null) {
             text = method.getTransformation(text, this)
         }
-        val targetWidth = getWidth() - getPaddingLeft() - getPaddingRight()
+        val targetWidth = width - getPaddingLeft() - getPaddingRight()
         if (targetWidth > 0) {
             val context = getContext()
             var r = Resources.getSystem()
-            val displayMetrics: DisplayMetrics?
 
             var size = mMaxTextSize
             val high = size
             val low = 0f
 
             if (context != null) {
-                r = context.getResources()
+                r = context.resources
             }
-            displayMetrics = r.getDisplayMetrics()
+            val displayMetrics = r.displayMetrics
 
-            mPaint!!.set(getPaint())
-            mPaint!!.setTextSize(size)
+            mPaint!!.set(paint)
+            mPaint!!.textSize = size
 
             if ((mMaxLines == 1 && mPaint!!.measureText(text, 0, text.length) > targetWidth)
                 || Companion.getLineCount(
@@ -325,11 +324,9 @@ class AutoFitButtonView : Button {
             var lineCount = 1
             var layout: StaticLayout? = null
 
-            paint.setTextSize(
-                TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_PX, mid,
-                    displayMetrics
-                )
+            paint.textSize = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_PX, mid,
+                displayMetrics
             )
 
             if (maxLines != 1) {
@@ -337,7 +334,7 @@ class AutoFitButtonView : Button {
                     text, paint, targetWidth.toInt(), Layout.Alignment.ALIGN_NORMAL,
                     1.0f, 0.0f, true
                 )
-                lineCount = layout.getLineCount()
+                lineCount = layout.lineCount
             }
 
             if (SPEW) Log.d(
@@ -389,17 +386,15 @@ class AutoFitButtonView : Button {
             text: CharSequence?, paint: TextPaint, size: Float, width: Float,
             displayMetrics: DisplayMetrics?
         ): Int {
-            paint.setTextSize(
-                TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_PX, size,
-                    displayMetrics
-                )
+            paint.textSize = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_PX, size,
+                displayMetrics
             )
             val layout = StaticLayout(
                 text, paint, width.toInt(),
                 Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, true
             )
-            return layout.getLineCount()
+            return layout.lineCount
         }
     }
 }
