@@ -15,7 +15,7 @@ object Clipboard {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
         val toastText =
-            String.format(context.getResources().getString(R.string.text_copied_toast), text)
+            String.format(context.resources.getString(R.string.text_copied_toast), text)
         Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
     }
 
