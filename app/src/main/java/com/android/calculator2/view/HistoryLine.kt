@@ -60,10 +60,10 @@ class HistoryLine(context: Context?, attrs: AttributeSet?) : LinearLayout(contex
     }
 
     fun copyContent(content: String) {
-        val clipboard = getContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText(null, content))
-        val toastText = String.format(getResources().getString(R.string.text_copied_toast), content)
-        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show()
+        val toastText = String.format(resources.getString(R.string.text_copied_toast), content)
+        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
     }
 
     private fun removeContent() {
@@ -95,7 +95,7 @@ class HistoryLine(context: Context?, attrs: AttributeSet?) : LinearLayout(contex
 
     private inner class MenuHandler : MenuItem.OnMenuItemClickListener {
         override fun onMenuItemClick(item: MenuItem): Boolean {
-            return onTextContextMenuItem(item.getTitle())
+            return onTextContextMenuItem(item.title)
         }
     }
 
