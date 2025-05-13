@@ -61,7 +61,7 @@ open class HistoryAdapter(val context: Context?, history: History, callback: His
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view = holder.itemView as HistoryLine
         val entry = mEntries.elementAt(position)
-        view.setAdapter(this@HistoryAdapter)
+        view.adapter = this@HistoryAdapter
         view.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 mCallback.onHistoryItemSelected(entry)
