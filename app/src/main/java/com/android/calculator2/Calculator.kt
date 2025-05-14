@@ -196,7 +196,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             mEvaluator = CalculatorExpressionEvaluator(tokenizer)
         }
 
-        savedInstanceState = if (savedInstanceState == null) Bundle.EMPTY else savedInstanceState
+        savedInstanceState = savedInstanceState ?: Bundle.EMPTY
         setState(
             CalculatorState.entries[savedInstanceState.getInt(
                 KEY_CURRENT_STATE,
