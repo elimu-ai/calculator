@@ -364,20 +364,20 @@ class AutoFitButtonView : Button {
                     }
                 }
 
-                if ((high - low) < precision) {
-                    return low
+                return if ((high - low) < precision) {
+                    low
                 } else if (maxLineWidth > targetWidth) {
-                    return getTextSize(
+                    getTextSize(
                         text, paint, targetWidth, maxLines, low, mid, precision,
                         displayMetrics
                     )
                 } else if (maxLineWidth < targetWidth) {
-                    return getTextSize(
+                    getTextSize(
                         text, paint, targetWidth, maxLines, mid, high, precision,
                         displayMetrics
                     )
                 } else {
-                    return mid
+                    mid
                 }
             }
         }

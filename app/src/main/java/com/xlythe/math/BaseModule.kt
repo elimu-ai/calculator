@@ -283,11 +283,10 @@ class BaseModule internal constructor(solver: Solver?) : Module(solver) {
     }
 
     fun getSeparator(base: Base): Char {
-        when (base) {
-            Base.DECIMAL -> return decSeparator
-            Base.BINARY -> return binSeparator
-            Base.HEXADECIMAL -> return hexSeparator
-            else -> return 0.toChar()
+        return when (base) {
+            Base.DECIMAL -> decSeparator
+            Base.BINARY -> binSeparator
+            Base.HEXADECIMAL -> hexSeparator
         }
     }
 
@@ -295,11 +294,10 @@ class BaseModule internal constructor(solver: Solver?) : Module(solver) {
         get() = getSeparator(mBase)
 
     private fun getSeparatorDistance(base: Base): Int {
-        when (base) {
-            Base.DECIMAL -> return decSeparatorDistance
-            Base.BINARY -> return binSeparatorDistance
-            Base.HEXADECIMAL -> return hexSeparatorDistance
-            else -> return -1
+        return when (base) {
+            Base.DECIMAL -> decSeparatorDistance
+            Base.BINARY -> binSeparatorDistance
+            Base.HEXADECIMAL -> hexSeparatorDistance
         }
     }
 

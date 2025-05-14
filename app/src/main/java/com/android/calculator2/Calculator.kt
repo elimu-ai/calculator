@@ -476,11 +476,11 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // maintaining the same apparent baseline for the displayed text.
         val textScale = oldSize / textView.textSize
         val translationX: Float
-        if (Build.VERSION.SDK_INT >= 17) {
-            translationX = (1.0f - textScale) *
+        translationX = if (Build.VERSION.SDK_INT >= 17) {
+            (1.0f - textScale) *
                     (textView.width / 2.0f - textView.getPaddingEnd())
         } else {
-            translationX = (1.0f - textScale) *
+            (1.0f - textScale) *
                     (textView.width / 2.0f - textView.getPaddingRight())
         }
         val translationY = (1.0f - textScale) *
@@ -619,11 +619,11 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         val resultScale =
             mFormulaEditText!!.getVariableTextSize(result) / mResultEditText!!.textSize
         val resultTranslationX: Float
-        if (Build.VERSION.SDK_INT >= 17) {
-            resultTranslationX = (1.0f - resultScale) *
+        resultTranslationX = if (Build.VERSION.SDK_INT >= 17) {
+            (1.0f - resultScale) *
                     (mResultEditText!!.width / 2.0f - mResultEditText!!.getPaddingEnd())
         } else {
-            resultTranslationX = (1.0f - resultScale) *
+            (1.0f - resultScale) *
                     (mResultEditText!!.width / 2.0f - mResultEditText!!.getPaddingRight())
         }
         val resultTranslationY = (1.0f - resultScale) *

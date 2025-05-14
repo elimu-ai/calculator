@@ -157,8 +157,8 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
                 val l = landr!![0]
                 val r = landr[1]
                 var res: Any? = null
-                if (ops[i] == Constants.MUL) res = applyMult(pieces[l], pieces[r])
-                else res = applyDiv(pieces[l], pieces[r])
+                res = if (ops[i] == Constants.MUL) applyMult(pieces[l], pieces[r])
+                else applyDiv(pieces[l], pieces[r])
 
                 // else res = applyMod(pieces[l], pieces[r]);
                 pieces[l] = res
@@ -173,8 +173,8 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
                 val l = landr!![0]
                 val r = landr[1]
                 var res: Any? = null
-                if (ops[i] == '+') res = applyPlus(pieces[l], pieces[r])
-                else res = applySub(pieces[l], pieces[r])
+                res = if (ops[i] == '+') applyPlus(pieces[l], pieces[r])
+                else applySub(pieces[l], pieces[r])
 
                 pieces[l] = res
                 pieces[r] = null
@@ -182,8 +182,8 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
         }
 
         for (piece in pieces) if (piece != null) {
-            if (piece is Double) return numToString(piece)
-            else if (piece is SimpleMatrix) return printMatrix(piece)
+            return if (piece is Double) numToString(piece)
+            else if (piece is SimpleMatrix) printMatrix(piece)
             else throw SyntaxException() // Neither matrix nor double
 
             // should never happen

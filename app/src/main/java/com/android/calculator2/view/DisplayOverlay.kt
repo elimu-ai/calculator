@@ -283,12 +283,12 @@ class DisplayOverlay : FrameLayout {
     private val translateState: TranslateState
         get() {
             val txY = translationY
-            if (txY <= 0) {
-                return TranslateState.COLLAPSED
+            return if (txY <= 0) {
+                TranslateState.COLLAPSED
             } else if (txY >= this.maxTranslation) {
-                return TranslateState.EXPANDED
+                TranslateState.EXPANDED
             } else {
-                return TranslateState.PARTIAL
+                TranslateState.PARTIAL
             }
         }
 

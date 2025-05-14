@@ -140,10 +140,10 @@ class Solver {
             }
         }
 
-        if (exponent != null) {
-            result = mantissa + 'e' + exponent
+        result = if (exponent != null) {
+            mantissa + 'e' + exponent
         } else {
-            result = mantissa
+            mantissa
         }
         return result
     }
