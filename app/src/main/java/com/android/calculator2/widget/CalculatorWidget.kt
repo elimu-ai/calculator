@@ -401,7 +401,7 @@ class CalculatorWidget : AppWidgetProvider() {
                     equation += op
                 }
             } else if (equation.length == 1) {
-                val lastChar = equation.get(0)
+                val lastChar = equation[0]
                 if (!Solver.isOperator(lastChar) && lastChar != decimal) {
                     equation += op
                 }
@@ -439,7 +439,7 @@ class CalculatorWidget : AppWidgetProvider() {
                 val decimal: Char = decimal
 
                 while (index >= 0) {
-                    val currChar = equation.get(index)
+                    val currChar = equation[index]
 
                     // If decimal symbol is already present, stop the loop and return back.
                     // Two decimal symbols are not permitted

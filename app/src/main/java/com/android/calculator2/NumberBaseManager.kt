@@ -44,7 +44,7 @@ class NumberBaseManager(var numberBase: Base) {
      * @return
      */
     fun isViewDisabled(viewResId: Int): Boolean {
-        val disabledSet = mDisabledViewIds.get(this.numberBase)
+        val disabledSet = mDisabledViewIds[this.numberBase]
         return disabledSet!!.contains(viewResId)
     }
 }

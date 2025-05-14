@@ -28,7 +28,7 @@ class GraphModule(solver: Solver?) : Module(solver) {
 
     fun updateGraph(text: String, l: OnGraphUpdatedListener) {
         val endsWithOperator = text.length != 0 &&
-                (Solver.isOperator(text.get(text.length - 1)) || text.endsWith("("))
+                (Solver.isOperator(text[text.length - 1]) || text.endsWith("("))
         val containsMatrices = solver!!.displayContainsMatrices(text)
         if (endsWithOperator || containsMatrices) {
             return

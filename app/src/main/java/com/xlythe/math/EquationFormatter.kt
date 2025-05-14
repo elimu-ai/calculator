@@ -33,7 +33,7 @@ class EquationFormatter {
         var paren_open = 0
         var paren_closed = 0
         for (i in 0..<input.length) {
-            val c = input.get(i)
+            val c = input[i]
             if (c == Constants.POWER) {
                 formattedInput.append("<sup>")
                 if (sub_open == 0) formattedInput.append("<small>")
@@ -53,17 +53,15 @@ class EquationFormatter {
                 if (paren_open == paren_closed) {
                     // Decide when to break the <sup> started by ^
                     if (c == Constants.PLUS // 2^3+1
-                        || (c == Constants.MINUS && input.get(i - 1) != Constants.POWER) // 2^3-1
+                        || (c == Constants.MINUS && input[i - 1] != Constants.POWER) // 2^3-1
                         || c == Constants.MUL // 2^3*1
                         || c == Constants.DIV // 2^3/1
                         || c == Constants.EQUAL // X^3=1
-                        || (c == Constants.LEFT_PAREN && (Solver.isDigit(input.get(i - 1)) || input.get(
-                            i - 1
-                        ) == Constants.RIGHT_PAREN)) // 2^3(1)
+                        || (c == Constants.LEFT_PAREN && (Solver.isDigit(input[i - 1]) || input[i - 1] == Constants.RIGHT_PAREN)) // 2^3(1)
                         // or
                         // 2^(3-1)(0)
-                        || (Solver.isDigit(c) && input.get(i - 1) == Constants.RIGHT_PAREN) // 2^(3)1
-                        || (!Solver.isDigit(c) && Solver.isDigit(input.get(i - 1))) && c != Constants.DECIMAL_POINT
+                        || (Solver.isDigit(c) && input[i - 1] == Constants.RIGHT_PAREN) // 2^(3)1
+                        || (!Solver.isDigit(c) && Solver.isDigit(input[i - 1])) && c != Constants.DECIMAL_POINT
                     ) { // 2^3log(1)
                         while (sub_open > sub_closed) {
                             if (sub_closed == 0) formattedInput.append("</small>")

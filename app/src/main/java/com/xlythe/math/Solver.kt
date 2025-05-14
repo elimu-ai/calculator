@@ -46,7 +46,7 @@ class Solver {
 
         // Drop final infix operators (they can only result in error)
         var size = input.length
-        while (size > 0 && isOperator(input.get(size - 1))) {
+        while (size > 0 && isOperator(input[size - 1])) {
             input = input.substring(0, size - 1)
             --size
         }
@@ -176,7 +176,7 @@ class Solver {
 
         @JvmStatic
         fun isOperator(c: String): Boolean {
-            return isOperator(c.get(0))
+            return isOperator(c[0])
         }
 
         fun isNegative(number: String): Boolean {

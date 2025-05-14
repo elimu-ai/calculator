@@ -33,7 +33,7 @@ class CalculatorExpressionEvaluator(tokenizer: CalculatorExpressionTokenizer) {
         expr = mTokenizer.getNormalizedExpression(expr)
 
         // remove any trailing operators
-        while (expr.isNotEmpty() && "+-/*".indexOf(expr.get(expr.length - 1)) != -1) {
+        while (expr.isNotEmpty() && "+-/*".indexOf(expr[expr.length - 1]) != -1) {
             expr = expr.substring(0, expr.length - 1)
         }
 

@@ -126,8 +126,8 @@ class Localizer(context: Context, r: Class<*>) {
      * If so, replaces the sentence with the English word.
      */
     private fun translate(sentence: String, word: String): String? {
-        if (mMap.get(word) != null) {
-            return sentence.replace(mMap.get(word)!!, word)
+        if (mMap[word] != null) {
+            return sentence.replace(mMap[word]!!, word)
         }
         return sentence
     }
@@ -137,8 +137,8 @@ class Localizer(context: Context, r: Class<*>) {
      * If so, replaces the sentence with the localized word.
      */
     private fun retranslate(sentence: String, word: String): String? {
-        if (mMap.get(word) != null) {
-            return sentence.replace(word, mMap.get(word)!!)
+        if (mMap[word] != null) {
+            return sentence.replace(word, mMap[word]!!)
         }
         return sentence
     }

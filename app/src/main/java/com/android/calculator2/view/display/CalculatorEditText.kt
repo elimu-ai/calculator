@@ -115,7 +115,7 @@ class CalculatorEditText : EditText {
 
                     // If we're trying to delete a separator shift the selector over
                     if (sel >= 1
-                        && edit.get(sel - 1) == mSolver!!.baseModule.separator
+                        && edit[sel - 1] == mSolver!!.baseModule.separator
                     ) {
                         setSelection(sel - 1)
                     }

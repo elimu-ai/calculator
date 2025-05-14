@@ -53,7 +53,7 @@ class CalculatorEditable private constructor(source: CharSequence?) :
 
         val length = delta.length
         if (length == 1) {
-            val text = delta.get(0)
+            val text = delta[0]
 
             // don't allow two dots in the same number
             if (text == Constants.DECIMAL_POINT) {

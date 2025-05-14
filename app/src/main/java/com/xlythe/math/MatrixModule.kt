@@ -22,7 +22,7 @@ import kotlin.math.tan
 class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
     @Throws(SyntaxException::class)
     fun gatherScalar(text: String): Double {
-        if (!Character.isDigit(text.get(1))) throw SyntaxException()
+        if (!Character.isDigit(text[1])) throw SyntaxException()
         return text.substring(1).toDouble()
     }
 
@@ -58,8 +58,8 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
 
         var open = 0
         for (i in 0..<input.length) {
-            if (input.get(i) == '(') open++
-            else if (input.get(i) == ')') open--
+            if (input[i] == '(') open++
+            else if (input[i] == ')') open--
         }
         if (open == 1) input = input + ")" // Auto-balance if possible
         else if (open != 0) throw SyntaxException() // Unbalanced
@@ -581,9 +581,9 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
             val buffer = StringBuilder()
             var c: Char
             var prev: Char
-            prev = str.get(0)
+            prev = str[0]
             for (i in 0..<str.length) {
-                c = str.get(i)
+                c = str[i]
                 if (c == '^' || c == Constants.MUL || c == Constants.DIV || c == '+') buffer.append(
                     c
                 )
