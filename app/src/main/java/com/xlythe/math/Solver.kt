@@ -16,13 +16,12 @@ import java.util.Locale
 class Solver {
     // Used for solving basic math
     var mSymbols: Symbols = Symbols()
-    val baseModule: BaseModule
+    val baseModule: BaseModule = BaseModule(this)
     val matrixModule: MatrixModule
     private var mLineLength = 14
     private var mLocalizer: Localizer? = null
 
     init {
-        this.baseModule = BaseModule(this)
         this.matrixModule = MatrixModule(this)
     }
 

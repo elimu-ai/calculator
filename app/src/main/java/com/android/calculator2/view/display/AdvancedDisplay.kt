@@ -45,7 +45,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         private set
 
     // The LinearLayout inside of this HorizontalScrollView
-    private val mRoot: Root
+    private val mRoot: Root = Root(context)
 
     // Math library
     private var mSolver: Solver? = null
@@ -105,7 +105,6 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
     }
 
     init {
-        mRoot = Root(context)
         val params = LayoutParams(
             LayoutParams.MATCH_PARENT,
             LayoutParams.WRAP_CONTENT
