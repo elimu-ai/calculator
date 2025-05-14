@@ -167,11 +167,8 @@ object SpellContext {
             text = spell(number, 1)
         }
 
-        val index_amp: Int
-        val index_perc: Int
-
-        index_amp = text.lastIndexOf("$")
-        index_perc = text.lastIndexOf("%")
+        val index_amp: Int = text.lastIndexOf("$")
+        val index_perc: Int = text.lastIndexOf("%")
 
         if (index_amp >= 0) {
             if (index_perc < 0 || index_amp > index_perc) {

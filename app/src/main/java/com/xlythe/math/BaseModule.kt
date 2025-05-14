@@ -15,22 +15,17 @@ import kotlin.plus
 
 class BaseModule internal constructor(solver: Solver?) : Module(solver) {
     // Regex to strip out things like "90" from "sin(90)"
-    private val REGEX_NUMBER: String
-    private val REGEX_NOT_NUMBER: String
+    // Modify the constants to include a fake character, SELECTION_HANDLE
+    private val REGEX_NUMBER: String = Constants.REGEX_NUMBER!!
+        .substring(0, Constants.REGEX_NUMBER!!.length - 1) + SELECTION_HANDLE + "]"
+    private val REGEX_NOT_NUMBER: String = Constants.REGEX_NOT_NUMBER!!
+        .substring(0, Constants.REGEX_NOT_NUMBER!!.length - 1) + SELECTION_HANDLE + "]"
 
     // The current base. Defaults to decimal.
     private var mBase = Base.DECIMAL
 
     // A listener for when the base changes.
     var onBaseChangeListener: OnBaseChangeListener? = null
-
-    init {
-        // Modify the constants to include a fake character, SELECTION_HANDLE
-        REGEX_NUMBER = Constants.REGEX_NUMBER!!
-            .substring(0, Constants.REGEX_NUMBER!!.length - 1) + SELECTION_HANDLE + "]"
-        REGEX_NOT_NUMBER = Constants.REGEX_NOT_NUMBER!!
-            .substring(0, Constants.REGEX_NOT_NUMBER!!.length - 1) + SELECTION_HANDLE + "]"
-    }
 
     var base: Base
         get() = mBase
