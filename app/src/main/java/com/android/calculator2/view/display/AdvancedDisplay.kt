@@ -536,7 +536,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                     }
 
                     // Append the next character to the EditText
-                    cache.append(delta.get(0))
+                    cache.append(delta[0])
                     delta = delta.substring(1)
                     cursor++
                 }

@@ -152,7 +152,7 @@ object SpellContext {
                 } catch (e: SpellException) {
                 }
             }
-            result += input.get(i)
+            result += input[i]
             i++
         }
         return result

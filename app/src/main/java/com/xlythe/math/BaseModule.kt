@@ -275,7 +275,7 @@ class BaseModule internal constructor(solver: Solver?) : Module(solver) {
         val sb = StringBuilder()
         var digitsSeen = 0
         for (i in wholeNumber.length - 1 downTo 0) {
-            val curChar = wholeNumber.get(i)
+            val curChar = wholeNumber[i]
             if (curChar != SELECTION_HANDLE) {
                 if (digitsSeen > 0 && digitsSeen % spacing == 0) {
                     sb.insert(0, separator)
