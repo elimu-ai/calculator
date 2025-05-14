@@ -161,10 +161,10 @@ object SpellContext {
     @Throws(SpellException::class)
     fun spell(number: Long): String {
         var text: String
-        if (number < 0L) {
-            text = "Minus " + spell(-number, 1)
+        text = if (number < 0L) {
+            "Minus " + spell(-number, 1)
         } else {
-            text = spell(number, 1)
+            spell(number, 1)
         }
 
         val index_amp: Int = text.lastIndexOf("$")
@@ -193,10 +193,10 @@ object SpellContext {
             return "-" + WithSeparator(-number)
         }
 
-        if (number / 1000L > 0) {
-            return WithSeparator(number / 1000L) + "," + String.format("%1$03d", number % 1000L)
+        return if (number / 1000L > 0) {
+            WithSeparator(number / 1000L) + "," + String.format("%1$03d", number % 1000L)
         } else {
-            return String.format(Locale.US, "%1\$d", number)
+            String.format(Locale.US, "%1\$d", number)
         }
     }
 
@@ -210,19 +210,19 @@ object SpellContext {
             val div = number.toInt() / 10
             val rem = number.toInt() % 10
 
-            if (rem == 0) {
-                return myCentText!![div - 2]
+            return if (rem == 0) {
+                myCentText!![div - 2]
             } else {
-                return myCentText!![div - 2] + " " + SpellBelow1000(rem.toLong())
+                myCentText!![div - 2] + " " + SpellBelow1000(rem.toLong())
             }
         } else {
             val div = number.toInt() / 100
             val rem = number.toInt() % 100
 
-            if (rem == 0) {
-                return myMilText!![div - 1]
+            return if (rem == 0) {
+                myMilText!![div - 1]
             } else {
-                return myMilText!![div - 1] + "%" + SpellBelow1000(rem.toLong())
+                myMilText!![div - 1] + "%" + SpellBelow1000(rem.toLong())
             }
         }
     }
@@ -232,13 +232,13 @@ object SpellContext {
         val div = number / 1000L
         val rem = number % 1000L
 
-        if (div == 0L) {
-            return SpellBelow1000(rem) + mySuffixText!![level]
+        return if (div == 0L) {
+            SpellBelow1000(rem) + mySuffixText!![level]
         } else {
             if (rem == 0L) {
-                return spell(div, level + 1)
+                spell(div, level + 1)
             } else {
-                return spell(div, level + 1) + "$" + SpellBelow1000(rem) + mySuffixText!![level]
+                spell(div, level + 1) + "$" + SpellBelow1000(rem) + mySuffixText!![level]
             }
         }
     }
@@ -295,7 +295,7 @@ object SpellContext {
             }
         }
 
-        if (processed) return totalValue
-        else return parseBelow1000(text)
+        return if (processed) totalValue
+        else parseBelow1000(text)
     }
 }

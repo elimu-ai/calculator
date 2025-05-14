@@ -58,8 +58,8 @@ object Constants {
 
         // We have to be careful with the Matrix Separator.
         // It defaults to "," but that's a common decimal point.
-        if (DECIMAL_POINT == ',') MATRIX_SEPARATOR = ' '
-        else MATRIX_SEPARATOR = ','
+        MATRIX_SEPARATOR = if (DECIMAL_POINT == ',') ' '
+        else ','
 
         val number = "A-F0-9" +
                 Pattern.quote(DECIMAL_POINT.toString()) +
