@@ -1,4 +1,4 @@
-# android_packages_apps_Calculator ➕
+# Calculator ➕
 
 Android calculator application adapted to children.
 
