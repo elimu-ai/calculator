@@ -572,7 +572,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         if (TextUtils.isEmpty(mFormulaEditText!!.text)) {
             return
         }
-        val sourceView = (if (mClearButton?.visibility == android.view.View.VISIBLE)
+        val sourceView = (if (mClearButton?.visibility == View.VISIBLE)
             mClearButton
         else
             mDeleteButton)!!
