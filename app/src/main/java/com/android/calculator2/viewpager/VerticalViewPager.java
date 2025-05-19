@@ -512,7 +512,7 @@ public class VerticalViewPager extends ViewGroup {
             setScrollingCacheEnabled(false);
             return;
         }
-        if (!always && mCurItem == item && mItems.size() != 0) {
+        if (!always && mCurItem == item && !mItems.isEmpty()) {
             setScrollingCacheEnabled(false);
             return;
         }
@@ -1587,7 +1587,7 @@ public class VerticalViewPager extends ViewGroup {
     }
 
     private boolean pageScrolled(int ypos) {
-        if (mItems.size() == 0) {
+        if (mItems.isEmpty()) {
             mCalledSuper = false;
             onPageScrolled(0, 0, 0);
             if (!mCalledSuper) {
@@ -2121,7 +2121,7 @@ public class VerticalViewPager extends ViewGroup {
             targetPage = (int) (currentPage + pageOffset + 0.5f);
         }
 
-        if (mItems.size() > 0) {
+        if (!mItems.isEmpty()) {
             final ItemInfo firstItem = mItems.get(0);
             final ItemInfo lastItem = mItems.get(mItems.size() - 1);
 
@@ -2181,7 +2181,7 @@ public class VerticalViewPager extends ViewGroup {
         super.onDraw(canvas);
 
         // Draw the margin drawable between pages if needed.
-        if (mPageMargin > 0 && mMarginDrawable != null && mItems.size() > 0 && mAdapter != null) {
+        if (mPageMargin > 0 && mMarginDrawable != null && !mItems.isEmpty() && mAdapter != null) {
             final int scrollY = getScrollY();
             final int height = getHeight();
 
