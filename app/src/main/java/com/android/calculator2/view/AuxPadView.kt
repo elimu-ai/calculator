@@ -23,15 +23,15 @@ class AuxPadView : FrameLayout {
         override val count: Int
             get() = mViewPager.size
 
-        public override fun instantiateItem(container: ViewGroup?, position: Int): Any? {
+        override fun instantiateItem(container: ViewGroup?, position: Int): Any? {
             return mViewPager.getChildAt(position)
         }
 
-        public override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+        override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
             mViewPager.removeViewAt(position)
         }
 
-        public override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
+        override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
             return view === `object`
         }
     }
