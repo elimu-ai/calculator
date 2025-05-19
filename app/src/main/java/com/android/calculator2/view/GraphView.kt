@@ -269,7 +269,7 @@ class GraphView : View {
 
         // Create a path to draw smooth arcs
         if (mDrawingAlgorithm == LINES) {
-            if (mData!!.size != 0) {
+            if (mData!!.isNotEmpty()) {
                 drawWithStraightLines(mData!!, canvas)
             }
         } else if (mDrawingAlgorithm == DOTS) {

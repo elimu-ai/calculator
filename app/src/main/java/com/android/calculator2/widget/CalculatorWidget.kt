@@ -160,7 +160,7 @@ class CalculatorWidget : AppWidgetProvider() {
         } else if (intent.action == CLR) {
             value = ""
         } else if (intent.action == DEL) {
-            if (value!!.length > 0) value = value.substring(0, value.length - 1)
+            if (value!!.isNotEmpty()) value = value.substring(0, value.length - 1)
         }
         setValue(context, appWidgetId, value)
 
