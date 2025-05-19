@@ -622,8 +622,7 @@ public class VerticalViewPager extends ViewGroup {
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
         final int index = mDrawingOrder == DRAW_ORDER_REVERSE ? childCount - 1 - i : i;
-        final int result = ((LayoutParams) mDrawingOrderedChildren.get(index).getLayoutParams()).childIndex;
-        return result;
+        return ((LayoutParams) mDrawingOrderedChildren.get(index).getLayoutParams()).childIndex;
     }
 
     /**
@@ -1530,8 +1529,6 @@ public class VerticalViewPager extends ViewGroup {
                 if (!lp.isDecor && (ii = infoForChild(child)) != null) {
                     int loff = (int) (height * ii.offset);
 
-                    int childLeft = paddingLeft;
-
                     int childTop = paddingTop = loff;
 
                     if (lp.needsMeasure) {
@@ -1547,10 +1544,10 @@ public class VerticalViewPager extends ViewGroup {
                         child.measure(widthSpec, heightSpec);
                     }
                     if (DEBUG) Log.v(TAG, "Positioning #" + i + " " + child + " f=" + ii.object
-                            + ":" + childLeft + "," + childTop + " " + child.getMeasuredWidth()
+                            + ":" + paddingLeft + "," + childTop + " " + child.getMeasuredWidth()
                             + "x" + child.getMeasuredHeight());
-                    child.layout(childLeft, childTop,
-                            childLeft + child.getMeasuredWidth(),
+                    child.layout(paddingLeft, childTop,
+                            paddingLeft + child.getMeasuredWidth(),
                             childTop + child.getMeasuredHeight());
                 }
             }
@@ -1996,8 +1993,7 @@ public class VerticalViewPager extends ViewGroup {
                 break;
             case MotionEventCompat.ACTION_POINTER_DOWN: {
                 final int index = MotionEventCompat.getActionIndex(ev);
-                final float y = MotionEventCompat.getY(ev, index);
-                mLastMotionY = y;
+                mLastMotionY = MotionEventCompat.getY(ev, index);
                 mActivePointerId = MotionEventCompat.getPointerId(ev, index);
                 break;
             }
