@@ -547,7 +547,7 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
         for (i in rows.indices) {
             val cols: Array<String?> =
                 rows[i]!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            if (cols.size == 0) throw SyntaxException()
+            if (cols.isEmpty()) throw SyntaxException()
             for (j in cols.indices) {
                 if (cols[j]!!.isEmpty()) throw SyntaxException()
                 temp.set(i, j, calculate(cols[j]!!).toDouble())

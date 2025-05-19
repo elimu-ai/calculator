@@ -136,7 +136,7 @@ class BaseModule internal constructor(solver: Solver?) : Module(solver) {
         var split: Array<String?> =
             originalNumber.split(Pattern.quote(decimalPoint.toString() + "").toRegex())
                 .dropLastWhile { it.isEmpty() }.toTypedArray()
-        if (split.size == 0) {
+        if (split.isEmpty()) {
             split = arrayOfNulls<String>(1)
             split[0] = "0"
         }

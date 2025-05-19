@@ -191,7 +191,7 @@ class CalculatorEditText : EditText {
         super.onDraw(canvas)
         // TextViews don't draw the cursor if textLength is 0. Because we're an
         // array of TextViews, we'd prefer that it did.
-        if (getText().length == 0 && isEnabled && (isFocused || isPressed)) {
+        if (getText().isEmpty() && isEnabled && (isFocused || isPressed)) {
             if ((SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
                 mHighlightPaint.setColor(currentTextColor)
                 mHighlightPaint.style = Paint.Style.STROKE
