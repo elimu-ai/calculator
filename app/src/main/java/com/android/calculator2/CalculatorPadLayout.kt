@@ -54,8 +54,7 @@ open class CalculatorPadLayout @JvmOverloads constructor(
         val paddingRight = getPaddingRight()
         val paddingTop = getPaddingTop()
         val paddingBottom = getPaddingBottom()
-        val isRTL: Boolean
-        isRTL = if (Build.VERSION.SDK_INT >= 17) {
+        val isRTL: Boolean = if (Build.VERSION.SDK_INT >= 17) {
             getLayoutDirection() == LAYOUT_DIRECTION_RTL
         } else {
             false

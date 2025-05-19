@@ -474,8 +474,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // Calculate the values needed to perform the scale and translation animations,
         // maintaining the same apparent baseline for the displayed text.
         val textScale = oldSize / textView.textSize
-        val translationX: Float
-        translationX = if (Build.VERSION.SDK_INT >= 17) {
+        val translationX: Float = if (Build.VERSION.SDK_INT >= 17) {
             (1.0f - textScale) *
                     (textView.width / 2.0f - textView.getPaddingEnd())
         } else {
@@ -617,8 +616,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // accounting for how the scale will affect the final position of the text.
         val resultScale =
             mFormulaEditText!!.getVariableTextSize(result) / mResultEditText!!.textSize
-        val resultTranslationX: Float
-        resultTranslationX = if (Build.VERSION.SDK_INT >= 17) {
+        val resultTranslationX: Float = if (Build.VERSION.SDK_INT >= 17) {
             (1.0f - resultScale) *
                     (mResultEditText!!.width / 2.0f - mResultEditText!!.getPaddingEnd())
         } else {
