@@ -22,7 +22,7 @@ class HistoryLine(context: Context?, attrs: AttributeSet?) : LinearLayout(contex
     private var mAdapter: RecyclerView.Adapter<*>? = null
 
     public override fun onCreateContextMenu(menu: ContextMenu) {
-        val handler: MenuHandler = MenuHandler()
+        val handler = MenuHandler()
         if (mMenuItemsStrings == null) {
             val resources = getResources()
             mMenuItemsStrings = arrayOfNulls<String>(4) as Array<String>?
