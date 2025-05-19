@@ -310,7 +310,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         mTextWatchers.add(watcher!!)
     }
 
-    protected fun registerSync(sync: Sync) {
+    private fun registerSync(sync: Sync) {
         mRegisteredSyncs.put(sync.tag, sync)
         apply(this, sync)
     }
@@ -352,13 +352,13 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         setTextSize(TypedValue.COMPLEX_UNIT_PX, getVariableTextSize(this.text.toString()))
     }
 
-    protected val selectionStart: Int
+    private val selectionStart: Int
         get() {
             if (this.activeEditText == null) return 0
             return this.activeEditText!!.selectionStart
         }
 
-    protected fun setSelection(position: Int) {
+    private fun setSelection(position: Int) {
         this.activeEditText!!.setSelection(position)
     }
 
