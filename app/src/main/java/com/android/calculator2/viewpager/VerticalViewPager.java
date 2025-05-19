@@ -797,7 +797,7 @@ public class VerticalViewPager extends ViewGroup {
         final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / height);
         final float distance = halfHeight + halfHeight * distanceInfluenceForSnapDuration(distanceRatio);
 
-        int duration = 0;
+        int duration;
         velocity = Math.abs(velocity);
         if (velocity > 0) {
             duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
@@ -936,7 +936,7 @@ public class VerticalViewPager extends ViewGroup {
         final int endPos = Math.min(N-1, mCurItem + pageLimit);
 
         // Locate the currently focused item or add it if needed.
-        int curIndex = -1;
+        int curIndex;
         ItemInfo curItem = null;
         for (curIndex = 0; curIndex < mItems.size(); curIndex++) {
             final ItemInfo ii = mItems.get(curIndex);
@@ -1089,7 +1089,7 @@ public class VerticalViewPager extends ViewGroup {
             // Base offsets off of oldCurInfo.
             if (oldCurPosition < curItem.position) {
                 int itemIndex = 0;
-                ItemInfo ii = null;
+                ItemInfo ii;
                 float offset = oldCurInfo.offset + oldCurInfo.heightFactor + marginOffset;
                 for (int pos = oldCurPosition + 1;
                      pos <= curItem.position && itemIndex < mItems.size(); pos++) {
@@ -1109,7 +1109,7 @@ public class VerticalViewPager extends ViewGroup {
                 }
             } else if (oldCurPosition > curItem.position) {
                 int itemIndex = mItems.size() - 1;
-                ItemInfo ii = null;
+                ItemInfo ii;
                 float offset = oldCurInfo.offset;
                 for (int pos = oldCurPosition - 1;
                      pos >= curItem.position && itemIndex >= 0; pos--) {
@@ -1473,8 +1473,8 @@ public class VerticalViewPager extends ViewGroup {
             final View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-                int childLeft = 0;
-                int childTop = 0;
+                int childLeft;
+                int childTop;
                 if (lp.isDecor) {
                     final int hgrav = lp.gravity & Gravity.HORIZONTAL_GRAVITY_MASK;
                     final int vgrav = lp.gravity & Gravity.VERTICAL_GRAVITY_MASK;
@@ -1645,7 +1645,7 @@ public class VerticalViewPager extends ViewGroup {
                 if (!lp.isDecor) continue;
 
                 final int vgrav = lp.gravity & Gravity.VERTICAL_GRAVITY_MASK;
-                int childTop = 0;
+                int childTop;
 
                 switch (vgrav) {
                     default:
