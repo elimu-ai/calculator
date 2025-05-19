@@ -465,7 +465,7 @@ class CalculatorWidget : AppWidgetProvider() {
         private fun getValue(context: Context?, appWidgetId: Int): String {
             return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(
-                    CalculatorWidget.Companion.PREFERENCE_WIDGET_PREAMBLE + appWidgetId,
+                    PREFERENCE_WIDGET_PREAMBLE + appWidgetId,
                     ""
                 )!!
         }

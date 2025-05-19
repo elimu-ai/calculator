@@ -264,7 +264,7 @@ class AutoFitButtonView : Button {
             mPaint!!.textSize = size
 
             if ((mMaxLines == 1 && mPaint!!.measureText(text, 0, text.length) > targetWidth)
-                || Companion.getLineCount(
+                || getLineCount(
                     text,
                     mPaint!!,
                     size,
@@ -272,7 +272,7 @@ class AutoFitButtonView : Button {
                     displayMetrics
                 ) > mMaxLines
             ) {
-                size = Companion.getTextSize(
+                size = getTextSize(
                     text, mPaint!!, targetWidth.toFloat(), mMaxLines, low, high, mPrecision,
                     displayMetrics
                 )
