@@ -188,20 +188,20 @@ object SpellContext {
     // WithSeparator () function:
     // It converts a number to string using 1000's separator.
     // It uses a simple recursive algorithm.
-    fun WithSeparator(number: Long): String {
+    fun withSeparator(number: Long): String {
         if (number < 0) {
-            return "-" + WithSeparator(-number)
+            return "-" + withSeparator(-number)
         }
 
         return if (number / 1000L > 0) {
-            WithSeparator(number / 1000L) + "," + String.format("%1$03d", number % 1000L)
+            withSeparator(number / 1000L) + "," + String.format("%1$03d", number % 1000L)
         } else {
             String.format(Locale.US, "%1\$d", number)
         }
     }
 
     @Throws(SpellException::class)
-    private fun SpellBelow1000(number: Long): String {
+    private fun spellBelow1000(number: Long): String {
         if (number < 0 || number >= 1000) throw SpellException("Expecting a number between 0 and 999: " + number)
 
         if (number < 20L) {
@@ -213,7 +213,7 @@ object SpellContext {
             return if (rem == 0) {
                 myCentText!![div - 2]
             } else {
-                myCentText!![div - 2] + " " + SpellBelow1000(rem.toLong())
+                myCentText!![div - 2] + " " + spellBelow1000(rem.toLong())
             }
         } else {
             val div = number.toInt() / 100
@@ -222,7 +222,7 @@ object SpellContext {
             return if (rem == 0) {
                 myMilText!![div - 1]
             } else {
-                myMilText!![div - 1] + "%" + SpellBelow1000(rem.toLong())
+                myMilText!![div - 1] + "%" + spellBelow1000(rem.toLong())
             }
         }
     }
@@ -233,12 +233,12 @@ object SpellContext {
         val rem = number % 1000L
 
         return if (div == 0L) {
-            SpellBelow1000(rem) + mySuffixText!![level]
+            spellBelow1000(rem) + mySuffixText!![level]
         } else {
             if (rem == 0L) {
                 spell(div, level + 1)
             } else {
-                spell(div, level + 1) + "$" + SpellBelow1000(rem) + mySuffixText!![level]
+                spell(div, level + 1) + "$" + spellBelow1000(rem) + mySuffixText!![level]
             }
         }
     }
