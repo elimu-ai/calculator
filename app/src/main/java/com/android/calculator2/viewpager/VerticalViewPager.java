@@ -607,7 +607,7 @@ public class VerticalViewPager extends ViewGroup {
         if (mSetChildrenDrawingOrderEnabled == null) {
             try {
                 mSetChildrenDrawingOrderEnabled = ViewGroup.class.getDeclaredMethod(
-                        "setChildrenDrawingOrderEnabled", new Class[] { Boolean.TYPE });
+                        "setChildrenDrawingOrderEnabled", Boolean.TYPE);
             } catch (NoSuchMethodException e) {
                 Log.e(TAG, "Can't find setChildrenDrawingOrderEnabled", e);
             }
