@@ -17,13 +17,9 @@ class Solver {
     // Used for solving basic math
     var mSymbols: Symbols = Symbols()
     val baseModule: BaseModule = BaseModule(this)
-    val matrixModule: MatrixModule
+    val matrixModule: MatrixModule = MatrixModule(this)
     private var mLineLength = 14
     private var mLocalizer: Localizer? = null
-
-    init {
-        this.matrixModule = MatrixModule(this)
-    }
 
     /**
      * Input an equation as a string
