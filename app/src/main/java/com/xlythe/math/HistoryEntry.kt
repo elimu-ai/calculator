@@ -33,7 +33,7 @@ class HistoryEntry {
             mBase = `in`.readUTF()
             this.edited = `in`.readUTF()
         } else {
-            throw IOException("invalid version " + version)
+            throw IOException("invalid version $version")
         }
     }
 

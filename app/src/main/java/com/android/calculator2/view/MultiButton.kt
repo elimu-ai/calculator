@@ -51,7 +51,7 @@ class MultiButton : FrameLayout {
 
         val newView = findViewById<View?>(resId)
         if (newView == null) {
-            Log.w(TAG, "Cannot enable MultiButton view by resId " + resId)
+            Log.w(TAG, "Cannot enable MultiButton view by resId $resId")
             return
         }
 

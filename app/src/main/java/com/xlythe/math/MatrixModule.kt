@@ -61,7 +61,7 @@ class MatrixModule internal constructor(solver: Solver?) : Module(solver) {
             if (input[i] == '(') open++
             else if (input[i] == ')') open--
         }
-        if (open == 1) input = input + ")" // Auto-balance if possible
+        if (open == 1) input = "$input)" // Auto-balance if possible
         else if (open != 0) throw SyntaxException() // Unbalanced
 
 

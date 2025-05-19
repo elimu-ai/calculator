@@ -171,7 +171,7 @@ class DisplayOverlay : FrameLayout {
         val y = event.rawY
         val dy = y - mLastMotionY
         if (DEBUG) {
-            Log.v(TAG, "handleMove y=" + y + ", dy=" + dy)
+            Log.v(TAG, "handleMove y=$y, dy=$dy")
         }
 
         if (dy < 0 && state != TranslateState.COLLAPSED) {
@@ -187,7 +187,7 @@ class DisplayOverlay : FrameLayout {
         mVelocityTracker!!.computeCurrentVelocity(1)
         val yvel = mVelocityTracker!!.yVelocity
         if (DEBUG) {
-            Log.v(TAG, "handleUp yvel=" + yvel + ", mLastDeltaY=" + mLastDeltaY)
+            Log.v(TAG, "handleUp yvel=$yvel, mLastDeltaY=$mLastDeltaY")
         }
 
         val curState = this.translateState
@@ -267,7 +267,7 @@ class DisplayOverlay : FrameLayout {
                 if (DEBUG) {
                     Log.v(
                         TAG,
-                        "mMaxTranslationInParent = " + mMaxTranslationInParent
+                        "mMaxTranslationInParent = $mMaxTranslationInParent"
                     )
                 }
             }

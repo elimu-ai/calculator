@@ -75,9 +75,9 @@ class Solver {
             .replace(Constants.INFINITY, Constants.INFINITY_UNICODE)
 
         var result = ""
-        if (value.re != 0.0 && value.im == 1.0) result = real + "+" + "i"
+        if (value.re != 0.0 && value.im == 1.0) result = "$real+i"
         else if (value.re != 0.0 && value.im > 0) result = real + "+" + imaginary + "i"
-        else if (value.re != 0.0 && value.im == -1.0) result = real + "-" + "i"
+        else if (value.re != 0.0 && value.im == -1.0) result = "$real-i"
         else if (value.re != 0.0 && value.im < 0) result = real + imaginary + "i" // Implicit -
         else if (value.re != 0.0 && value.im == 0.0) result = real
         else if (value.re == 0.0 && value.im == 1.0) result = "i"

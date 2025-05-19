@@ -51,7 +51,7 @@ class History {
             }
             mPos = `in`.readInt()
         } else {
-            throw IOException("invalid version " + version)
+            throw IOException("invalid version $version")
         }
     }
 

@@ -67,7 +67,7 @@ object Constants {
                 Pattern.quote(BINARY_SEPARATOR.toString()) +
                 Pattern.quote(HEXADECIMAL_SEPARATOR.toString())
 
-        REGEX_NUMBER = "[" + number + "]"
-        REGEX_NOT_NUMBER = "[^" + number + "]"
+        REGEX_NUMBER = "[$number]"
+        REGEX_NOT_NUMBER = "[^$number]"
     }
 }

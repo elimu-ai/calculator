@@ -175,7 +175,7 @@ object SpellContext {
                 val text1 = text.substring(0, index_amp)
                 val text2 = text.substring(index_amp + 1, text.length)
 
-                text = text1 + " and " + text2
+                text = "$text1 and $text2"
             }
         }
 
@@ -202,7 +202,7 @@ object SpellContext {
 
     @Throws(SpellException::class)
     private fun spellBelow1000(number: Long): String {
-        if (number < 0 || number >= 1000) throw SpellException("Expecting a number between 0 and 999: " + number)
+        if (number < 0 || number >= 1000) throw SpellException("Expecting a number between 0 and 999: $number")
 
         if (number < 20L) {
             return myTeenText!![number.toInt()]
@@ -251,7 +251,7 @@ object SpellContext {
 
         for (word in words) {
             if (!myBelowThousandWordList.contains(word)) {
-                throw SpellException("Unknown token : " + word)
+                throw SpellException("Unknown token : $word")
             }
 
             val subval = getValueOf(word)
