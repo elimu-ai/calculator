@@ -470,7 +470,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
 
 
             // limit the max number of characters the edit text can have
-            if (delta.length > 0 &&
+            if (delta.isNotEmpty() &&
                 this.activeEditText!!.length() + delta.length > MAX_TEXT_EDIT_CHARS
             ) {
                 val chars = min(
@@ -650,7 +650,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         if (text == null) return
 
         // Don't allow leading operators
-        while (text!!.length > 0 && isOperator(text[0])
+        while (text!!.isNotEmpty() && isOperator(text[0])
             && !text.startsWith(Constants.MINUS.toString())
         ) {
             text = text.substring(1)

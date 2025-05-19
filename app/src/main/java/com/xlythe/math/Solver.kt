@@ -128,7 +128,7 @@ class Solver {
         }
         if (period != -1) {
             // Strip trailing 0's
-            while (mantissa.length > 0 && mantissa.endsWith("0")) {
+            while (mantissa.isNotEmpty() && mantissa.endsWith("0")) {
                 mantissa = mantissa.substring(0, mantissa.length - 1)
             }
             if (mantissa.length == period + 1) {
