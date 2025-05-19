@@ -706,9 +706,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             // This will not work if the same resId is used on multiple pages,
             // which will be the case after adding the matrix view.
             val view = findViewById<View?>(resId)
-            if (view != null) {
-                view.setEnabled(!mBaseManager!!.isViewDisabled(resId))
-            }
+            view?.setEnabled(!mBaseManager!!.isViewDisabled(resId))
         }
 
         // TODO: preserve history

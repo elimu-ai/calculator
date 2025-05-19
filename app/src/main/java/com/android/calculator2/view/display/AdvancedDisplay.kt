@@ -418,7 +418,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
     fun next() {
         if (activeEditText!!.selectionStart == activeEditText!!.getText().length) {
             val v = activeEditText!!.focusSearch(FOCUS_FORWARD)
-            if (v != null) v.requestFocus()
+            v?.requestFocus()
             activeEditText!!.setSelection(0)
         } else {
             activeEditText!!.setSelection(activeEditText!!.selectionStart + 1)
@@ -446,7 +446,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
 
     fun backspace() {
         val aet = this.activeEditText
-        if (aet != null) aet.dispatchKeyEvent(KeyEvent(0, KeyEvent.KEYCODE_DEL))
+        aet?.dispatchKeyEvent(KeyEvent(0, KeyEvent.KEYCODE_DEL))
     }
 
     /**
