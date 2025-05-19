@@ -211,7 +211,7 @@ class CalculatorWidget : AppWidgetProvider() {
             StudentUpdatedReceiver.PREF_STUDENT_NUMERACY_SKILLS,
             null
         )
-        Log.d(javaClass.getName(), "numeracySkillSet: " + numeracySkillSet)
+        Log.d(javaClass.getName(), "numeracySkillSet: $numeracySkillSet")
         if (numeracySkillSet == null) {
             remoteViews.setViewVisibility(R.id.mul, View.INVISIBLE)
             remoteViews.setViewVisibility(R.id.minus, View.INVISIBLE)

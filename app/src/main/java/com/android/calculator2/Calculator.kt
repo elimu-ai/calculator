@@ -158,7 +158,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             StudentUpdatedReceiver.PREF_STUDENT_NUMERACY_SKILLS,
             null
         )
-        Log.d(javaClass.getName(), "numeracySkillSet: " + numeracySkillSet)
+        Log.d(javaClass.getName(), "numeracySkillSet: $numeracySkillSet")
         if (numeracySkillSet == null) {
             buttonOperatorMul.visibility = View.INVISIBLE
             buttonOperatorSub.visibility = View.INVISIBLE
@@ -448,7 +448,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             if (result == null || result == mFormulaEditText!!.text) {
                 mResultEditText!!.clear()
             } else {
-                mResultEditText!!.setText("=" + result)
+                mResultEditText!!.setText("=$result")
             }
         } else if (errorResourceId != INVALID_RES_ID) {
             onError(errorResourceId)
