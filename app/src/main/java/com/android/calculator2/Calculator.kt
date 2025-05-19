@@ -152,7 +152,6 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // Personalize available operators
         val buttonOperatorMul: Button = findViewById<Button>(R.id.op_mul)
         val buttonOperatorSub: Button = findViewById<Button>(R.id.op_sub)
-        val buttonOperatorAdd: Button = findViewById<Button>(R.id.op_add)
         val sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val numeracySkillSet = sharedPreferences.getStringSet(
