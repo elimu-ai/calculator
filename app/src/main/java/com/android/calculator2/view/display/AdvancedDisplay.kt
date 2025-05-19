@@ -230,7 +230,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
     fun setEditableFactory(factory: Editable.Factory) {
         mFactory = factory
         registerSync(object : Sync("setEditableFactory") {
-            public override fun apply(textView: TextView?) {
+            override fun apply(textView: TextView?) {
                 textView?.setEditableFactory(mFactory)
             }
         })
@@ -239,7 +239,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
     fun setKeyListener(input: KeyListener?) {
         mKeyListener = input
         registerSync(object : Sync("setKeyListener") {
-            public override fun apply(textView: TextView?) {
+            override fun apply(textView: TextView?) {
                 textView?.setKeyListener(mKeyListener)
             }
         })
@@ -248,7 +248,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
     fun setTextColor(color: Int) {
         this.currentTextColor = color
         registerSync(object : Sync("setTextColor") {
-            public override fun apply(textView: TextView?) {
+            override fun apply(textView: TextView?) {
                 textView?.setTextColor(currentTextColor)
             }
         })
@@ -258,7 +258,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         val oldTextSize = mTextSize
         mTextSize = size
         registerSync(object : Sync("setTextSize") {
-            public override fun apply(textView: TextView?) {
+            override fun apply(textView: TextView?) {
                 textView?.setTextSize(unit, mTextSize)
             }
         })
@@ -343,7 +343,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         leftSide.setSelection(cursor)
     }
 
-    protected override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         mWidthConstraint =
             MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight()
@@ -604,7 +604,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
     override fun setEnabled(enabled: Boolean) {
         // We only want to disable our children. So we're not calling super on purpose.
         registerSync(object : Sync("setEnabled") {
-            public override fun apply(textView: TextView?) {
+            override fun apply(textView: TextView?) {
                 textView?.setEnabled(enabled)
             }
         })
@@ -727,7 +727,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
             }
 
             apply(child, object : Sync("addTextChangedListener") {
-                public override fun apply(textView: TextView?) {
+                override fun apply(textView: TextView?) {
                     textView?.addTextChangedListener(mTextWatcher)
                 }
             })
@@ -749,7 +749,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
             return -1
         }
 
-        public override fun onCreateContextMenu(menu: ContextMenu) {
+        override fun onCreateContextMenu(menu: ContextMenu) {
             mMenuHandler.onCreateContextMenu(menu)
         }
     }
