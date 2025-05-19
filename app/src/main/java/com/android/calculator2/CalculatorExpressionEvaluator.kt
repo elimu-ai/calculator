@@ -38,7 +38,7 @@ class CalculatorExpressionEvaluator(tokenizer: CalculatorExpressionTokenizer) {
         }
 
         try {
-            if (expr.length == 0 || expr.toDouble() != null) {
+            if (expr.isEmpty() || expr.toDouble() != null) {
                 callback.onEvaluate(expr, null, Calculator.INVALID_RES_ID)
                 return
             }

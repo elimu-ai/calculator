@@ -479,7 +479,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
                 ).toInt()
                 delta = delta.substring(0, chars)
 
-                if (delta.length == 0) {
+                if (delta.isEmpty()) {
                     Toast.makeText(context, R.string.text_max_chars, Toast.LENGTH_SHORT)
                         .show()
                 }
