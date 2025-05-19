@@ -81,7 +81,7 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
             case 0:
                 mViews[position] = View.inflate(mContext, R.layout.floating_calculator_history, null);
                 RecyclerView historyView =
-                        (RecyclerView) mViews[position].findViewById(R.id.history);
+                        mViews[position].findViewById(R.id.history);
                 setUpHistory(historyView);
                 break;
             case 1:
@@ -90,7 +90,7 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
                         new DigitLabelHelper.DigitLabelHelperCallback() {
                             @Override
                             public void setDigitText(int id, String text) {
-                                TextView textView = (TextView) mViews[position].findViewById(id);
+                                TextView textView = mViews[position].findViewById(id);
                                 textView.setText(text);
                             }
                         });
