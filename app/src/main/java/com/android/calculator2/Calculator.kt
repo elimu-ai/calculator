@@ -16,6 +16,9 @@
 package com.android.calculator2
 
 import ai.elimu.calculator.R
+import ai.elimu.common.utils.data.model.tts.QueueMode
+import ai.elimu.common.utils.viewmodel.TextToSpeechViewModel
+import ai.elimu.common.utils.viewmodel.TextToSpeechViewModelImpl
 import ai.elimu.model.v2.enums.content.NumeracySkill
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -24,7 +27,6 @@ import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -42,12 +44,15 @@ import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback
 import com.android.calculator2.HistoryAdapter.HistoryItemCallback
 import com.android.calculator2.receiver.StudentUpdatedReceiver
 import com.android.calculator2.util.DigitLabelHelper
 import com.android.calculator2.util.PlayerUtil
+import com.android.calculator2.util.tagToNumber
 import com.android.calculator2.view.DisplayOverlay
 import com.android.calculator2.view.GraphView
 import com.android.calculator2.view.MatrixEditText
@@ -64,11 +69,17 @@ import com.xlythe.math.GraphModule
 import com.xlythe.math.History
 import com.xlythe.math.HistoryEntry
 import com.xlythe.math.Persist
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.random.Random
 
-class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener {
+@AndroidEntryPoint
+class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener {
+
+    private lateinit var ttsViewModel: TextToSpeechViewModel
+
     private enum class CalculatorState {
         INPUT, EVALUATE, RESULT, ERROR
     }
@@ -148,6 +159,8 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         var savedInstanceState = savedInstanceState
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calculator)
+
+        ttsViewModel = ViewModelProvider(this)[TextToSpeechViewModelImpl::class.java]
 
         // Personalize available operators
         val buttonOperatorMul: Button = findViewById<Button>(R.id.op_mul)
@@ -375,7 +388,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
         // Play audio for numbers and operators
 
         if ((view.tag != null) && PlayerUtil.RAW_FILE_EQUALS != view.tag) {
-            PlayerUtil.playRawFile(this, view.tag.toString())
+            ttsViewModel.speak(view.tag.toString().tagToNumber(), QueueMode.FLUSH, Random.nextInt().toString())
         }
 
         mCurrentButton = view
@@ -606,7 +619,7 @@ class Calculator : Activity(), OnTextSizeChangeListener, EvaluateCallback, OnLon
             val view = findViewById<View>(DigitLabelHelper.getIdForDigit(result.toInt()))
             PlayerUtil.playResult(this, view.tag.toString())
         } else {
-            PlayerUtil.playRawFile(this, PlayerUtil.RAW_FILE_EQUALS)
+            ttsViewModel.speak(getString(R.string.desc_eq), QueueMode.FLUSH, Random.nextInt().toString())
         }
 
         // Make the clear button appear immediately.

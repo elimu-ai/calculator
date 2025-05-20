@@ -9,6 +9,7 @@
 
     <application
         android:allowBackup="true"
+        android:name="com.android.calculator2.App"
         android:icon="@mipmap/ic_launcher_calculator"
         android:label="@string/app_name">
         <uses-library
