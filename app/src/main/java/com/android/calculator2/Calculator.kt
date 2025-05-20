@@ -52,7 +52,7 @@ import com.android.calculator2.HistoryAdapter.HistoryItemCallback
 import com.android.calculator2.receiver.StudentUpdatedReceiver
 import com.android.calculator2.util.DigitLabelHelper
 import com.android.calculator2.util.PlayerUtil
-import com.android.calculator2.util.tagToNumber
+import com.android.calculator2.util.tagToSpokenText
 import com.android.calculator2.view.DisplayOverlay
 import com.android.calculator2.view.GraphView
 import com.android.calculator2.view.MatrixEditText
@@ -388,7 +388,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         // Play audio for numbers and operators
 
         if ((view.tag != null) && PlayerUtil.RAW_FILE_EQUALS != view.tag) {
-            ttsViewModel.speak(view.tag.toString().tagToNumber(), QueueMode.FLUSH, Random.nextInt().toString())
+            ttsViewModel.speak(view.tag.toString().tagToSpokenText(), QueueMode.FLUSH, Random.nextInt().toString())
         }
 
         mCurrentButton = view

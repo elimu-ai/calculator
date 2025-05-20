@@ -47,7 +47,7 @@ object PlayerUtil {
     }
 }
 
-fun String.tagToNumber(): String {
+fun String.tagToSpokenText(): String {
     return when (this) {
         NUMBER_RAW_FILES[0] -> "0"
         NUMBER_RAW_FILES[1] -> "1"
@@ -59,6 +59,6 @@ fun String.tagToNumber(): String {
         NUMBER_RAW_FILES[7] -> "7"
         NUMBER_RAW_FILES[8] -> "8"
         NUMBER_RAW_FILES[9] -> "9"
-        else -> ""
+        else -> this
     }
 }
