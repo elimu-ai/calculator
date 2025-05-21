@@ -176,7 +176,7 @@ class CalculatorWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
+        appWidgetIds: IntArray,
     ) {
         for (appWidgetID in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetID)
@@ -186,7 +186,7 @@ class CalculatorWidget : AppWidgetProvider() {
     private fun updateAppWidget(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetId: Int
+        appWidgetId: Int,
     ) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget)
 
@@ -254,109 +254,127 @@ class CalculatorWidget : AppWidgetProvider() {
         intent.setAction(DIGIT_0)
         remoteViews.setOnClickPendingIntent(
             R.id.digit0,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 0, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 0, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_1)
         remoteViews.setOnClickPendingIntent(
             R.id.digit1,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 1, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 1, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_2)
         remoteViews.setOnClickPendingIntent(
             R.id.digit2,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 2, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 2, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_3)
         remoteViews.setOnClickPendingIntent(
             R.id.digit3,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 3, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 3, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_4)
         remoteViews.setOnClickPendingIntent(
             R.id.digit4,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 4, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 4, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_5)
         remoteViews.setOnClickPendingIntent(
             R.id.digit5,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 5, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 5, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_6)
         remoteViews.setOnClickPendingIntent(
             R.id.digit6,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 6, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 6, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_7)
         remoteViews.setOnClickPendingIntent(
             R.id.digit7,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 7, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 7, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_8)
         remoteViews.setOnClickPendingIntent(
             R.id.digit8,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 8, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 8, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIGIT_9)
         remoteViews.setOnClickPendingIntent(
             R.id.digit9,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 9, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 9, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DOT)
         remoteViews.setOnClickPendingIntent(
             R.id.dec_point,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 10, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 10, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DIV)
         remoteViews.setOnClickPendingIntent(
             R.id.div,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 11, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 11, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(MUL)
         remoteViews.setOnClickPendingIntent(
             R.id.mul,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 12, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 12, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(MINUS)
         remoteViews.setOnClickPendingIntent(
             R.id.minus,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 13, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 13, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(PLUS)
         remoteViews.setOnClickPendingIntent(
             R.id.plus,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 14, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 14, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(EQUALS)
         remoteViews.setOnClickPendingIntent(
             R.id.equal,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 15, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 15, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(DEL)
         remoteViews.setOnClickPendingIntent(
             R.id.delete,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 16, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 16, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
 
         intent.setAction(CLR)
         remoteViews.setOnClickPendingIntent(
             R.id.clear,
-            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 17, intent, 0)
+            PendingIntent.getBroadcast(context, shiftedAppWidgetId + 17, intent,
+                PendingIntent.FLAG_IMMUTABLE)
         )
     }
 
