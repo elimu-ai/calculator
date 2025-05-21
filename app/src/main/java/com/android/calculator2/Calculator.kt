@@ -617,7 +617,8 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
 
         if (TextUtils.isDigitsOnly(result) && (result.toInt() < 10)) {
             val view = findViewById<View>(DigitLabelHelper.getIdForDigit(result.toInt()))
-            PlayerUtil.playResult(this, view.tag.toString())
+            ttsViewModel.speak(getString(R.string.desc_eq) + view.tag.toString().tagToSpokenText(), QueueMode.FLUSH,
+                Random.nextInt().toString())
         } else {
             ttsViewModel.speak(getString(R.string.desc_eq), QueueMode.FLUSH, Random.nextInt().toString())
         }
