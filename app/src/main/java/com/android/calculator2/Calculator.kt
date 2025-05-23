@@ -74,6 +74,7 @@ import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
+import androidx.core.text.isDigitsOnly
 
 @AndroidEntryPoint
 class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener {
@@ -603,7 +604,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
     private fun onResult(result: String) {
         // Play audio for result
 
-        if (TextUtils.isDigitsOnly(result) && (result.toInt() < 10)) {
+        if (result.isDigitsOnly() && (result.toInt() < 10)) {
             val view = findViewById<View>(DigitLabelHelper.getIdForDigit(result.toInt()))
             ttsViewModel.speak(getString(R.string.desc_eq) + view.tag.toString().tagToSpokenText(), QueueMode.FLUSH,
                 Random.nextInt().toString())
