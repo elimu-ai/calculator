@@ -196,7 +196,7 @@ class CalculatorWidget : AppWidgetProvider() {
         value = formatter.addComas(Solver(), value)
 
         val displayId =
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) R.id.display_long_clickable else R.id.display
+            R.id.display_long_clickable
 
         remoteViews.setViewVisibility(displayId, View.VISIBLE)
         remoteViews.setTextViewText(displayId, value)
