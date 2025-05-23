@@ -144,7 +144,7 @@ class AdvancedDisplay(context: Context, attrs: AttributeSet?) : ScrollableDispla
         val factory: Editable.Factory = CalculatorEditable.Factory()
         setEditableFactory(factory)
 
-        val keywords = Arrays.asList<String?>(
+        val keywords = listOf<String>(
             context.getString(R.string.arcsin) + "(",
             context.getString(R.string.arccos) + "(",
             context.getString(R.string.arctan) + "(",

@@ -62,7 +62,7 @@ object SpellContext {
         "Eight Hundred",
         "Nine Hundred"
     )
-    private val myBelowThousandWords = arrayOf<String?>(
+    private val myBelowThousandWords = arrayOf<String>(
         "zero",
         "one",
         "two",
@@ -94,7 +94,7 @@ object SpellContext {
         "hundred"
     )
     private val myBelowThousandWordList =
-        ArrayList<String?>(Arrays.asList<String?>(*myBelowThousandWords))
+        ArrayList<String?>(listOf<String>(*myBelowThousandWords))
     private val myBelowThousandValuess = longArrayOf(
         0,
         1,
