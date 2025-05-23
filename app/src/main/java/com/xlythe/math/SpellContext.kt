@@ -1,6 +1,5 @@
 package com.xlythe.math
 
-import java.util.Arrays
 import java.util.Locale
 
 object SpellContext {

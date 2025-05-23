@@ -29,7 +29,6 @@ import com.android.calculator2.view.display.CalculatorEditText.Companion.getInst
 import com.xlythe.math.Constants
 import com.xlythe.math.Solver
 import com.xlythe.math.Solver.Companion.isOperator
-import java.util.Arrays
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.view.isEmpty

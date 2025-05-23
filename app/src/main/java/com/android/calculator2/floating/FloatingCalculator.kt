@@ -3,7 +3,6 @@ package com.android.calculator2.floating
 import ai.elimu.calculator.R
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.text.TextUtils
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnLongClickListener

@@ -3,11 +3,8 @@ package com.xlythe.floatingview
 import ai.elimu.calculator.R
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 
 /**
  * Created by Will on 4/9/2014.

@@ -19,7 +19,6 @@ import ai.elimu.calculator.R
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.os.Build
 import android.os.Handler
 import android.os.SystemClock
 import android.text.Editable
