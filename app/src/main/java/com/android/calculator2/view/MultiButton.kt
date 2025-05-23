@@ -74,6 +74,6 @@ class MultiButton : FrameLayout {
         get() = findViewById<View?>(mActiveViewId)
 
     companion object {
-        private val TAG = Calculator.TAG
+        private const val TAG = Calculator.TAG
     }
 }
