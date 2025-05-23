@@ -59,8 +59,6 @@ public abstract class FloatingView extends Service implements OnTouchListener {
     private boolean mIsBeingDestroyed = false;
     private int mCurrentPosX = -1;
     private int mCurrentPosY = -1;
-    private int mCalcParamsX;
-    private int mCalcParamsY;
     // Animation variables
     private LimitedQueue<Float> mDeltaXArray;
     private LimitedQueue<Float> mDeltaYArray;
@@ -548,19 +546,20 @@ public abstract class FloatingView extends Service implements OnTouchListener {
         int screenWidth = getScreenWidth();
         int screenHeight = getScreenHeight();
         int calcWidth = 4 * (int) getResources().getDimension(R.dimen.floating_window_button_height);
-        mCalcParamsX = screenWidth - calcWidth - MARGIN_VIEW;
+        int calcParamsX = screenWidth - calcWidth - MARGIN_VIEW;
         int attemptedY = (int) (STARTING_POINT_Y * 1.1) + mDraggableIcon.getHeight() + mView
                 .getHeight();
+        int calcParamsY;
         if (attemptedY > screenHeight) {
-            mCalcParamsX = mCalcParamsX - mDraggableIcon.getHeight();
-            mCalcParamsY = (int) (STARTING_POINT_Y * 1.5) - mDraggableIcon.getHeight();
+            calcParamsX = calcParamsX - mDraggableIcon.getHeight();
+            calcParamsY = (int) (STARTING_POINT_Y * 1.5) - mDraggableIcon.getHeight();
         } else {
-            mCalcParamsY = (int) (STARTING_POINT_Y * 1.1) + mDraggableIcon.getHeight();
+            calcParamsY = (int) (STARTING_POINT_Y * 1.1) + mDraggableIcon.getHeight();
         }
 
         if(!mIsDestroyed) {
-            mView.setTranslationX(mCalcParamsX);
-            mView.setTranslationY(mCalcParamsY);
+            mView.setTranslationX(calcParamsX);
+            mView.setTranslationY(calcParamsY);
         }
 
         // Animate calc in
