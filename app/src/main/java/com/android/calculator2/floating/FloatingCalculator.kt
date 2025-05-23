@@ -23,6 +23,7 @@ import com.android.calculator2.view.display.AdvancedDisplay
 import com.xlythe.floatingview.FloatingView
 import com.xlythe.math.History
 import com.xlythe.math.Persist
+import androidx.core.text.isDigitsOnly
 
 class FloatingCalculator : FloatingView() {
     // Calc logic
@@ -87,7 +88,7 @@ class FloatingCalculator : FloatingView() {
                                     onError(errorResourceId)
                                 } else {
                                     // Play audio for result
-                                    if (result != null && TextUtils.isDigitsOnly(result) && result.toInt() < 10) {
+                                    if (result != null && result.isDigitsOnly() && result.toInt() < 10) {
                                         val view = child.findViewById<View>(
                                             DigitLabelHelper.getIdForDigit(result.toInt())
                                         )
