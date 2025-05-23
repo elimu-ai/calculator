@@ -749,7 +749,6 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         /**
          * Constant for an invalid resource id.
          */
-        @JvmField
-        val INVALID_RES_ID: Int = -1
+        const val INVALID_RES_ID: Int = -1
     }
 }

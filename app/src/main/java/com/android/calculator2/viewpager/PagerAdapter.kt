@@ -316,9 +316,7 @@ abstract class PagerAdapter {
     }
 
     companion object {
-        @JvmField
-        val POSITION_UNCHANGED: Int = -1
-        @JvmField
-        val POSITION_NONE: Int = -2
+        const val POSITION_UNCHANGED: Int = -1
+        const val POSITION_NONE: Int = -2
     }
 }

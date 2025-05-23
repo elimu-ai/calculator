@@ -38,6 +38,6 @@ class MatrixInverseView : TextView {
 
     companion object {
         private const val PLACEHOLDER = '\uFEFF'
-        val PATTERN: String = "$PLACEHOLDER^-1"
+        const val PATTERN: String = "$PLACEHOLDER^-1"
     }
 }
