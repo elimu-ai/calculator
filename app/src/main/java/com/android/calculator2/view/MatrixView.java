@@ -139,8 +139,7 @@ public class MatrixView extends TableLayout implements AdvancedDisplayControls {
     }
 
     public SimpleMatrix getSimpleMatrix() throws SyntaxException {
-        SimpleMatrix sm = new SimpleMatrix(getData());
-        return sm;
+        return new SimpleMatrix(getData());
     }
 
     private double[][] getData() throws SyntaxException {
