@@ -156,7 +156,6 @@ public class VerticalViewPager extends ViewGroup {
     private float mFirstOffset = -Float.MAX_VALUE;
     private float mLastOffset = Float.MAX_VALUE;
 
-    private int mChildWidthMeasureSpec;
     private boolean mInLayout;
 
     private boolean mScrollingCacheEnabled;
@@ -1382,7 +1381,7 @@ public class VerticalViewPager extends ViewGroup {
             }
         }
 
-        mChildWidthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
+        int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
 
         // Make sure we have created all fragments that we need to have shown.
         mInLayout = true;
@@ -1395,13 +1394,13 @@ public class VerticalViewPager extends ViewGroup {
             final View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
                 if (DEBUG) Log.v(TAG, "Measuring #" + i + " " + child
-                        + ": " + mChildWidthMeasureSpec);
+                        + ": " + childWidthMeasureSpec);
 
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 if (lp == null || !lp.isDecor) {
                     final int heightSpec = MeasureSpec.makeMeasureSpec(
                             (int) (childHeightSize * lp.heightFactor), MeasureSpec.EXACTLY);
-                    child.measure(mChildWidthMeasureSpec, heightSpec);
+                    child.measure(childWidthMeasureSpec, heightSpec);
                 }
             }
         }
