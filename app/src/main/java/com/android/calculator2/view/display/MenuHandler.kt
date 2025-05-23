@@ -1,6 +1,5 @@
 package com.android.calculator2.view.display
 
-import android.R
 import android.content.Context
 import android.text.TextUtils
 import android.view.ContextMenu
@@ -21,9 +20,9 @@ internal class MenuHandler(private val mDisplay: AdvancedDisplay) :
     init {
         val resources = context.resources
         mMenuItemsStrings = arrayOfNulls<String>(3)
-        mMenuItemsStrings[CUT] = resources.getString(R.string.cut)
-        mMenuItemsStrings[COPY] = resources.getString(R.string.copy)
-        mMenuItemsStrings[PASTE] = resources.getString(R.string.paste)
+        mMenuItemsStrings[CUT] = resources.getString(android.R.string.cut)
+        mMenuItemsStrings[COPY] = resources.getString(android.R.string.copy)
+        mMenuItemsStrings[PASTE] = resources.getString(android.R.string.paste)
     }
 
     fun onCreateContextMenu(menu: ContextMenu) {

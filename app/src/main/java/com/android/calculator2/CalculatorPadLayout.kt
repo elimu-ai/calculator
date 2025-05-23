@@ -15,7 +15,6 @@
 */
 package com.android.calculator2
 
-import android.R
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
@@ -38,7 +37,7 @@ open class CalculatorPadLayout @JvmOverloads constructor(
     init {
         val a = context.obtainStyledAttributes(
             attrs,
-            intArrayOf(R.attr.rowCount, R.attr.columnCount), defStyle, 0
+            intArrayOf(android.R.attr.rowCount, android.R.attr.columnCount), defStyle, 0
         )
         mRowCount = a.getInt(0, 1)
         mColumnCount = a.getInt(1, 1)
