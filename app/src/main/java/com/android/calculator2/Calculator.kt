@@ -27,7 +27,6 @@ import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.Editable
@@ -347,9 +346,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
                 val errorColor = resources.getColor(R.color.calculator_error_color)
                 mFormulaEditText!!.setTextColor(errorColor)
                 mResultEditText!!.setTextColor(errorColor)
-                if (Build.VERSION.SDK_INT >= 21) {
-                    window.statusBarColor = errorColor
-                }
+                window.statusBarColor = errorColor
             } else {
                 mFormulaEditText!!.setTextColor(
                     resources.getColor(R.color.display_formula_text_color)
@@ -357,9 +354,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
                 mResultEditText!!.setTextColor(
                     resources.getColor(R.color.display_result_text_color)
                 )
-                if (Build.VERSION.SDK_INT >= 21) {
-                    window.statusBarColor = resources.getColor(R.color.calculator_accent_color)
-                }
+                window.statusBarColor = resources.getColor(R.color.calculator_accent_color)
             }
         }
     }
@@ -487,13 +482,9 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         // Calculate the values needed to perform the scale and translation animations,
         // maintaining the same apparent baseline for the displayed text.
         val textScale = oldSize / textView.textSize
-        val translationX: Float = if (Build.VERSION.SDK_INT >= 17) {
+        val translationX: Float =
             (1.0f - textScale) *
                     (textView.width / 2.0f - textView.getPaddingEnd())
-        } else {
-            (1.0f - textScale) *
-                    (textView.width / 2.0f - textView.getPaddingRight())
-        }
         val translationY = (1.0f - textScale) *
                 (textView.height / 2.0f - textView.paddingBottom)
         val animatorSet = AnimatorSet()
@@ -540,26 +531,22 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         mDisplayView!!.addView(revealView)
 
         val revealAnimator: Animator
-        if (Build.VERSION.SDK_INT >= 21) {
-            val clearLocation = IntArray(2)
-            sourceView.getLocationInWindow(clearLocation)
-            clearLocation[0] += sourceView.width / 2
-            clearLocation[1] += sourceView.height / 2
-            val revealCenterX = clearLocation[0] - revealView.left
-            val revealCenterY = clearLocation[1] - revealView.top
-            val x1_2 = (revealView.left - revealCenterX).toDouble().pow(2.0)
-            val x2_2 = (revealView.right - revealCenterX).toDouble().pow(2.0)
-            val y_2 = (revealView.top - revealCenterY).toDouble().pow(2.0)
-            val revealRadius = max(sqrt(x1_2 + y_2), sqrt(x2_2 + y_2)).toFloat()
+        val clearLocation = IntArray(2)
+        sourceView.getLocationInWindow(clearLocation)
+        clearLocation[0] += sourceView.width / 2
+        clearLocation[1] += sourceView.height / 2
+        val revealCenterX = clearLocation[0] - revealView.left
+        val revealCenterY = clearLocation[1] - revealView.top
+        val x1_2 = (revealView.left - revealCenterX).toDouble().pow(2.0)
+        val x2_2 = (revealView.right - revealCenterX).toDouble().pow(2.0)
+        val y_2 = (revealView.top - revealCenterY).toDouble().pow(2.0)
+        val revealRadius = max(sqrt(x1_2 + y_2), sqrt(x2_2 + y_2)).toFloat()
 
-            revealAnimator =
-                ViewAnimationUtils.createCircularReveal(
-                    revealView,
-                    revealCenterX, revealCenterY, 0.0f, revealRadius
-                )
-        } else {
-            revealAnimator = ObjectAnimator.ofFloat<View?>(revealView, View.ALPHA, 0.0f, 1f)
-        }
+        revealAnimator =
+            ViewAnimationUtils.createCircularReveal(
+                revealView,
+                revealCenterX, revealCenterY, 0.0f, revealRadius
+            )
         revealAnimator.duration = resources.getInteger(android.R.integer.config_longAnimTime).toLong()
 
         val alphaAnimator: Animator = ObjectAnimator.ofFloat<View?>(revealView, View.ALPHA, 0.0f)
@@ -630,13 +617,9 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         // accounting for how the scale will affect the final position of the text.
         val resultScale =
             mFormulaEditText!!.getVariableTextSize(result) / mResultEditText!!.textSize
-        val resultTranslationX: Float = if (Build.VERSION.SDK_INT >= 17) {
+        val resultTranslationX: Float =
             (1.0f - resultScale) *
                     (mResultEditText!!.width / 2.0f - mResultEditText!!.getPaddingEnd())
-        } else {
-            (1.0f - resultScale) *
-                    (mResultEditText!!.width / 2.0f - mResultEditText!!.getPaddingRight())
-        }
         val resultTranslationY = (1.0f - resultScale) *
                 (mResultEditText!!.height / 2.0f - mResultEditText!!.paddingBottom) +
                 (mFormulaEditText!!.bottom - mResultEditText!!.bottom) +
