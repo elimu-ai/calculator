@@ -2,7 +2,6 @@ package com.android.calculator2
 
 import ai.elimu.calculator.R
 import com.xlythe.math.Base
-import java.util.Arrays
 
 /**
  * Keeps track of the application wide number base, and manages the IDs of views to disable

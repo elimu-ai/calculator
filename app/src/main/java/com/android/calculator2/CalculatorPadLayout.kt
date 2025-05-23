@@ -16,7 +16,6 @@
 package com.android.calculator2
 
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.core.view.size
