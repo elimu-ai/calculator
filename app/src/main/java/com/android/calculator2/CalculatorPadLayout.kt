@@ -53,11 +53,8 @@ open class CalculatorPadLayout @JvmOverloads constructor(
         val paddingRight = getPaddingRight()
         val paddingTop = getPaddingTop()
         val paddingBottom = getPaddingBottom()
-        val isRTL: Boolean = if (Build.VERSION.SDK_INT >= 17) {
+        val isRTL: Boolean =
             getLayoutDirection() == LAYOUT_DIRECTION_RTL
-        } else {
-            false
-        }
         val columnWidth =
             Math.round((right - left - paddingLeft - paddingRight).toFloat()) / mColumnCount
         val rowHeight =

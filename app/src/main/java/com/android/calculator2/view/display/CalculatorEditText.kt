@@ -195,9 +195,7 @@ class CalculatorEditText : EditText {
             if ((SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
                 mHighlightPaint.setColor(currentTextColor)
                 mHighlightPaint.style = Paint.Style.STROKE
-                if (Build.VERSION.SDK_INT >= 21) {
-                    mHighlightPaint.strokeWidth = 6f
-                }
+                mHighlightPaint.strokeWidth = 6f
                 canvas.drawLine(
                     (width / 2).toFloat(),
                     0f,

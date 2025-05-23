@@ -17,15 +17,7 @@ class FloatingActivity : Activity() {
     public override fun onCreate(state: Bundle?) {
         super.onCreate(state)
         if (intent.getBooleanExtra(EXTRA_HIDE_STATUS_BAR, false)) {
-            if (Build.VERSION.SDK_INT < 16) {
-                requestWindowFeature(Window.FEATURE_NO_TITLE)
-                window.setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN
-                )
-            } else {
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-            }
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
     }
 
