@@ -1475,9 +1475,6 @@ public class VerticalViewPager extends ViewGroup {
                     final int hgrav = lp.gravity & Gravity.HORIZONTAL_GRAVITY_MASK;
                     final int vgrav = lp.gravity & Gravity.VERTICAL_GRAVITY_MASK;
                     switch (hgrav) {
-                        default:
-                            childLeft = paddingLeft;
-                            break;
                         case Gravity.LEFT:
                             childLeft = paddingLeft;
                             paddingLeft += child.getMeasuredWidth();
@@ -1490,11 +1487,11 @@ public class VerticalViewPager extends ViewGroup {
                             childLeft = width - paddingRight - child.getMeasuredWidth();
                             paddingRight += child.getMeasuredWidth();
                             break;
+                        default:
+                            childLeft = paddingLeft;
+                            break;
                     }
                     switch (vgrav) {
-                        default:
-                            childTop = paddingTop;
-                            break;
                         case Gravity.TOP:
                             childTop = paddingTop;
                             paddingTop += child.getMeasuredHeight();
@@ -1506,6 +1503,9 @@ public class VerticalViewPager extends ViewGroup {
                         case Gravity.BOTTOM:
                             childTop = height - paddingBottom - child.getMeasuredHeight();
                             paddingBottom += child.getMeasuredHeight();
+                            break;
+                        default:
+                            childTop = paddingTop;
                             break;
                     }
                     childTop += scrollY;
@@ -1642,9 +1642,6 @@ public class VerticalViewPager extends ViewGroup {
                 int childTop;
 
                 switch (vgrav) {
-                    default:
-                        childTop = paddingTop;
-                        break;
                     case Gravity.TOP:
                         childTop = paddingTop;
                         paddingTop += child.getHeight();
@@ -1656,6 +1653,9 @@ public class VerticalViewPager extends ViewGroup {
                     case Gravity.BOTTOM:
                         childTop = height - paddingBottom - child.getMeasuredHeight();
                         paddingBottom += child.getMeasuredHeight();
+                        break;
+                    default:
+                        childTop = paddingTop;
                         break;
                 }
                 childTop += scrollY;
