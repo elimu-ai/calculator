@@ -20,6 +20,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import kotlin.math.max
@@ -95,7 +96,7 @@ class CalculatorPadViewPager @JvmOverloads constructor(
 
     init {
         setAdapter(mStaticPagerAdapter)
-        setBackgroundColor(resources.getColor(android.R.color.black))
+        setBackgroundColor(ContextCompat.getColor(context, android.R.color.black))
         setOnPageChangeListener(mOnPageChangeListener)
         setPageMargin(resources.getDimensionPixelSize(R.dimen.pad_page_margin))
         setPageTransformer(false, mPageTransformer)

@@ -11,6 +11,7 @@ import android.view.View.OnTouchListener
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.android.calculator2.Calculator
 import com.android.calculator2.CalculatorExpressionEvaluator
@@ -185,8 +186,8 @@ class FloatingCalculator : FloatingView() {
         if (mState != state) {
             when (state) {
                 State.CLEAR -> {}
-                State.DELETE -> mDisplay!!.setTextColor(resources.getColor(R.color.display_formula_text_color))
-                State.ERROR -> mDisplay!!.setTextColor(resources.getColor(R.color.calculator_error_color))
+                State.DELETE -> mDisplay!!.setTextColor(ContextCompat.getColor(this, R.color.display_formula_text_color))
+                State.ERROR -> mDisplay!!.setTextColor(ContextCompat.getColor(this, R.color.calculator_error_color))
             }
             mState = state
         }
