@@ -43,6 +43,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
@@ -242,9 +243,9 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         }
 
         mEvaluator!!.evaluate(mFormulaEditText!!.text, this)
-        mFormulaEditText!!.setTextColor(resources.getColor(R.color.display_formula_text_color))
+        mFormulaEditText!!.setTextColor(ContextCompat.getColor(this, R.color.display_formula_text_color))
         mDeleteButton!!.setOnLongClickListener(this)
-        mResultEditText!!.setTextColor(resources.getColor(R.color.display_result_text_color))
+        mResultEditText!!.setTextColor(ContextCompat.getColor(this, R.color.display_result_text_color))
         mResultEditText!!.isEnabled = false
 
         mFormulaEditText!!.registerComponent(MVDisplayComponent())
@@ -343,18 +344,18 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             setClearVisibility(state == CalculatorState.RESULT || state == CalculatorState.ERROR)
 
             if (state == CalculatorState.ERROR) {
-                val errorColor = resources.getColor(R.color.calculator_error_color)
+                val errorColor = ContextCompat.getColor(this, R.color.calculator_error_color)
                 mFormulaEditText!!.setTextColor(errorColor)
                 mResultEditText!!.setTextColor(errorColor)
                 window.statusBarColor = errorColor
             } else {
                 mFormulaEditText!!.setTextColor(
-                    resources.getColor(R.color.display_formula_text_color)
+                    ContextCompat.getColor(this, R.color.display_formula_text_color)
                 )
                 mResultEditText!!.setTextColor(
-                    resources.getColor(R.color.display_result_text_color)
+                    ContextCompat.getColor(this, R.color.display_result_text_color)
                 )
-                window.statusBarColor = resources.getColor(R.color.calculator_accent_color)
+                window.statusBarColor = ContextCompat.getColor(this, R.color.calculator_accent_color)
             }
         }
     }
@@ -527,7 +528,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         mLayoutParams.height = mDisplayView!!.displayHeight
         mLayoutParams.gravity = Gravity.BOTTOM
         revealView.setLayoutParams(mLayoutParams)
-        revealView.setBackgroundColor(resources.getColor(colorRes))
+        revealView.setBackgroundColor(ContextCompat.getColor(this, colorRes))
         mDisplayView!!.addView(revealView)
 
         val revealAnimator: Animator
