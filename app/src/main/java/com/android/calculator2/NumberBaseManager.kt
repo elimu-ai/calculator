@@ -18,10 +18,10 @@ class NumberBaseManager(var numberBase: Base) {
 
     init {
         val hexList =
-            Arrays.asList<Int?>(R.id.A, R.id.B, R.id.C, R.id.D, R.id.E, R.id.F)
+            listOf<Int>(R.id.A, R.id.B, R.id.C, R.id.D, R.id.E, R.id.F)
 
         val binaryList =
-            Arrays.asList<Int?>(
+            listOf<Int>(
                 R.id.digit2, R.id.digit3, R.id.digit4, R.id.digit5, R.id.digit6,
                 R.id.digit7, R.id.digit8, R.id.digit9
             )
