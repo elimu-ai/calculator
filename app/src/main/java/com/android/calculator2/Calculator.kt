@@ -50,7 +50,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback
 import com.android.calculator2.HistoryAdapter.HistoryItemCallback
 import com.android.calculator2.receiver.StudentUpdatedReceiver
-import com.android.calculator2.util.DigitLabelHelper
 import com.android.calculator2.util.PlayerUtil
 import com.android.calculator2.util.tagToSpokenText
 import com.android.calculator2.view.DisplayOverlay
@@ -604,9 +603,8 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
     private fun onResult(result: String) {
         // Play audio for result
 
-        if (result.isDigitsOnly() && (result.toInt() < 10)) {
-            val view = findViewById<View>(DigitLabelHelper.getIdForDigit(result.toInt()))
-            ttsViewModel.speak(getString(R.string.desc_eq) + view.tag.toString().tagToSpokenText(), QueueMode.FLUSH,
+        if (result.isDigitsOnly()) {
+            ttsViewModel.speak(getString(R.string.desc_eq) + result, QueueMode.FLUSH,
                 Random.nextInt().toString())
         } else {
             ttsViewModel.speak(getString(R.string.desc_eq), QueueMode.FLUSH, Random.nextInt().toString())
