@@ -8,6 +8,7 @@ legacySupportV4 = "1.0.0"
 coreKtx = "1.16.0"
 agp = "8.8.2"
 hilt = "2.55"
+androidxPreference = "1.2.1"
 
 [libraries]
 elimu-model = { group = "ai.elimu", name = "model", version.ref = "elimuModel" }
@@ -15,6 +16,7 @@ elimu-common-utils = { group = "ai.elimu", name = "common-utils", version.ref = 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appCompat" }
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 androidx-recycler-view = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
