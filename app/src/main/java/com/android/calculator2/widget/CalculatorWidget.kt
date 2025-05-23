@@ -8,8 +8,6 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
@@ -26,6 +24,7 @@ import com.xlythe.math.Solver
 import org.javia.arity.SyntaxException
 import java.text.DecimalFormatSymbols
 import androidx.core.text.isDigitsOnly
+import androidx.preference.PreferenceManager
 
 class CalculatorWidget : AppWidgetProvider() {
     private var mClearText = false
@@ -406,7 +405,7 @@ class CalculatorWidget : AppWidgetProvider() {
                 return dfs.decimalSeparator
             }
 
-        private fun setValue(context: Context?, appWidgetId: Int, newValue: String?) {
+        private fun setValue(context: Context, appWidgetId: Int, newValue: String?) {
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString(
                 PREFERENCE_WIDGET_PREAMBLE + appWidgetId, newValue
             ).commit()
@@ -480,7 +479,7 @@ class CalculatorWidget : AppWidgetProvider() {
             return equation
         }
 
-        private fun getValue(context: Context?, appWidgetId: Int): String {
+        private fun getValue(context: Context, appWidgetId: Int): String {
             return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(
                     PREFERENCE_WIDGET_PREAMBLE + appWidgetId,

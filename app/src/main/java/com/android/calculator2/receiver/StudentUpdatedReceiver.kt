@@ -3,11 +3,11 @@ package com.android.calculator2.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.preference.PreferenceManager
 import android.util.Log
+import androidx.preference.PreferenceManager
 
 class StudentUpdatedReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent) {
+    override fun onReceive(context: Context, intent: Intent) {
         Log.i(javaClass.getName(), "onReceive")
 
         // Customize the user interface to match the current Student's level

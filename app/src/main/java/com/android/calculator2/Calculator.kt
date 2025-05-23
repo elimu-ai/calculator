@@ -28,7 +28,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -45,6 +44,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback
 import com.android.calculator2.HistoryAdapter.HistoryItemCallback

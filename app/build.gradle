@@ -48,6 +48,7 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.androidx.recycler.view
     implementation libs.androidx.legacy.support.v4
+    implementation libs.androidx.preference
     implementation libs.elimu.model
     implementation libs.elimu.common.utils
     implementation libs.androidx.core.ktx
