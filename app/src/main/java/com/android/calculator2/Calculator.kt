@@ -103,7 +103,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
 
         override fun afterTextChanged(editable: Editable) {
             setState(CalculatorState.INPUT)
-            mEvaluator!!.evaluate(editable, this@Calculator)
+            mEvaluator.evaluate(editable, this@Calculator)
 
             if (editable.toString().contains(mX!!)) {
                 mEqualsGraphButton!!.setEnabled(R.id.graph)
@@ -136,8 +136,12 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
     }
 
     private var mCurrentState: CalculatorState? = null
-    private var mTokenizer: CalculatorExpressionTokenizer? = null
-    private var mEvaluator: CalculatorExpressionEvaluator? = null
+    private val mTokenizer: CalculatorExpressionTokenizer by lazy {
+        CalculatorExpressionTokenizer(this)
+    }
+    private val mEvaluator: CalculatorExpressionEvaluator by lazy {
+        CalculatorExpressionEvaluator(mTokenizer)
+    }
     private var mDisplayView: DisplayOverlay? = null
     private var mFormulaEditText: AdvancedDisplay? = null
     private var mResultEditText: AdvancedDisplay? = null
@@ -204,10 +208,6 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             mEqualsGraphButton = findViewById<View>(R.id.pad_operator).findViewById<MultiButton>(R.id.equals_graph)
         }
 
-        mTokenizer = CalculatorExpressionTokenizer(this).also { tokenizer ->
-            mEvaluator = CalculatorExpressionEvaluator(tokenizer)
-        }
-
         savedInstanceState = savedInstanceState ?: Bundle.EMPTY
         setState(
             CalculatorState.entries[savedInstanceState.getInt(
@@ -216,8 +216,8 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             )]
         )
 
-        mFormulaEditText!!.setSolver(mEvaluator!!.solver)
-        mResultEditText!!.setSolver(mEvaluator!!.solver)
+        mFormulaEditText!!.setSolver(mEvaluator.solver)
+        mResultEditText!!.setSolver(mEvaluator.solver)
 
         var base = Base.DECIMAL
         val baseOrdinal = savedInstanceState.getInt(KEY_BASE, -1)
@@ -234,7 +234,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         mFormulaEditText!!.setOnKeyListener(mFormulaOnKeyListener)
         mFormulaEditText!!.setOnTextSizeChangeListener(this)
         mFormulaEditText!!.setText(
-            mTokenizer!!.getLocalizedExpression(
+            mTokenizer.getLocalizedExpression(
                 savedInstanceState.getString(KEY_CURRENT_EXPRESSION, "")
             )
         )
@@ -242,7 +242,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             mEqualsGraphButton!!.setEnabled(R.id.eq)
         }
 
-        mEvaluator!!.evaluate(mFormulaEditText!!.text, this)
+        mEvaluator.evaluate(mFormulaEditText!!.text, this)
         mFormulaEditText!!.setTextColor(ContextCompat.getColor(this, R.color.display_formula_text_color))
         mDeleteButton!!.setOnLongClickListener(this)
         mResultEditText!!.setTextColor(ContextCompat.getColor(this, R.color.display_result_text_color))
@@ -267,7 +267,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
 
         val graphView: GraphView =
             findViewById<GraphView>(R.id.graphView)
-        val graphModule = GraphModule(mEvaluator!!.solver)
+        val graphModule = GraphModule(mEvaluator.solver)
         mGraphController = GraphController(graphView, graphModule, mDisplayView!!)
 
         var displayMode: DisplayOverlay.DisplayMode = DisplayOverlay.DisplayMode.FORMULA
@@ -327,7 +327,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         outState.putInt(KEY_CURRENT_STATE, mCurrentState!!.ordinal)
         outState.putString(
             KEY_CURRENT_EXPRESSION,
-            mTokenizer!!.getNormalizedExpression(mFormulaEditText!!.text)
+            mTokenizer.getNormalizedExpression(mFormulaEditText!!.text)
         )
         outState.putInt(KEY_BASE, mBaseManager!!.numberBase.ordinal)
         outState.putInt(KEY_DISPLAY_MODE, mDisplayView!!.mode.ordinal)
@@ -508,7 +508,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
                 mFormulaEditText!!.next()
             } else {
                 setState(CalculatorState.EVALUATE)
-                mEvaluator!!.evaluate(mFormulaEditText!!.text, this)
+                mEvaluator.evaluate(mFormulaEditText!!.text, this)
             }
         }
     }
@@ -680,7 +680,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         mBaseManager!!.numberBase = base
 
         // Update the evaluator, which handles the math
-        mEvaluator!!.setBase(mFormulaEditText!!.text, base, object : EvaluateCallback {
+        mEvaluator.setBase(mFormulaEditText!!.text, base, object : EvaluateCallback {
             override fun onEvaluate(expr: String?, result: String?, errorResourceId: Int) {
                 if (errorResourceId != INVALID_RES_ID) {
                     onError(errorResourceId)
