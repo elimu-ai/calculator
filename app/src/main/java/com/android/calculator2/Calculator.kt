@@ -106,9 +106,9 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             mEvaluator.evaluate(editable, this@Calculator)
 
             if (editable.toString().contains(mX!!)) {
-                mEqualsGraphButton!!.setEnabled(R.id.graph)
+                mEqualsGraphButton?.setEnabled(R.id.graph)
             } else {
-                mEqualsGraphButton!!.setEnabled(R.id.eq)
+                mEqualsGraphButton?.setEnabled(R.id.eq)
             }
         }
     }
@@ -118,7 +118,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             when (keyCode) {
                 KeyEvent.KEYCODE_NUMPAD_ENTER, KeyEvent.KEYCODE_ENTER -> {
                     if (keyEvent.action == KeyEvent.ACTION_UP) {
-                        val v = mEqualsGraphButton!!.enabledView
+                        val v = mEqualsGraphButton?.enabledView
                         mCurrentButton = v
                         if (v != null) {
                             when (v.id) {
@@ -203,7 +203,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         mClearButton = findViewById(R.id.clr)
 
         if (mEqualsGraphButton == null ||
-            mEqualsGraphButton!!.visibility != View.VISIBLE
+            mEqualsGraphButton?.visibility != View.VISIBLE
         ) {
             mEqualsGraphButton = findViewById<View>(R.id.pad_operator).findViewById<MultiButton>(R.id.equals_graph)
         }
@@ -239,7 +239,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             )
         )
         if (TextUtils.isEmpty(mFormulaEditText!!.text)) {
-            mEqualsGraphButton!!.setEnabled(R.id.eq)
+            mEqualsGraphButton?.setEnabled(R.id.eq)
         }
 
         mEvaluator.evaluate(mFormulaEditText!!.text, this)
