@@ -105,7 +105,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             setState(CalculatorState.INPUT)
             mEvaluator.evaluate(editable, this@Calculator)
 
-            if (editable.toString().contains(mX!!)) {
+            if (editable.toString().contains(mX)) {
                 mEqualsGraphButton?.setEnabled(R.id.graph)
             } else {
                 mEqualsGraphButton?.setEnabled(R.id.eq)
@@ -155,7 +155,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
     private var mHistoryAdapter: RecyclerView.Adapter<*>? = null
     private var mPersist: Persist? = null
     private var mBaseManager: NumberBaseManager? = null
-    private var mX: String? = null
+    private val mX: String by lazy { getString(R.string.X) }
     private var mGraphController: GraphController? = null
     private val mLayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 0)
 
@@ -188,7 +188,6 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             }
         }
 
-        mX = getString(R.string.X)
         mDisplayView =
             findViewById<DisplayOverlay>(R.id.display)
         mFormulaEditText =
