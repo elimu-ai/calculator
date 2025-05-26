@@ -802,7 +802,7 @@ public class VerticalViewPager extends ViewGroup {
         duration = Math.min(duration, MAX_SETTLE_DURATION);
 
         mScroller.startScroll(sx, sy, dx, dy, duration);
-        ViewCompat.postInvalidateOnAnimation(this);
+        this.postInvalidateOnAnimation();
     }
 
     ItemInfo addNewItem(int position, int index) {
@@ -1569,7 +1569,7 @@ public class VerticalViewPager extends ViewGroup {
             }
 
             // Keep on drawing until the animation has finished.
-            ViewCompat.postInvalidateOnAnimation(this);
+            this.postInvalidateOnAnimation();
             return;
         }
 
@@ -1830,7 +1830,7 @@ public class VerticalViewPager extends ViewGroup {
                 if (mIsBeingDragged) {
                     // Scroll to follow the motion event
                     if (performDrag(y)) {
-                        ViewCompat.postInvalidateOnAnimation(this);
+                        this.postInvalidateOnAnimation();
                     }
                 }
                 break;
@@ -1994,7 +1994,7 @@ public class VerticalViewPager extends ViewGroup {
                 break;
         }
         if (needsInvalidate) {
-            ViewCompat.postInvalidateOnAnimation(this);
+            this.postInvalidateOnAnimation();
         }
         return true;
     }
@@ -2158,7 +2158,7 @@ public class VerticalViewPager extends ViewGroup {
 
         if (needsInvalidate) {
             // Keep animating
-            ViewCompat.postInvalidateOnAnimation(this);
+            this.postInvalidateOnAnimation();
         }
     }
 
