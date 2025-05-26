@@ -17,6 +17,7 @@ package com.android.calculator2
 
 import ai.elimu.calculator.R
 import ai.elimu.common.utils.data.model.tts.QueueMode
+import ai.elimu.common.utils.ui.setStatusBarColorCompat
 import ai.elimu.common.utils.viewmodel.TextToSpeechViewModel
 import ai.elimu.common.utils.viewmodel.TextToSpeechViewModelImpl
 import ai.elimu.model.v2.enums.content.NumeracySkill
@@ -346,7 +347,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
                 val errorColor = ContextCompat.getColor(this, R.color.calculator_error_color)
                 mFormulaEditText!!.setTextColor(errorColor)
                 mResultEditText!!.setTextColor(errorColor)
-                window.statusBarColor = errorColor
+                window.setStatusBarColorCompat(errorColor)
             } else {
                 mFormulaEditText!!.setTextColor(
                     ContextCompat.getColor(this, R.color.display_formula_text_color)
@@ -354,7 +355,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
                 mResultEditText!!.setTextColor(
                     ContextCompat.getColor(this, R.color.display_result_text_color)
                 )
-                window.statusBarColor = ContextCompat.getColor(this, R.color.calculator_accent_color)
+                window.setStatusBarColorCompat(R.color.calculator_accent_color)
             }
         }
     }
