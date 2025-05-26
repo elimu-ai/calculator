@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.xlythe.math.Point
 import java.lang.Double
 import java.text.DecimalFormat
@@ -53,7 +54,7 @@ class GraphView : View {
         val res = context.resources
 
         mBackgroundPaint = Paint()
-        mBackgroundPaint!!.setColor(res.getColor(R.color.graph_background_color))
+        mBackgroundPaint!!.setColor(ContextCompat.getColor(context, R.color.graph_background_color))
         mBackgroundPaint!!.style = Paint.Style.FILL
 
         mTextPaintSize = TypedValue.applyDimension(
@@ -62,16 +63,16 @@ class GraphView : View {
             resources.displayMetrics
         ).toInt()
         mTextPaint = Paint()
-        mTextPaint!!.setColor(res.getColor(R.color.graph_labels_color))
+        mTextPaint!!.setColor(ContextCompat.getColor(context, R.color.graph_labels_color))
         mTextPaint!!.textSize = mTextPaintSize.toFloat()
 
         mAxisPaint = Paint()
-        mAxisPaint!!.setColor(res.getColor(R.color.graph_grid_color))
+        mAxisPaint!!.setColor(ContextCompat.getColor(context, R.color.graph_grid_color))
         mAxisPaint!!.style = Paint.Style.STROKE
         mAxisPaint!!.strokeWidth = 2f
 
         mGraphPaint = Paint()
-        mGraphPaint!!.setColor(res.getColor(R.color.graph_line_color))
+        mGraphPaint!!.setColor(ContextCompat.getColor(context, R.color.graph_line_color))
         mGraphPaint!!.style = Paint.Style.STROKE
         mGraphPaint!!.strokeWidth = 6f
 
