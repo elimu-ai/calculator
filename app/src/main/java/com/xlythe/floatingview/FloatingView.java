@@ -176,12 +176,9 @@ public abstract class FloatingView extends Service implements OnTouchListener {
         if(mRootView == null) return;
 
         mInactiveButton.setVisibility(View.VISIBLE);
-        mRootView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(mRootView != null && !mIsViewOpen) {
-                    mRootView.setVisibility(View.GONE);
-                }
+        mRootView.postDelayed(() -> {
+            if(mRootView != null && !mIsViewOpen) {
+                mRootView.setVisibility(View.GONE);
             }
         }, 30);
         int x = mCurrentPosX;
@@ -310,11 +307,8 @@ public abstract class FloatingView extends Service implements OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         mRootView.setVisibility(View.VISIBLE);
-        mInactiveButton.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(mInactiveButton != null) mInactiveButton.setVisibility(View.INVISIBLE);
-            }
+        mInactiveButton.postDelayed(() -> {
+            if(mInactiveButton != null) mInactiveButton.setVisibility(View.INVISIBLE);
         }, 30);
         switch(event.getAction()) {
         case MotionEvent.ACTION_DOWN:
@@ -483,12 +477,9 @@ public abstract class FloatingView extends Service implements OnTouchListener {
                 }
             });
             mAnimationTask.run();
-            mRootView.setOnTouchListener(new OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    closeView();
-                    return true;
-                }
+            mRootView.setOnTouchListener((v, event) -> {
+                closeView();
+                return true;
             });
             Intent intent = new Intent(getContext(), FloatingActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
