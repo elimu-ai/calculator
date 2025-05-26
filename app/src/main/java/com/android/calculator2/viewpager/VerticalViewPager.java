@@ -1796,7 +1796,7 @@ public class VerticalViewPager extends ViewGroup {
                     break;
                 }
 
-                final int pointerIndex = MotionEventCompat.findPointerIndex(ev, activePointerId);
+                final int pointerIndex = ev.findPointerIndex(activePointerId);
                 final float x = ev.getX(pointerIndex);
                 final float dx = x - mLastMotionX;
                 final float xDiff = Math.abs(dx);
@@ -1929,7 +1929,7 @@ public class VerticalViewPager extends ViewGroup {
             }
             case MotionEvent.ACTION_MOVE:
                 if (!mIsBeingDragged) {
-                    final int pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    final int pointerIndex = ev.findPointerIndex(mActivePointerId);
                     final float x = ev.getX(pointerIndex);
                     final float xDiff = Math.abs(x - mLastMotionX);
                     final float y = ev.getY(pointerIndex);
@@ -1949,8 +1949,7 @@ public class VerticalViewPager extends ViewGroup {
                 // Not else! Note that mIsBeingDragged can be set above.
                 if (mIsBeingDragged) {
                     // Scroll to follow the motion event
-                    final int activePointerIndex = MotionEventCompat.findPointerIndex(
-                            ev, mActivePointerId);
+                    final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
                     final float y = ev.getY(activePointerIndex);
                     needsInvalidate |= performDrag(y);
                 }
@@ -1967,8 +1966,7 @@ public class VerticalViewPager extends ViewGroup {
                     final ItemInfo ii = infoForCurrentScrollPosition();
                     final int currentPage = ii.position;
                     final float pageOffset = (((float) scrollY / height) - ii.offset) / ii.heightFactor;
-                    final int activePointerIndex =
-                            MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
                     final float y = ev.getY(activePointerIndex);
                     final int totalDelta = (int) (y - mInitialMotionX);
                     int nextPage = determineTargetPage(currentPage, pageOffset, initialVelocity,
@@ -1996,7 +1994,7 @@ public class VerticalViewPager extends ViewGroup {
             }
             case MotionEventCompat.ACTION_POINTER_UP:
                 onSecondaryPointerUp(ev);
-                mLastMotionY = ev.getY(MotionEventCompat.findPointerIndex(ev, mActivePointerId));
+                mLastMotionY = ev.getY(ev.findPointerIndex(mActivePointerId));
                 break;
         }
         if (needsInvalidate) {
