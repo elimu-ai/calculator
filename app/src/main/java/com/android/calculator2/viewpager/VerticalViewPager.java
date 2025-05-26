@@ -372,9 +372,9 @@ public class VerticalViewPager extends ViewGroup {
         ViewCompat.setAccessibilityDelegate(this, new MyAccessibilityDelegate());
 
         if (this.getImportantForAccessibility()
-                == ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
+                == View.IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
             this.setImportantForAccessibility(
-                    ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+                    View.IMPORTANT_FOR_ACCESSIBILITY_YES);
         }
     }
 
@@ -1734,8 +1734,8 @@ public class VerticalViewPager extends ViewGroup {
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             final int layerType = enable ?
-                    ViewCompat.LAYER_TYPE_HARDWARE : ViewCompat.LAYER_TYPE_NONE;
-            ViewCompat.setLayerType(getChildAt(i), layerType, null);
+                    View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
+            getChildAt(i).setLayerType(layerType, null);
         }
     }
 
@@ -2124,8 +2124,8 @@ public class VerticalViewPager extends ViewGroup {
         boolean needsInvalidate = false;
 
         final int overScrollMode = this.getOverScrollMode();
-        if (overScrollMode == ViewCompat.OVER_SCROLL_ALWAYS ||
-                (overScrollMode == ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS &&
+        if (overScrollMode == View.OVER_SCROLL_ALWAYS ||
+                (overScrollMode == View.OVER_SCROLL_IF_CONTENT_SCROLLS &&
                         mAdapter != null && mAdapter.getCount() > 1)) {
             if (!mTopEdge.isFinished()) {
                 final int height = getHeight();
