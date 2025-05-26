@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.android.calculator2.HistoryAdapter;
 import com.android.calculator2.util.DigitLabelHelper;
 import com.xlythe.math.History;
-import com.xlythe.math.HistoryEntry;
 
 import ai.elimu.calculator.R;
 
@@ -88,13 +87,9 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
                 break;
             case 1:
                 mViews[position] = View.inflate(mContext, R.layout.floating_calculator_basic, null);
-                DigitLabelHelper.getInstance().getTextForDigits(mContext,
-                        new DigitLabelHelper.DigitLabelHelperCallback() {
-                            @Override
-                            public void setDigitText(int id, String text) {
-                                TextView textView = mViews[position].findViewById(id);
-                                textView.setText(text);
-                            }
+                DigitLabelHelper.getInstance().getTextForDigits(mContext, (id, text) -> {
+                            TextView textView = mViews[position].findViewById(id);
+                            textView.setText(text);
                         });
                 break;
             case 2:
@@ -118,11 +113,8 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
     }
 
     private void setUpHistory(RecyclerView historyView) {
-        HistoryAdapter.HistoryItemCallback listener = new HistoryAdapter.HistoryItemCallback() {
-            @Override
-            public void onHistoryItemSelected(HistoryEntry entry) {
-                // TODO: implement
-            }
+        HistoryAdapter.HistoryItemCallback listener = entry -> {
+            // TODO: implement
         };
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
