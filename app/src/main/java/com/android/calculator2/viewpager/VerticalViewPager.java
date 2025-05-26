@@ -371,9 +371,9 @@ public class VerticalViewPager extends ViewGroup {
 
         ViewCompat.setAccessibilityDelegate(this, new MyAccessibilityDelegate());
 
-        if (ViewCompat.getImportantForAccessibility(this)
+        if (this.getImportantForAccessibility()
                 == ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
-            ViewCompat.setImportantForAccessibility(this,
+            this.setImportantForAccessibility(
                     ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
         }
     }
