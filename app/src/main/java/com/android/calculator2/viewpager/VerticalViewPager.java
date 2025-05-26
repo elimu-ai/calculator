@@ -2414,7 +2414,7 @@ public class VerticalViewPager extends ViewGroup {
             }
         }
 
-        return checkV && ViewCompat.canScrollVertically(v, -dy);
+        return checkV && v.canScrollVertically(-dy);
     }
 
     @Override
