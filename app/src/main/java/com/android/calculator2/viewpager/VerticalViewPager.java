@@ -2123,7 +2123,7 @@ public class VerticalViewPager extends ViewGroup {
         super.draw(canvas);
         boolean needsInvalidate = false;
 
-        final int overScrollMode = ViewCompat.getOverScrollMode(this);
+        final int overScrollMode = this.getOverScrollMode();
         if (overScrollMode == ViewCompat.OVER_SCROLL_ALWAYS ||
                 (overScrollMode == ViewCompat.OVER_SCROLL_IF_CONTENT_SCROLLS &&
                         mAdapter != null && mAdapter.getCount() > 1)) {
