@@ -1846,7 +1846,7 @@ public class VerticalViewPager extends ViewGroup {
                  */
                 mLastMotionY = mInitialMotionY = ev.getY();
                 mLastMotionX = ev.getX();
-                mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                mActivePointerId = ev.getPointerId(0);
                 mIsUnableToDrag = false;
 
                 mScroller.computeScrollOffset();
@@ -1924,7 +1924,7 @@ public class VerticalViewPager extends ViewGroup {
 
                 // Remember where the motion event started
                 mLastMotionY = mInitialMotionY = ev.getY();
-                mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                mActivePointerId = ev.getPointerId(0);
                 break;
             }
             case MotionEvent.ACTION_MOVE:
@@ -1991,7 +1991,7 @@ public class VerticalViewPager extends ViewGroup {
             case MotionEventCompat.ACTION_POINTER_DOWN: {
                 final int index = MotionEventCompat.getActionIndex(ev);
                 mLastMotionY = MotionEventCompat.getY(ev, index);
-                mActivePointerId = MotionEventCompat.getPointerId(ev, index);
+                mActivePointerId = ev.getPointerId(index);
                 break;
             }
             case MotionEventCompat.ACTION_POINTER_UP:
@@ -2345,13 +2345,13 @@ public class VerticalViewPager extends ViewGroup {
 
     private void onSecondaryPointerUp(MotionEvent ev) {
         final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-        final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+        final int pointerId = ev.getPointerId(pointerIndex);
         if (pointerId == mActivePointerId) {
             // This was our active pointer going up. Choose a new
             // active pointer and adjust accordingly.
             final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
             mLastMotionY = MotionEventCompat.getY(ev, newPointerIndex);
-            mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+            mActivePointerId = ev.getPointerId(newPointerIndex);
             if (mVelocityTracker != null) {
                 mVelocityTracker.clear();
             }
