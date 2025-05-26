@@ -317,8 +317,8 @@ public abstract class FloatingView extends Service implements OnTouchListener {
 
             mDragged = false;
 
-            mDeltaXArray = new LimitedQueue<Float>(5);
-            mDeltaYArray = new LimitedQueue<Float>(5);
+            mDeltaXArray = new LimitedQueue<>(5);
+            mDeltaYArray = new LimitedQueue<>(5);
 
             mDraggableIcon.setScaleX(0.92f);
             mDraggableIcon.setScaleY(0.92f);

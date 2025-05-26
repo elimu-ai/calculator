@@ -123,7 +123,7 @@ public class VerticalViewPager extends ViewGroup {
         return t * t * t * t * t + 1.0f;
     };
 
-    private final ArrayList<ItemInfo> mItems = new ArrayList<ItemInfo>();
+    private final ArrayList<ItemInfo> mItems = new ArrayList<>();
     private final ItemInfo mTempItem = new ItemInfo();
 
     private final Rect mTempRect = new Rect();
@@ -1022,7 +1022,7 @@ public class VerticalViewPager extends ViewGroup {
         final boolean sort = mDrawingOrder != DRAW_ORDER_DEFAULT;
         if (sort) {
             if (mDrawingOrderedChildren == null) {
-                mDrawingOrderedChildren = new ArrayList<View>();
+                mDrawingOrderedChildren = new ArrayList<>();
             } else {
                 mDrawingOrderedChildren.clear();
             }
@@ -1180,11 +1180,12 @@ public class VerticalViewPager extends ViewGroup {
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR
-                = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
+                = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<>() {
             @Override
             public SavedState createFromParcel(Parcel in, ClassLoader loader) {
                 return new SavedState(in, loader);
             }
+
             @Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
