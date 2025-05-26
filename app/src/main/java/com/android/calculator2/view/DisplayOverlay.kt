@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.calculator2.util.AnimationUtil
@@ -110,7 +109,7 @@ class DisplayOverlay : FrameLayout {
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        val action = MotionEventCompat.getActionMasked(ev)
+        val action = ev.actionMasked
         val y = ev.rawY
         val state = this.translateState
 
@@ -148,7 +147,7 @@ class DisplayOverlay : FrameLayout {
                 mRecyclerView!!.adapter!!.itemCount - 1
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val action = MotionEventCompat.getActionMasked(event)
+        val action = event.actionMasked
         initVelocityTrackerIfNotExists()
         mVelocityTracker!!.addMovement(event)
 
