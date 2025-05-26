@@ -1719,7 +1719,7 @@ public class VerticalViewPager extends ViewGroup {
         }
         if (needPopulate) {
             if (postEvents) {
-                ViewCompat.postOnAnimation(this, mEndScrollRunnable);
+                this.postOnAnimation(mEndScrollRunnable);
             } else {
                 mEndScrollRunnable.run();
             }
