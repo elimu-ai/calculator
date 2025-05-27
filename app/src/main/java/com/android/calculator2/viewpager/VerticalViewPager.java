@@ -115,8 +115,7 @@ public class VerticalViewPager extends ViewGroup {
         float offset;
     }
 
-    private static final Comparator<ItemInfo> COMPARATOR = (lhs, rhs) ->
-            lhs.position - rhs.position;
+    private static final Comparator<ItemInfo> COMPARATOR = Comparator.comparingInt(lhs -> lhs.position);
 
     private static final Interpolator sInterpolator = t -> {
         t -= 1.0f;
