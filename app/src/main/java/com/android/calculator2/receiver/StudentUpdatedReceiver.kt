@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 
 class StudentUpdatedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -25,7 +26,9 @@ class StudentUpdatedReceiver : BroadcastReceiver() {
                 availableNumberSet.add(availableNumber)
             }
             Log.i(javaClass.getName(), "Storing availableNumbersSet: $availableNumberSet")
-            sharedPreferences.edit().putStringSet(PREF_STUDENT_NUMBERS, availableNumberSet).commit()
+            sharedPreferences.edit(commit = true) {
+                putStringSet(PREF_STUDENT_NUMBERS, availableNumberSet)
+            }
         }
 
         if (availableNumeracySkills != null) {
@@ -37,8 +40,9 @@ class StudentUpdatedReceiver : BroadcastReceiver() {
                 javaClass.getName(),
                 "Storing availableNumeracySkillSet: $availableNumeracySkillSet"
             )
-            sharedPreferences.edit()
-                .putStringSet(PREF_STUDENT_NUMERACY_SKILLS, availableNumeracySkillSet).commit()
+            sharedPreferences.edit(commit = true) {
+                putStringSet(PREF_STUDENT_NUMERACY_SKILLS, availableNumeracySkillSet)
+            }
         }
     }
 
