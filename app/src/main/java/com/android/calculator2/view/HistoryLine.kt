@@ -62,7 +62,7 @@ class HistoryLine(context: Context?, attrs: AttributeSet?) : LinearLayout(contex
     fun copyContent(content: String) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText(null, content))
-        val toastText = String.format(resources.getString(R.string.text_copied_toast), content)
+        val toastText = resources.getString(R.string.text_copied_toast)
         Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
     }
 
