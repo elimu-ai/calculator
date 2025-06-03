@@ -25,6 +25,7 @@ import org.javia.arity.SyntaxException
 import java.text.DecimalFormatSymbols
 import androidx.core.text.isDigitsOnly
 import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 
 class CalculatorWidget : AppWidgetProvider() {
     private var mClearText = false
@@ -406,9 +407,9 @@ class CalculatorWidget : AppWidgetProvider() {
             }
 
         private fun setValue(context: Context, appWidgetId: Int, newValue: String?) {
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putString(
-                PREFERENCE_WIDGET_PREAMBLE + appWidgetId, newValue
-            ).commit()
+            PreferenceManager.getDefaultSharedPreferences(context).edit(commit = true) {
+                putString(PREFERENCE_WIDGET_PREAMBLE + appWidgetId, newValue)
+            }
         }
 
         private fun addOperator(equation: String, op: Char): String {
