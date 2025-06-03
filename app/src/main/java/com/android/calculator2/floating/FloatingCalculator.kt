@@ -196,7 +196,7 @@ class FloatingCalculator : FloatingView() {
     private fun copyContent(text: String) {
         val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
-        val toastText = String.format(resources.getString(R.string.text_copied_toast), text)
+        val toastText = resources.getString(R.string.text_copied_toast)
         Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
     }
 }
