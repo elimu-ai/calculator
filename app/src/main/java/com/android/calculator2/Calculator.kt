@@ -15,12 +15,15 @@
 */
 package com.android.calculator2
 
+import ai.elimu.analytics.utils.LearningEventUtil
+import ai.elimu.calculator.BuildConfig
 import ai.elimu.calculator.R
 import ai.elimu.common.utils.data.model.tts.QueueMode
 import ai.elimu.common.utils.ui.setStatusBarColorCompat
 import ai.elimu.common.utils.viewmodel.TextToSpeechViewModel
 import ai.elimu.common.utils.viewmodel.TextToSpeechViewModelImpl
 import ai.elimu.model.v2.enums.content.NumeracySkill
+import ai.elimu.model.v2.gson.content.NumberGson
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -384,7 +387,16 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
         // Play audio for numbers and operators
 
         if ((view.tag != null) && PlayerUtil.RAW_FILE_EQUALS != view.tag) {
-            ttsViewModel.speak(view.tag.toString().tagToSpokenText(), QueueMode.FLUSH, Random.nextInt().toString())
+            val spokenText = view.tag.toString().tagToSpokenText()
+            ttsViewModel.speak(spokenText, QueueMode.FLUSH, Random.nextInt().toString())
+
+            if (spokenText.isDigitsOnly()) {
+                LearningEventUtil.reportNumberLearningEvent(
+                    numberGson = NumberGson().apply {
+                        value = spokenText.toInt()},
+                    context = applicationContext,
+                    analyticsApplicationId = BuildConfig.ANALYTICS_APPLICATION_ID)
+            }
         }
 
         mCurrentButton = view

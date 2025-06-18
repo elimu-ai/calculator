@@ -22,9 +22,11 @@ android {
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            buildConfigField("String", "ANALYTICS_APPLICATION_ID", '"ai.elimu.analytics.debug"')
         }
         release {
             minifyEnabled false
+            buildConfigField("String", "ANALYTICS_APPLICATION_ID", '"ai.elimu.analytics"')
         }
     }
 
@@ -40,6 +42,10 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -51,6 +57,7 @@ dependencies {
     implementation libs.androidx.preference
     implementation libs.elimu.model
     implementation libs.elimu.common.utils
+    implementation libs.elimu.analytics
     implementation libs.androidx.core.ktx
     implementation libs.hilt.android
     kapt libs.hilt.compiler
