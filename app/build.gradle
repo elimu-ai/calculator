@@ -56,8 +56,6 @@ dependencies {
     implementation libs.androidx.legacy.support.v4
     implementation libs.androidx.preference
     implementation libs.elimu.content.provider
-    implementation libs.elimu.common.utils
-    implementation libs.elimu.analytics
     implementation libs.androidx.core.ktx
     implementation libs.hilt.android
     kapt libs.hilt.compiler
