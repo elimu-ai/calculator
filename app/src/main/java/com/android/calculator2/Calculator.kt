@@ -78,6 +78,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
 import androidx.core.text.isDigitsOnly
+import org.json.JSONObject
 
 @AndroidEntryPoint
 class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener {
@@ -394,6 +395,9 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
                 LearningEventUtil.reportNumberLearningEvent(
                     numberGson = NumberGson().apply {
                         value = spokenText.toInt()},
+                    additionalData = JSONObject().apply {
+                        put("eventType", "NUMBER_PRESSED")
+                    },
                     context = applicationContext,
                     analyticsApplicationId = BuildConfig.ANALYTICS_APPLICATION_ID)
             }
