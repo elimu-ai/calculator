@@ -394,7 +394,8 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
             if (spokenText.isDigitsOnly()) {
                 LearningEventUtil.reportNumberLearningEvent(
                     numberGson = NumberGson().apply {
-                        value = spokenText.toInt()},
+                        value = spokenText.toInt()
+                    },
                     additionalData = JSONObject().apply {
                         put("eventType", "NUMBER_PRESSED")
                     },
