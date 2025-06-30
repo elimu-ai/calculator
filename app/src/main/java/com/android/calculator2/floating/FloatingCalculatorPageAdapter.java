@@ -2,6 +2,7 @@ package com.android.calculator2.floating;
 
 import android.content.Context;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import com.android.calculator2.HistoryAdapter;
 import com.android.calculator2.util.DigitLabelHelper;
 import com.xlythe.math.History;
-import com.xlythe.math.HistoryEntry;
 
 import ai.elimu.calculator.R;
 
@@ -40,29 +40,30 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
     }
 
     @Override
-    public void startUpdate(View container) {
+    public void startUpdate(@NonNull ViewGroup container) {
     }
 
+    @NonNull
     @Override
-    public Object instantiateItem(View container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View v = getViewAt(position);
-        ((ViewGroup) container).addView(v);
+        container.addView(v);
 
         return v;
     }
 
     @Override
-    public void destroyItem(View container, int position, Object object) {
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         if(mViews[position] != null) mViews[position] = null;
-        ((ViewGroup) container).removeView((View) object);
+        container.removeView((View) object);
     }
 
     @Override
-    public void finishUpdate(View container) {
+    public void finishUpdate(@NonNull ViewGroup container) {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
 
@@ -81,18 +82,14 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
             case 0:
                 mViews[position] = View.inflate(mContext, R.layout.floating_calculator_history, null);
                 RecyclerView historyView =
-                        (RecyclerView) mViews[position].findViewById(R.id.history);
+                        mViews[position].findViewById(R.id.history);
                 setUpHistory(historyView);
                 break;
             case 1:
                 mViews[position] = View.inflate(mContext, R.layout.floating_calculator_basic, null);
-                DigitLabelHelper.getInstance().getTextForDigits(mContext,
-                        new DigitLabelHelper.DigitLabelHelperCallback() {
-                            @Override
-                            public void setDigitText(int id, String text) {
-                                TextView textView = (TextView) mViews[position].findViewById(id);
-                                textView.setText(text);
-                            }
+                DigitLabelHelper.getInstance().getTextForDigits(mContext, (id, text) -> {
+                            TextView textView = mViews[position].findViewById(id);
+                            textView.setText(text);
                         });
                 break;
             case 2:
@@ -116,11 +113,8 @@ public class FloatingCalculatorPageAdapter extends PagerAdapter {
     }
 
     private void setUpHistory(RecyclerView historyView) {
-        HistoryAdapter.HistoryItemCallback listener = new HistoryAdapter.HistoryItemCallback() {
-            @Override
-            public void onHistoryItemSelected(HistoryEntry entry) {
-                // TODO: implement
-            }
+        HistoryAdapter.HistoryItemCallback listener = entry -> {
+            // TODO: implement
         };
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

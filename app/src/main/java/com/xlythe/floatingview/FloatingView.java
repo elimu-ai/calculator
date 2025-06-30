@@ -59,8 +59,6 @@ public abstract class FloatingView extends Service implements OnTouchListener {
     private boolean mIsBeingDestroyed = false;
     private int mCurrentPosX = -1;
     private int mCurrentPosY = -1;
-    private int mCalcParamsX;
-    private int mCalcParamsY;
     // Animation variables
     private LimitedQueue<Float> mDeltaXArray;
     private LimitedQueue<Float> mDeltaYArray;
@@ -178,12 +176,9 @@ public abstract class FloatingView extends Service implements OnTouchListener {
         if(mRootView == null) return;
 
         mInactiveButton.setVisibility(View.VISIBLE);
-        mRootView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(mRootView != null && !mIsViewOpen) {
-                    mRootView.setVisibility(View.GONE);
-                }
+        mRootView.postDelayed(() -> {
+            if(mRootView != null && !mIsViewOpen) {
+                mRootView.setVisibility(View.GONE);
             }
         }, 30);
         int x = mCurrentPosX;
@@ -312,11 +307,8 @@ public abstract class FloatingView extends Service implements OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         mRootView.setVisibility(View.VISIBLE);
-        mInactiveButton.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(mInactiveButton != null) mInactiveButton.setVisibility(View.INVISIBLE);
-            }
+        mInactiveButton.postDelayed(() -> {
+            if(mInactiveButton != null) mInactiveButton.setVisibility(View.INVISIBLE);
         }, 30);
         switch(event.getAction()) {
         case MotionEvent.ACTION_DOWN:
@@ -325,8 +317,8 @@ public abstract class FloatingView extends Service implements OnTouchListener {
 
             mDragged = false;
 
-            mDeltaXArray = new LimitedQueue<Float>(5);
-            mDeltaYArray = new LimitedQueue<Float>(5);
+            mDeltaXArray = new LimitedQueue<>(5);
+            mDeltaYArray = new LimitedQueue<>(5);
 
             mDraggableIcon.setScaleX(0.92f);
             mDraggableIcon.setScaleY(0.92f);
@@ -485,12 +477,9 @@ public abstract class FloatingView extends Service implements OnTouchListener {
                 }
             });
             mAnimationTask.run();
-            mRootView.setOnTouchListener(new OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    closeView();
-                    return true;
-                }
+            mRootView.setOnTouchListener((v, event) -> {
+                closeView();
+                return true;
             });
             Intent intent = new Intent(getContext(), FloatingActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -548,19 +537,20 @@ public abstract class FloatingView extends Service implements OnTouchListener {
         int screenWidth = getScreenWidth();
         int screenHeight = getScreenHeight();
         int calcWidth = 4 * (int) getResources().getDimension(R.dimen.floating_window_button_height);
-        mCalcParamsX = screenWidth - calcWidth - MARGIN_VIEW;
+        int calcParamsX = screenWidth - calcWidth - MARGIN_VIEW;
         int attemptedY = (int) (STARTING_POINT_Y * 1.1) + mDraggableIcon.getHeight() + mView
                 .getHeight();
+        int calcParamsY;
         if (attemptedY > screenHeight) {
-            mCalcParamsX = mCalcParamsX - mDraggableIcon.getHeight();
-            mCalcParamsY = (int) (STARTING_POINT_Y * 1.5) - mDraggableIcon.getHeight();
+            calcParamsX = calcParamsX - mDraggableIcon.getHeight();
+            calcParamsY = (int) (STARTING_POINT_Y * 1.5) - mDraggableIcon.getHeight();
         } else {
-            mCalcParamsY = (int) (STARTING_POINT_Y * 1.1) + mDraggableIcon.getHeight();
+            calcParamsY = (int) (STARTING_POINT_Y * 1.1) + mDraggableIcon.getHeight();
         }
 
         if(!mIsDestroyed) {
-            mView.setTranslationX(mCalcParamsX);
-            mView.setTranslationY(mCalcParamsY);
+            mView.setTranslationX(calcParamsX);
+            mView.setTranslationY(calcParamsY);
         }
 
         // Animate calc in

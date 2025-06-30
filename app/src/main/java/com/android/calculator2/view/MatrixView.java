@@ -139,8 +139,7 @@ public class MatrixView extends TableLayout implements AdvancedDisplayControls {
     }
 
     public SimpleMatrix getSimpleMatrix() throws SyntaxException {
-        SimpleMatrix sm = new SimpleMatrix(getData());
-        return sm;
+        return new SimpleMatrix(getData());
     }
 
     private double[][] getData() throws SyntaxException {
@@ -152,10 +151,10 @@ public class MatrixView extends TableLayout implements AdvancedDisplayControls {
                 if(input.isEmpty()) throw new SyntaxException();
                 try {
                     if(mSolver != null) {
-                        data[row][column] = Double.valueOf(stringify(mSolver.solve(input)));
+                        data[row][column] = Double.parseDouble(stringify(mSolver.solve(input)));
                     }
                     else {
-                        data[row][column] = Double.valueOf(stringify(input));
+                        data[row][column] = Double.parseDouble(stringify(input));
                     }
                 } catch(Exception e) {
                     e.printStackTrace();

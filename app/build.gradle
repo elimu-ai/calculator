@@ -1,4 +1,10 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdk 35
@@ -8,17 +14,19 @@ android {
         applicationId "ai.elimu.calculator"
         minSdkVersion 26
         targetSdkVersion 35
-        versionCode 2000000
-        versionName "2.0.0"
+        versionCode 2001020
+        versionName "2.1.20-SNAPSHOT"
     }
 
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            buildConfigField("String", "ANALYTICS_APPLICATION_ID", '"ai.elimu.analytics.debug"')
         }
         release {
             minifyEnabled false
+            buildConfigField("String", "ANALYTICS_APPLICATION_ID", '"ai.elimu.analytics"')
         }
     }
 
@@ -31,13 +39,88 @@ android {
         disable 'MissingTranslation'
         abortOnError false
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'ai.elimu:model:model-2.0.100'
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.recycler.view
+    implementation libs.androidx.legacy.support.v4
+    implementation libs.androidx.preference
+    implementation libs.elimu.content.provider
+    implementation libs.androidx.core.ktx
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+}
+
+tasks.register('removeSnapshot') {
+    doLast {
+        println("removeSnapshot")
+
+        def file = file("build.gradle")
+        def originalFileContent = file.getText()
+
+        Pattern pattern = Pattern.compile("versionName \"\\d+\\.\\d+\\.\\d+-SNAPSHOT\"")
+        Matcher matcher = pattern.matcher(originalFileContent)
+        matcher.find()
+        println("match: ${matcher.group()}")
+
+        def newVersionName = matcher.group().replace("-SNAPSHOT", "")
+        println("newVersionName: ${newVersionName}")
+
+        def newFileContent = originalFileContent.replaceFirst("versionName \"\\d+\\.\\d+\\.\\d+-SNAPSHOT\"", newVersionName)
+        file.write(newFileContent)
+    }
+}
+tasks.register('getVersionName') {
+    doLast {
+        println android.defaultConfig.versionName
+    }
+}
+tasks.register('bumpVersion') {
+    doLast {
+        println("bumpVersion")
+
+        def currentVersionCode = android.defaultConfig.versionCode
+        println("currentVersionCode: ${currentVersionCode}")
+
+        def newVersionCode = currentVersionCode + 1
+        println("newVersionCode: ${newVersionCode}")
+
+        def newVersionName = newVersionCode.toString().substring(0, 1).toInteger() + "." + newVersionCode.toString().substring(1, 4).toInteger() + "." + newVersionCode.toString().substring(4, 7).toInteger()
+        println("newVersionName: ${newVersionName}")
+
+        def file = file("build.gradle")
+        def originalFileContent = file.getText()
+        def newFileContent = originalFileContent.replaceFirst("versionCode \\d+", "versionCode ${newVersionCode}")
+        newFileContent = newFileContent.replaceFirst("versionName \"\\d+\\.\\d+\\.\\d+\"", "versionName \"${newVersionName}\"")
+        file.write(newFileContent)
+    }
+}
+tasks.register('addSnapshot') {
+    doLast {
+        println("addSnapshot")
+
+        def file = file("build.gradle")
+        def originalFileContent = file.getText()
+
+        Pattern pattern = Pattern.compile("versionName \"\\d+\\.\\d+\\.\\d+\"")
+        Matcher matcher = pattern.matcher(originalFileContent)
+        matcher.find()
+        println("match: ${matcher.group()}")
+
+        def newVersionName = "${matcher.group().substring(12, matcher.group().length() - 1)}-SNAPSHOT\""
+        println("newVersionName: ${newVersionName}")
+
+        def newFileContent = originalFileContent.replaceFirst("versionName \"\\d+\\.\\d+\\.\\d+\"", "versionName ${newVersionName}")
+        file.write(newFileContent)
+    }
 }

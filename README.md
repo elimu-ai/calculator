@@ -1,4 +1,4 @@
-# android_packages_apps_Calculator ➕
+# Calculator ➕
 
 Android calculator application adapted to children.
 
@@ -12,7 +12,8 @@ Corresponding [EGMA skill](https://github.com/elimu-ai/model/blob/master/src/mai
 
 ## Installation
 
-Note: This app depends on the [elimu.ai Content Provider](https://github.com/elimu-ai/content-provider) to be installed.
+> [!IMPORTANT]
+> Note: This app depends on the [elimu.ai Content Provider](https://github.com/elimu-ai/content-provider) to be installed.
 
 ---
 

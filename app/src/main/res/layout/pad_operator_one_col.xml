@@ -58,7 +58,7 @@
 
     <Button
         android:id="@+id/op_sub"
-        android:tag="minus"
+        android:tag="@string/desc_op_sub"
         style="@style/PadButtonStyle.Operator"
         android:contentDescription="@string/desc_op_sub"
         android:onClick="onButtonClick"
@@ -66,7 +66,7 @@
 
     <Button
         android:id="@+id/op_add"
-        android:tag="plus"
+        android:tag="@string/desc_op_add"
         style="@style/PadButtonStyle.Operator"
         android:contentDescription="@string/desc_op_add"
         android:onClick="onButtonClick"
