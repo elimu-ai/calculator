@@ -1,8 +1,5 @@
 package com.android.calculator2.util
 
-import android.content.Context
-import android.media.MediaPlayer
-import android.media.MediaPlayer.OnCompletionListener
 import com.android.calculator2.util.PlayerUtil.NUMBER_RAW_FILES
 
 /**
@@ -23,28 +20,6 @@ object PlayerUtil {
         "digit_8",
         "digit_9"
     )
-
-    fun playRawFile(context: Context, rawFile: String?) {
-        val rawId = context.resources.getIdentifier(rawFile, "raw", context.packageName)
-        if (rawId != 0) {
-            val mediaPlayer = MediaPlayer.create(context, rawId)
-            mediaPlayer.start()
-        }
-    }
-
-    fun playResult(context: Context, result: String?) {
-        val rawId =
-            context.resources.getIdentifier(RAW_FILE_EQUALS, "raw", context.packageName)
-        if (rawId != 0) {
-            val mediaPlayer = MediaPlayer.create(context, rawId)
-            mediaPlayer.setOnCompletionListener(object : OnCompletionListener {
-                override fun onCompletion(mp: MediaPlayer?) {
-                    playRawFile(context, result)
-                }
-            })
-            mediaPlayer.start()
-        }
-    }
 }
 
 fun String.tagToSpokenText(): String {
