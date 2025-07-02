@@ -6,7 +6,7 @@ import com.android.calculator2.util.NumPadUtils.NUMBER_RAW_FILES
  * Created by GSC on 12/11/2016.
  */
 object NumPadUtils {
-    var RAW_FILE_EQUALS: String = "equals"
+    const val RAW_FILE_EQUALS: String = "equals"
 
     val NUMBER_RAW_FILES: Array<String> = arrayOf<String>(
         "digit_0",
