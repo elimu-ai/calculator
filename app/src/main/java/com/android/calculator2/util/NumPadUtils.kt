@@ -1,6 +1,6 @@
 package com.android.calculator2.util
 
-import com.android.calculator2.util.NumPadUtils.NUMBER_RAW_FILES
+import com.android.calculator2.util.NumPadUtils.DIGIT_TAGS
 
 /**
  * Created by GSC on 12/11/2016.
@@ -8,7 +8,7 @@ import com.android.calculator2.util.NumPadUtils.NUMBER_RAW_FILES
 object NumPadUtils {
     const val RAW_FILE_EQUALS: String = "equals"
 
-    val NUMBER_RAW_FILES: Array<String> = arrayOf<String>(
+    val DIGIT_TAGS: Array<String> = arrayOf<String>(
         "digit_0",
         "digit_1",
         "digit_2",
@@ -24,16 +24,16 @@ object NumPadUtils {
 
 fun String.tagToSpokenText(): String {
     return when (this) {
-        NUMBER_RAW_FILES[0] -> "0"
-        NUMBER_RAW_FILES[1] -> "1"
-        NUMBER_RAW_FILES[2] -> "2"
-        NUMBER_RAW_FILES[3] -> "3"
-        NUMBER_RAW_FILES[4] -> "4"
-        NUMBER_RAW_FILES[5] -> "5"
-        NUMBER_RAW_FILES[6] -> "6"
-        NUMBER_RAW_FILES[7] -> "7"
-        NUMBER_RAW_FILES[8] -> "8"
-        NUMBER_RAW_FILES[9] -> "9"
+        DIGIT_TAGS[0] -> "0"
+        DIGIT_TAGS[1] -> "1"
+        DIGIT_TAGS[2] -> "2"
+        DIGIT_TAGS[3] -> "3"
+        DIGIT_TAGS[4] -> "4"
+        DIGIT_TAGS[5] -> "5"
+        DIGIT_TAGS[6] -> "6"
+        DIGIT_TAGS[7] -> "7"
+        DIGIT_TAGS[8] -> "8"
+        DIGIT_TAGS[9] -> "9"
         else -> this
     }
 }
