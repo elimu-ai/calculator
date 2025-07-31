@@ -54,7 +54,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback
 import com.android.calculator2.HistoryAdapter.HistoryItemCallback
 import com.android.calculator2.receiver.StudentUpdatedReceiver
-import com.android.calculator2.util.PlayerUtil
+import com.android.calculator2.util.NumPadUtils
 import com.android.calculator2.util.tagToSpokenText
 import com.android.calculator2.view.DisplayOverlay
 import com.android.calculator2.view.GraphView
@@ -387,7 +387,7 @@ class Calculator : AppCompatActivity(), OnTextSizeChangeListener, EvaluateCallba
     fun onButtonClick(view: View) {
         // Play audio for numbers and operators
 
-        if ((view.tag != null) && PlayerUtil.RAW_FILE_EQUALS != view.tag) {
+        if ((view.tag != null) && NumPadUtils.RAW_FILE_EQUALS != view.tag) {
             val spokenText = view.tag.toString().tagToSpokenText()
             ttsViewModel.speak(spokenText, QueueMode.FLUSH, Random.nextInt().toString())
 

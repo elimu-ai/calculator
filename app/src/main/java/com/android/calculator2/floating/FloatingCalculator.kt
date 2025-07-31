@@ -17,7 +17,6 @@ import com.android.calculator2.CalculatorExpressionEvaluator
 import com.android.calculator2.CalculatorExpressionEvaluator.EvaluateCallback
 import com.android.calculator2.CalculatorExpressionTokenizer
 import com.android.calculator2.util.DigitLabelHelper
-import com.android.calculator2.util.PlayerUtil
 import com.android.calculator2.view.display.AdvancedDisplay
 import com.xlythe.floatingview.FloatingView
 import com.xlythe.math.History
@@ -71,10 +70,6 @@ class FloatingCalculator : FloatingView() {
         mClear = child.findViewById<View?>(R.id.clear) as ImageButton
         mListener = object : View.OnClickListener {
             override fun onClick(v: View) {
-                if (v.tag != null && PlayerUtil.RAW_FILE_EQUALS != v.tag) {
-                    PlayerUtil.playRawFile(context, v.tag.toString())
-                }
-
                 if (v is Button) {
                     if (v.getText().toString() == "=") {
                         mEvaluator!!.evaluate(mDisplay!!.text, object : EvaluateCallback {
@@ -90,15 +85,6 @@ class FloatingCalculator : FloatingView() {
                                     if (result != null && result.isDigitsOnly() && result.toInt() < 10) {
                                         val view = child.findViewById<View>(
                                             DigitLabelHelper.getIdForDigit(result.toInt())
-                                        )
-                                        PlayerUtil.playResult(
-                                            context,
-                                            view.tag.toString()
-                                        )
-                                    } else {
-                                        PlayerUtil.playRawFile(
-                                            context,
-                                            PlayerUtil.RAW_FILE_EQUALS
                                         )
                                     }
                                     setText(result)

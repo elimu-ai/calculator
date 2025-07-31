@@ -15,7 +15,6 @@ import com.android.calculator2.CalculatorExpressionTokenizer
 import com.android.calculator2.receiver.StudentUpdatedReceiver
 import com.android.calculator2.util.DigitLabelHelper
 import com.android.calculator2.util.DigitLabelHelper.DigitLabelHelperCallback
-import com.android.calculator2.util.PlayerUtil
 import com.xlythe.math.Base
 import com.xlythe.math.Constants
 import com.xlythe.math.EquationFormatter
@@ -23,7 +22,6 @@ import com.xlythe.math.Persist
 import com.xlythe.math.Solver
 import org.javia.arity.SyntaxException
 import java.text.DecimalFormatSymbols
-import androidx.core.text.isDigitsOnly
 import androidx.preference.PreferenceManager
 import androidx.core.content.edit
 
@@ -40,9 +38,6 @@ class CalculatorWidget : AppWidgetProvider() {
 
         // Play audio for numbers and operators
         val action = intent.action!!.substring(intent.action!!.lastIndexOf(".") + 1)
-        if (PlayerUtil.RAW_FILE_EQUALS != action) {
-            PlayerUtil.playRawFile(context, action)
-        }
 
         if (intent.action == DIGIT_0) {
             if (mClearText) {
@@ -143,12 +138,6 @@ class CalculatorWidget : AppWidgetProvider() {
             // Try to save it to history
             if (value != context.resources.getString(R.string.error_syntax)) {
                 // Play audio for result
-
-                if (value.isDigitsOnly() && value.toInt() < 10) {
-                    PlayerUtil.playResult(context, PlayerUtil.NUMBER_RAW_FILES[value.toInt()])
-                } else {
-                    PlayerUtil.playRawFile(context, PlayerUtil.RAW_FILE_EQUALS)
-                }
 
                 val persist = Persist(context)
                 persist.load()

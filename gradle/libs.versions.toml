@@ -1,5 +1,5 @@
 [versions]
-elimuContentProvider = "1.4.27"
+elimuContentProvider = "1.4.42"
 
 appCompat = "1.7.0"
 recyclerView = "1.4.0"
