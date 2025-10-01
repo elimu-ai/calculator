@@ -7,13 +7,12 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdk 35
     namespace "ai.elimu.calculator"
+    compileSdk 36
 
     defaultConfig {
-        applicationId "ai.elimu.calculator"
-        minSdkVersion 26
-        targetSdkVersion 35
+        minSdkVersion 29
+        targetSdkVersion 36
         versionCode 2001023
         versionName "2.1.23-SNAPSHOT"
     }
