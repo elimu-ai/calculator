@@ -1,11 +1,11 @@
 [versions]
-elimuContentProvider = "1.4.64"
+elimuContentProvider = "1.4.75"
 
 appCompat = "1.7.0"
 recyclerView = "1.4.0"
 legacySupportV4 = "1.0.0"
 coreKtx = "1.16.0"
-agp = "8.8.2"
+agp = "8.9.1"
 hilt = "2.55"
 androidxPreference = "1.2.1"
 

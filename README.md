@@ -1,6 +1,6 @@
 # Calculator ➕
 
-Android calculator application adapted to children.
+Android calculator application adapted to children learning basic math.
 
 Corresponding [EGMA skill](https://github.com/elimu-ai/model/blob/master/src/main/java/ai/elimu/model/v2/enums/content/NumeracySkill.java): `Addition`
 
@@ -21,7 +21,7 @@ Corresponding [EGMA skill](https://github.com/elimu-ai/model/blob/master/src/mai
   <img src="https://github.com/elimu-ai/webapp/blob/main/src/main/webapp/static/img/logo-text-256x78.png" />
 </p>
 <p align="center">
-  elimu.ai - Free open-source learning software for out-of-school children ✨🚀
+  elimu.ai - Free open-source learning software for out-of-school children 🚀✨
 </p>
 <p align="center">
   <a href="https://elimu.ai">Website 🌐</a>
